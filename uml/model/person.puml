@@ -1,0 +1,32 @@
+@startuml
+skinparam classAttributeIconSize 0
+abstract class Person {
+    - id: int
+    - firstName: std::string
+    - lastName: std::string
+    - pesel: const std::string
+    - birthDate: boost::gregorian::date
+    - address: Address*
+    - licenses: std::vector<Category>
+}
+
+class Instructor {
+    - qualifications: std::vector<Category>
+}
+note bottom of Instructor
+ Lista kategorii, których instruktor może nauczać
+end note
+
+class Student {
+    - pkkNumber: std::string
+    - isReadyForExam: bool
+}
+note bottom of Student
+  pkkNumber - Numer Profilu Kandydata na Kierowcę.
+  isReadyForExam -  Czy wyjechał wymaganą liczbę godzin
+end note
+
+Person <|-- Instructor
+Person <|-- Student
+
+@enduml

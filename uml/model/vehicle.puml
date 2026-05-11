@@ -1,0 +1,56 @@
+@startuml
+skinparam classAttributeIconSize 0
+abstract class Vehicle {
+    - id: int
+    - plateNumber: std::string
+    - category: Category
+}
+
+abstract class Motorcycle {
+    - engineCapacity: int
+    - power: double
+}
+note bottom of Motorcycle
+  Definiuje cechy wspólne dla wszystkich jednośladów.
+  Konstruktor będzie zawierał logikę do przyznania odpowiedniej kategorii.
+end note
+
+abstract class HeavyVehicle {
+    - grossVehicleWeight: double
+    - hasTrailer: bool
+}
+note bottom of HeavyVehicle
+  Stanowi fundament dla pojazdów typu TIR, autobus itp.
+end note
+
+class PassengerCar {
+}
+
+class Truck {
+    - cargoCapacity: double
+}
+note right of Truck
+  Reprezentuje TIRY oraz mniejsze ciężarówki.
+  Logika kategorii:
+  Jeśli hasTrailer == false -> Kat. C
+  Jeśli hasTrailer == true -> Kat. C+E
+end note
+
+class Bus {
+    - numberOfSeats: int
+}
+note bottom of Bus
+  Logika kategorii:
+  Jeśli hasTrailer == false -> Kat. D
+  Jeśli hasTrailer == true -> Kat. D+E
+end note
+
+
+Vehicle <|-- Motorcycle
+Vehicle <|-- HeavyVehicle
+Vehicle <|-- PassengerCar
+
+HeavyVehicle <|-- Truck
+HeavyVehicle <|-- Bus
+
+@enduml

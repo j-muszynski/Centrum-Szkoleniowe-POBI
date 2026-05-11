@@ -1,0 +1,17 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+!include model/entities.puml
+!include model/person.puml
+!include model/vehicle.puml
+
+Person "1" *-r-> "1 address" Address : contains >
+
+Course "1" --> "1 instructor" Instructor : taught by >
+Course "1" --> "1 student" Student : attended by >
+
+DrivingSession "0..*" --> "1 instructor" Instructor : conducted by >
+DrivingSession "0..*" --> "1 student" Student : attended by >
+DrivingSession "0..*" --> "1 vehicle" Vehicle : uses >
+
+@enduml

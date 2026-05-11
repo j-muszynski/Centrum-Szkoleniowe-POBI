@@ -1,0 +1,40 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+!include model/entities.puml
+!include model/person.puml
+!include model/vehicle.puml
+!include model/repositories.puml
+!include model/managers.puml
+
+Person <|-d- Instructor
+Person <|-d- Student
+
+Vehicle <|-d- Motorcycle
+Vehicle <|-d- HeavyVehicle
+Vehicle <|-d- PassengerCar
+HeavyVehicle <|-d- Truck
+HeavyVehicle <|-d- Bus
+
+Person "1" *-r-> "1 address" Address : contains >
+
+Course "1" --> "1 instructor" Instructor : taught by >
+Course "1" --> "1 student" Student : attended by >
+
+DrivingSession "0..*" --> "1 instructor" Instructor : conducted by >
+DrivingSession "0..*" --> "1 student" Student : attended by >
+DrivingSession "0..*" --> "1 vehicle" Vehicle : uses >
+
+CourseRepository "1" *-- "0..* courses" Course : manages >
+VehicleRepository "1" *-- "0..* vehicles" Vehicle : manages >
+StudentRepository "1" *-- "0..* students" Student : manages >
+InstructorRepository "1" *-- "0..* instructors" Instructor : manages >
+DrivingSessionRepository "1" *-- "0..* sessions" DrivingSession : manages >
+
+CourseManager "1" o-d-> "1" CourseRepository : uses >
+VehicleManager "1" o-d-> "1" VehicleRepository : uses >
+StudentManager "1" o-d-> "1" StudentRepository : uses >
+InstructorManager "1" o-d-> "1" InstructorRepository : uses >
+DrivingSessionManager "1" o-d-> "1" DrivingSessionRepository : uses >
+
+@enduml
