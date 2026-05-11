@@ -1,0 +1,18 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+!include model/managers.puml
+
+class CourseRepository {}
+class VehicleRepository {}
+class StudentRepository {}
+class InstructorRepository {}
+class DrivingSessionRepository {}
+
+CourseManager "1" o-d-> "1" CourseRepository : uses >
+VehicleManager "1" o-d-> "1" VehicleRepository : uses >
+StudentManager "1" o-d-> "1" StudentRepository : uses >
+InstructorManager "1" o-d-> "1" InstructorRepository : uses >
+DrivingSessionManager "1" o-d-> "1" DrivingSessionRepository : uses >
+
+@enduml
