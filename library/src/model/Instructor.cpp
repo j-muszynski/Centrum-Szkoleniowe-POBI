@@ -1,0 +1,16 @@
+#include "model/Instructor.h"
+
+Instructor::Instructor(int id, const std::string& firstName, const std::string& lastName,
+                       const std::string& pesel, const boost::gregorian::date& birthDate,
+                       std::shared_ptr<Address> address)
+    : Person(id, firstName, lastName, pesel, birthDate, address) {}
+
+const std::vector<Category>& Instructor::getQualifications() const { return qualifications; }
+
+void Instructor::addQualification(Category category) {
+    qualifications.push_back(category);
+}
+
+std::string Instructor::getInfo() const {
+    return "Instruktor: " + getFirstName() + " " + getLastName();
+}
