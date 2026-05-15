@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 project(Library)
 
+if(POLICY CMP0167)
+    cmake_policy(SET CMP0167 NEW)
+endif()
+
 if(MSVC)
     add_compile_options(/W4 /WX)
 else()
@@ -28,14 +32,18 @@ target_include_directories(Library PUBLIC include)
 
 enable_testing()
 
-find_package(Boost 1.80.0 COMPONENTS "unit_test_framework" "date_time" REQUIRED)
+find_package(Boost 1.80.0 COMPONENTS "unit_test_framework" "date_time" "serialization" REQUIRED)
 
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${Boost_INCLUDE_DIRS}
 )
 
-target_link_libraries(Library PUBLIC Boost::date_time)
+target_link_libraries(Library PUBLIC
+        Boost::date_time
+        Boost::serialization
+)
+
 set(SOURCE_TEST_FILES
         test/master.cpp
         # test/AddressTest.cpp tu bedzie reszta
