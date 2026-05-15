@@ -1,5 +1,10 @@
 #include "repositories/CourseRepository.h"
 #include "model/Course.h"
+#include <fstream>
+#include <iostream>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 CoursePtr CourseRepository::getCourse(int id) const {
     for (auto c : courseRepo) {
@@ -41,14 +46,43 @@ std::vector<CoursePtr> CourseRepository::findAll() const {
   return findBy(alwaysTrue);
 }
 
-// logic yet to come
 bool CourseRepository::saveData() {
-    bool success = 1;
-    return success;
+    try {
+        // creating file for saved data
+        std::ofstream file("courses_data.txt");
+        if (!file.is_open()) return false;
+
+        // creating archive
+        boost::archive::text_oarchive archive(file);
+
+        // saving the vector
+        archive << courseRepo;
+
+        return true;
+    } catch ([[maybe_unused]] boost::archive::archive_exception& e) {
+        std::cout << "error while saving course repository!" << std::endl;
+        return false;
+    }
 }
 
 // logic yet to come
 bool CourseRepository::loadData() {
-    bool success = 1;
-    return success;
+    try {
+        // opening a file with data to load
+        std::ifstream file("courses_data.txt");
+        if (!file.is_open()) return false;
+
+        // creating archive conncted to file with data
+        boost::archive::text_iarchive archive(file);
+
+        // laoding up the data
+        archive >> courseRepo;
+
+        return true;
+    } catch (const boost::archive::archive_exception& e) {
+        // catching exceptions
+        std::cerr << "Błąd podczas wczytywania repozytorium: " << e.what() << std::endl;
+        return false;
+    }
 }
+

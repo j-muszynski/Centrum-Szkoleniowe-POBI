@@ -2,12 +2,23 @@
 #define ADDRESS_H
 
 #include <string>
+#include <boost/serialization/access.hpp>
 
 class Address {
 private:
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, [[maybe_unused]] const unsigned int version) {
+        ar & city;
+        ar & street;
+        ar & number;
+    }
     std::string city;   // Miasto
     std::string street; // Ulica
     std::string number; // Numer
+protected:
+    Address() = default;
 
 public:
     // Konstruktor
