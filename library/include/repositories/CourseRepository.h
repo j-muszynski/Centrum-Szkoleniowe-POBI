@@ -1,10 +1,14 @@
 #pragma once
 
 #include "typedefs.h"
+#include <fstream>
+#include <vector>
 
 class CourseRepository{
 private:
     std::vector<CoursePtr> courseRepo;
+
+    CourseRepository() = default;
 public:
     [[nodiscard]] CoursePtr getCourse(int id) const;
 
