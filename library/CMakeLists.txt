@@ -1,16 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 project(Library)
 
-if(POLICY CMP0167)
-    cmake_policy(SET CMP0167 NEW)
-endif()
-
-if(MSVC)
-    add_compile_options(/W4 /WX)
-else()
-    add_compile_options(-Wall -Wextra -Werror)
-endif()
-
 set(SOURCE_FILES
         src/model/Address.cpp
         src/model/Vehicle.cpp
@@ -24,30 +14,25 @@ set(SOURCE_FILES
         src/model/Instructor.cpp
         src/model/Course.cpp
         src/model/DrivingSession.cpp
+        src/repositories/CourseRepository.cpp
+        src/repositories/DrvingSessionRepository.cpp
+        src/repositories/InstructorRepository.cpp
+        src/repositories/StudentRepository.cpp
+        src/repositories/VehicleRepository.cpp
 )
 
-add_library(Library ${SOURCE_FILES})
+add_library(Library STATIC ${SOURCE_FILES})
 
 target_include_directories(Library PUBLIC include)
-
-enable_testing()
-
-find_package(Boost 1.80.0 COMPONENTS "unit_test_framework" "date_time" "serialization" REQUIRED)
-
-include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${Boost_INCLUDE_DIRS}
-)
+target_include_directories(Library PRIVATE ${Boost_INCLUDE_DIRS})
 
 target_link_libraries(Library PUBLIC
         Boost::date_time
         Boost::serialization
 )
 
-set(SOURCE_TEST_FILES
-        test/master.cpp
-        # test/AddressTest.cpp tu bedzie reszta
-)
+# Konfiguracja testera
+set(SOURCE_TEST_FILES test/master.cpp)
 add_executable(LibraryTester ${SOURCE_TEST_FILES})
 
 target_link_libraries(LibraryTester

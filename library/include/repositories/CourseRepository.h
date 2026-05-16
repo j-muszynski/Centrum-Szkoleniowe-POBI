@@ -8,8 +8,9 @@ class CourseRepository{
 private:
     std::vector<CoursePtr> courseRepo;
 
-    CourseRepository() = default;
 public:
+    CourseRepository() = default;
+
     [[nodiscard]] CoursePtr getCourse(int id) const;
 
     [[nodiscard]] int getSize() const;

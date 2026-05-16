@@ -11,7 +11,8 @@
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/shared_ptr.hpp>
-#include <boost/date_time/gregorian/greg_serialize.hpp>
+//#include <boost/date_time/gregorian/greg_serialize.hpp>
+#include <boost/date_time/gregorian/gregorian.hpp>
 
 class Person {
     friend class boost::serialization::access;
@@ -25,7 +26,7 @@ class Person {
         ar & address;
     }
 private:
-    int id;
+    int id = -1;
     std::string firstName;
     std::string lastName;             // Imie nazwisko
     std::string pesel;          // Pesel (usunieto const bo nie dzialalo wtedy zapisywanie do pliku)
