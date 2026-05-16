@@ -1,10 +1,16 @@
 #include "repositories/CourseRepository.h"
 #include "model/Course.h"
+#include "model/Student.h"
+#include "model/Instructor.h"
 #include <fstream>
-#include <iostream>
+
+#include <boost/date_time/gregorian/gregorian.hpp>
+#include <boost/date_time/gregorian/greg_serialize.hpp>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 CoursePtr CourseRepository::getCourse(int id) const {
     for (auto c : courseRepo) {
@@ -14,7 +20,7 @@ CoursePtr CourseRepository::getCourse(int id) const {
 }
 
 int CourseRepository::getSize() const {
-    return courseRepo.size();
+    return static_cast<int> (courseRepo.size());
 }
 
 void CourseRepository::addCourse(const CoursePtr& newCourse) {
@@ -22,8 +28,8 @@ void CourseRepository::addCourse(const CoursePtr& newCourse) {
 }
 
 std::string CourseRepository::reportCourses() const {
-    std::string info = "";
-    for (auto c : courseRepo) {
+    std::string info;
+    for (const auto& c : courseRepo) {
         info += c->getCourseInfo();
     }
     return info;
