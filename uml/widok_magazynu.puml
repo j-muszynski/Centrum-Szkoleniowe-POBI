@@ -3,7 +3,6 @@ skinparam classAttributeIconSize 0
 
 !include model/repositories.puml
 
-' Zamykamy puste deklaracje w ich oryginalnych pakietach
 package "Realizacja Kursów (Course Execution)" {
     class Course {}
     class DrivingSession {}
@@ -14,7 +13,7 @@ package "Użytkownicy i Role (Users & Roles)" {
     class Instructor {}
 }
 
-package "Flota Pojazdów (Fleet)" {
+package "Pojazdy" {
     class Vehicle {}
 }
 
