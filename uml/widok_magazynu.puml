@@ -1,26 +1,12 @@
 @startuml
 skinparam classAttributeIconSize 0
 
+!include model/managers.puml
 !include model/repositories.puml
 
-package "Realizacja Kursów (Course Execution)" {
-    class Course {}
-    class DrivingSession {}
-}
-
-package "Użytkownicy i Role (Users & Roles)" {
-    class Student {}
-    class Instructor {}
-}
-
-package "Flota Pojazdów (Fleet)" {
-    class Vehicle {}
-}
-
-CourseRepository "1" --> "0..*" Course : manages >
-VehicleRepository "1" --> "0..*" Vehicle : manages >
-StudentRepository "1" --> "0..*" Student : manages >
-InstructorRepository "1" --> "0..*" Instructor : manages >
-DrivingSessionRepository "1" --> "0..*" DrivingSession : manages >
-
+CourseManager "1" --> "1" IRepository : uses >
+VehicleManager "1" --> "1" IRepository : uses >
+StudentManager "1" --> "1" IRepository : uses >
+InstructorManager "1" --> "1" IRepository : uses >
+DrivingSessionManager "1" --> "1" IRepository : uses >
 @enduml
