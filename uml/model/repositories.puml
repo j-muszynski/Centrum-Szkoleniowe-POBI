@@ -1,115 +1,51 @@
 @startuml
 skinparam classAttributeIconSize 0
-class CourseRepository {
-    - courses: std::vector<Course>
-    + findAll(): std::vector<Course>
-    + findBy(predicate: const coursePredicate&): std::vector<Course>
-    + getCourseById(id: int): Course
-    + addCourse(course: const Course&): void
-    + removeCourse(id: int): void
-    + getSize(): int
-    + reportCourses(): std::string
-    + saveData(): void
-    + loadData(): void
+
+package "Warstwa Składowania Danych (DAL)" {
+
+    interface IRepository<T> {
+        + save(data: std::vector<T>) : void
+        + load() : std::vector<T>
+        + findAll() : std::vector<T>
+        + findBy(predicate: Predicate<T>) : std::vector<T>
+        + add(item: T) : void
+        + remove(id: int) : void
+        + getById(id: int) : T
+        + getSize() : int
+    }
+
+    abstract class AbstractFileRepository<T> {
+        # filePath : std::string
+    }
+
+    IRepository <|.. AbstractFileRepository
+
+    class CourseRepository {
+        + reportCourses(): std::string
+    }
+
+    class DrivingSessionRepository {
+        + reportDrivingSession(): std::string
+    }
+
+    class InstructorRepository {
+        + reportInstructors(): std::string
+    }
+
+
+    class StudentRepository {
+        + reportStudents(): std::string
+    }
+
+    class VehicleRepository {
+        + reportVehicles(): std::string
+    }
+
+
+    AbstractFileRepository <|-- CourseRepository
+    AbstractFileRepository <|-- DrivingSessionRepository
+    AbstractFileRepository <|-- InstructorRepository
+    AbstractFileRepository <|-- StudentRepository
+    AbstractFileRepository <|-- VehicleRepository
 }
-note right of CourseRepository
-  std::vector<Course> courses -  kontener
-     przechowujący obiekty kursów
-  findAll() -  Zwraca listę wszystkich kursów
-  findBy - Szuka kursów konkretnej kategorii
-  getCourseById - Szuka po ID
-  addCourse - Dodaje nowy kurs do systemu
-  removeCourse - realizuje soft delete, zmienia status na Archived / Finished
-  getSize() - Zwraca aktualną liczbę kursów w bazie
-  reportCourses() - Generuje podsumowanie o wszystkich kursach
-  saveData() / loadData() - Zapisuje/odczytuje wektor courses z pliku
-end note
-
-class DrivingSessionRepository {
-    - sessions: std::vector<DrivingSession>
-    + findAll(): std::vector<DrivingSession>
-    + findBy(predicate: const drivingSessionPredicate&): std::vector<DrivingSession>
-    + getDrivingSessionById(id: int): DrivingSession
-    + addDrivingSession(drivingSession: const DrivingSession&): void
-    + removeDrivingSession(id: int): void
-    + getSize(): int
-    + reportDrivingSession(): std::string
-    + saveData(): void
-    + loadData(): void
-}
-note right of DrivingSessionRepository::removeDrivingSession
-  Hard delete – usuwa z wektora zaplanowaną
-  jazdę i zwalnia zasoby.
-end note
-
-class InstructorRepository {
-    - instructors: std::vector<Instructor>
-    + findAll(): std::vector<Instructor>
-    + findBy(predicate: const InstructorPredicate&): std::vector<Instructor>
-    + getInstructorById(id: int): Instructor
-    + addInstructor(instructor: const Instructor&): void
-    + removeInstructor(id: int): void
-    + getSize(): int
-    + reportInstructors(): std::string
-    + saveData(): void
-    + loadData(): void
-}
-note right of InstructorRepository::removeInstructor
-  Soft delete – usuwa instruktora i przenosi jego dane do
-    archiwum
-end note
-
-class StudentRepository {
-    - students: std::vector<Student>
-    + findAll(): std::vector<Student>
-    + findBy(predicate: const StudentPredicate&): std::vector<Student>
-    + getStudentById(id: int): Student
-    + addStudent(student: const Student&): void
-    + removeStudent(id: int): void
-    + getSize(): int
-    + reportStudents(): std::string
-    + saveData(): void
-    + loadData(): void
-}
-note right of StudentRepository::removeStudent
-  Soft delete – zmienia status na Archived
-  (np. po zdanym egzaminie)
-end note
-
-class VehicleRepository {
-    - vehicles: std::vector<std::shared_ptr<Vehicle>>
-    + findAll(): std::vector<std::shared_ptr<Vehicle>>
-    + findBy(predicate: const VehiclePredicate&): std::vector<std::shared_ptr<Vehicle>>
-    + getVehicleById(id: int): std::shared_ptr<Vehicle>
-    + addVehicle(vehicle: std::shared_ptr<Vehicle>): void
-    + removeVehicle(id: int): void
-    + getSize(): int
-    + reportVehicles(): std::string
-    + saveData(): void
-    + loadData(): void
-}
-note right of VehicleRepository::vehicles
-  Używamy wskaźników współdzielonych (shared_ptr),
-  móc przechowywać różne
-  typy pojazdów w jednym kontenerze.
-end note
-note right of VehicleRepository::removeVehicle
-  Hard delete – usuwa pojazd.
-end note
-
-class UnitOfWork {
-    - courseRepo: CourseRepository
-    - sessionRepo: DrivingSessionRepository
-    - instructorRepo: InstructorRepository
-    - studentRepo: StudentRepository
-    - vehicleRepo: VehicleRepository
-    + saveAll(): void
-    + loadAll(): void
-}
-note bottom of UnitOfWork
-saveAll() - Wywołuje saveData() na każdym repozytorium.
-loadAll() - Wywołuje loadData() na każdym repozytorium
-end note
-
-
 @enduml

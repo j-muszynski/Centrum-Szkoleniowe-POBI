@@ -52,6 +52,10 @@ add_test(LibraryTest LibraryTester
         --report_level=detailed
         --log_level=all
         --color_output=yes
+        src/test/AddressTest.cpp
+        src/test/PersonTest.cpp
+        src/test/VehicleTest.cpp
+        src/test/CourseAndSessionTest.cpp
 )
 
 add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1 BOOST_TEST_LOG_LEVEL=all

@@ -3,22 +3,24 @@ skinparam classAttributeIconSize 0
 
 !include model/repositories.puml
 
-class Course {}
-class Vehicle {}
-class Student {}
-class Instructor {}
-class DrivingSession {}
+package "Realizacja Kursów (Course Execution)" {
+    class Course {}
+    class DrivingSession {}
+}
 
-UnitOfWork "1" *-- "1" CourseRepository : contains >
-UnitOfWork "1" *-- "1" VehicleRepository : contains >
-UnitOfWork "1" *-- "1" StudentRepository : contains >
-UnitOfWork "1" *-- "1" InstructorRepository : contains >
-UnitOfWork "1" *-- "1" DrivingSessionRepository : contains >
+package "Użytkownicy i Role (Users & Roles)" {
+    class Student {}
+    class Instructor {}
+}
 
-CourseRepository "1" *-- "0..* courses" Course : manages >
-VehicleRepository "1" *-- "0..* vehicles" Vehicle : manages >
-StudentRepository "1" *-- "0..* students" Student : manages >
-InstructorRepository "1" *-- "0..* instructors" Instructor : manages >
-DrivingSessionRepository "1" *-- "0..* sessions" DrivingSession : manages >
+package "Flota Pojazdów (Fleet)" {
+    class Vehicle {}
+}
+
+CourseRepository "1" --> "0..*" Course : manages >
+VehicleRepository "1" --> "0..*" Vehicle : manages >
+StudentRepository "1" --> "0..*" Student : manages >
+InstructorRepository "1" --> "0..*" Instructor : manages >
+DrivingSessionRepository "1" --> "0..*" DrivingSession : manages >
 
 @enduml
