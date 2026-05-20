@@ -4,9 +4,9 @@ skinparam classAttributeIconSize 0
 !include model/managers.puml
 !include model/repositories.puml
 
-CourseManager "1" o-down-> "1" IRepository : uses >
-VehicleManager "1" o-down-> "1" IRepository : uses >
-StudentManager "1" o-down-> "1" IRepository : uses >
-InstructorManager "1" o-down-> "1" IRepository : uses >
-DrivingSessionManager "1" o-down-> "1" IRepository : uses >
+CourseManager "1" -down-> "1" IRepository : uses >
+VehicleManager "1" -down-> "1" IRepository : uses >
+StudentManager "1" -down-> "1" IRepository : uses >
+InstructorManager "1" -down-> "1" IRepository : uses >
+DrivingSessionManager "1" -down-> "1" IRepository : uses >
 @enduml
