@@ -32,7 +32,6 @@ package "Warstwa Składowania Danych (DAL)" {
         + reportInstructors(): std::string
     }
 
-
     class StudentRepository {
         + reportStudents(): std::string
     }
@@ -41,11 +40,13 @@ package "Warstwa Składowania Danych (DAL)" {
         + reportVehicles(): std::string
     }
 
-
     AbstractFileRepository <|-- CourseRepository
     AbstractFileRepository <|-- DrivingSessionRepository
     AbstractFileRepository <|-- InstructorRepository
     AbstractFileRepository <|-- StudentRepository
     AbstractFileRepository <|-- VehicleRepository
+
+    note "Klasy (np. CourseRepository, VehicleRepository itd.)\nw pełni implementują oraz nadpisują wszystkie metody\nczysto wirtualne zdefiniowane w interfejsie IRepository<T>\n(w tym operacje zapisu, odczytu oraz zarządzania kolekcją)." as DAL_Note
+    AbstractFileRepository .. DAL_Note
 }
 @enduml
