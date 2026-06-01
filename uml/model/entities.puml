@@ -1,59 +1,48 @@
 @startuml
 skinparam classAttributeIconSize 0
-enum Category {
-    AM
-    A1
-    A2
-    A
-    B
-    BE
-    C
-    CE
-    D
-    DE
+
+package "Typy Wyliczeniowe (Enums)" {
+    enum Category {
+        AM
+        A1
+        A2
+        A
+        B
+        BE
+        C
+        CE
+        D
+        DE
+    }
 }
 
-class Address {
-    - city: std::string
-    - street: std::string
-    - number: std::string
+package "Realizacja Kursów (Course Execution)" {
+    class Course {
+        - id: int
+        - type: Category
+        - instructor: Instructor*
+        - student: Student*
+        - isFinished: bool
+    }
+
+    class DrivingSession {
+        - id: int
+        - startTime: DateTime
+        - endTime: DateTime
+        - instructor: Instructor*
+        - student: Student*
+        - courseId: int
+        - vehicle: Vehicle*
+        - status: std::string
+        + getSessionCost(): double
+    }
+
+    note right of DrivingSession
+      getSessionCost() oblicza koszt na podstawie:
+      pojazd.getBaseHourlyCost() × liczba godzin jazdy
+    end note
 }
 
-class Course {
-    - id: int
-    - type: Category
-    - instructor: Instructor*
-    - student: Student*
-    - isFinished: bool
-    - price: double
-}
-note right of Course
-  instructor: Instructor* - Wskaźnik na przypisanego instruktora
-  student: Student* - wskaźnik na kursanta
-  isFinished:
-  1 - kurs ukończony (wyjeżdżona określona liczba godzin)
-  0 - kursant jeszcze w trakcie kursu
-end note
-
-class DrivingSession {
-    - id: int
-    - startTime: DateTime
-    - endTime: DateTime
-    - instructor: Instructor*
-    - student: Student*
-    - courseId: int
-    - vehicle: Vehicle*
-    - status: std::string
-}
-
-note right of DrivingSession
-  startTime, endTime - Rozpoczęcie
-     zakończenie
-  instructor Instruktor* - Kto prowadził
-  student: Student* - Kto jechał
-  courseId - W ramach jakiego kursu były realizowane te jazdy
-  vehicle - Jakim pojazdem
-  status - np Scheduled/Completed
- end note
-
+Course .up.> Category : <<uses>>
+DrivingSession .up.> Category : <<uses>>
 @enduml

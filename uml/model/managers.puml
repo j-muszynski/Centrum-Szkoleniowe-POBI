@@ -1,117 +1,113 @@
 @startuml
 skinparam classAttributeIconSize 0
-class CourseManager {
-    - coursesRepo: CourseRepository&
-    - archiveCoursesRepo: CourseRepository&
-    + findCourses(predicate: const CoursePredicate&): std::vector<Course>
-    + findAllCourses(): std::vector<Course>
-    + checkStudentCourseBalance(personalID: std::string): double
-    + registerCourse(studentId: int, instructorId: int, category: Category): void
-    + completeCourse(courseId: int): void
-    + calculateRevenue(): double
+
+package "Interfejs Użytkownika (UI)" {
+    class ConsoleUI {
+        - coordinator: Coordinator&
+        + start(): void
+        + displayMenu(): void
+    }
 }
+
+package "Warstwa Logiki Biznesowej (BLL)" {
+
+    class Coordinator {
+        - courseManager: CourseManager
+        - studentManager: StudentManager
+        - instructorManager: InstructorManager
+        - drivingSessionManager: DrivingSessionManager
+        - vehicleManager: VehicleManager
+
+        + calculateRevenue(): double
+        + completeCourse(courseId: int): void
+        + checkStudentCourseBalance(studentId: int): double
+        + getTotalHoursForCourse(courseId: int): double
+        + getStudentHours(studentId: int): double
+        + getAvailableVehicles(category: Category, range: TimeRange): std::vector<std::shared_ptr<Vehicle>>
+        + getAvailableInstructors(category: Category): std::vector<Instructor>
+    }
+
+    class CourseManager {
+        - coursesRepo: IRepository<Course>&
+        - archiveCoursesRepo: IRepository<Course>&
+        + findCourses(predicate: const CoursePredicate&): std::vector<Course>
+        + findAllCourses(): std::vector<Course>
+        + registerCourse(studentId: int, instructorId: int, category: Category): void
+    }
+
+    class StudentManager {
+        - studentRepo: IRepository<Student>&
+        - archiveStudentRepo: IRepository<Student>&
+        + registerStudent(student: const Student&): void
+        + unregisterStudent(studentId: int): void
+        + findStudents(predicate: const StudentPredicate&): std::vector<Student>
+        + findAllStudents(): std::vector<Student>
+        + updateExamStatus(studentId: int): void
+    }
+
+    class InstructorManager {
+        - instructorRepo: IRepository<Instructor>&
+        - archiveInstructorRepo: IRepository<Instructor>&
+        + registerInstructor(instructor: const Instructor&): void
+        + unregisterInstructor(instructorId: int): void
+        + findInstructor(predicate: const InstructorPredicate&): std::vector<Instructor>
+        + findAllInstructors(): std::vector<Instructor>
+        + assignToCategory(instructorId: int, category: Category): void
+    }
+
+    class DrivingSessionManager {
+        - drivingSessionRepo: IRepository<DrivingSession>&
+        - archiveDrivingSessionRepo: IRepository<DrivingSession>&
+        + scheduleSession(studentId: int, instructorId: int, vehicleId: int, range: TimeRange): void
+        + cancelSession(sessionId: int): void
+        + findDrivingSession(predicate: const DrivingSessionPredicate&): std::vector<DrivingSession>
+        + findAllDrivingSession(): std::vector<DrivingSession>
+    }
+
+   class VehicleManager {
+       - vehicleRepo: IRepository<Vehicle>&
+       + registerVehicle(vehicle: std::shared_ptr<Vehicle>): void
+       + unregisterVehicle(vehicleId: int): void
+       + findVehicles(predicate: const VehiclePredicate&): std::vector<std::shared_ptr<Vehicle>>
+       + findAllVehicles(): std::vector<std::shared_ptr<Vehicle>>
+   }
+}
+
+ConsoleUI "1" --> "1" Coordinator : uses >
+
+Coordinator "1" --> "1" CourseManager
+Coordinator "1" --> "1" StudentManager
+Coordinator "1" --> "1" InstructorManager
+Coordinator "1" --> "1" DrivingSessionManager
+Coordinator "1" --> "1" VehicleManager
+
 note bottom of CourseManager
-  coursesRepo CourseRepository& - przechowuje aktualne kursy,
-     które jeszcze nie zostały ukończone
-  archiveCoursesRepo CourseRepository& - przechowuje ukończoen kursy
-  registerCourse - Tworzy kurs
-  completeCourse - Czy wyjeżdżono godziny?
-  calculateRevenue() - Podlicza zysk
+  coursesRepo - przechowuje aktualne kursy, które jeszcze trwają
+  archiveCoursesRepo - przechowuje ukończone kursy (archiwum)
+  registerCourse - odpowiada za utworzenie nowego kursu w systemie
 end note
 
-class StudentManager {
-    - studentRepo: StudentRepository&
-    - archiveStudentRepo: StudentRepository&
-    + registerStudent(student: const Student&): void
-    + unregisterStudent(studentId: int): void
-    + findStudents(predicate: const StudentPredicate&): std::vector<Student>
-    + findAllStudents(): std::vector<Student>
-    + updateExamStatus(studentId: int): void
-    + getStudentHours(studentId: int): double
-}
 note bottom of StudentManager
-  studentRepo:StudentRepository& -  przechowuje
-     kursantów, które jeszcze nie ukończyli kursu
-  archiveStudentRepo StudentRepository& - przechowuje kursantów,
-     którzy już ukończyli kurs
-  registerStudent - Tworzy nowego studenta
-  unregisterStudent - Usuwa studenta z listy, odwołuje wszystkie zaplanowane jazdy
-  updateExamStatus - Czy można zmienić status gotowości na egzamin?
-  getStudentHours - Sumuje wyjeżdżone godziny studenta
+  studentRepo - przechowuje aktywnych kursantów szkoły
+  archiveStudentRepo - przechowuje kursantów z zakończonym procesem szkolenia
+  unregisterStudent - usuwa studenta, automatycznie odwołując jego jazdy
+  updateExamStatus - weryfikuje warunki i zmienia status gotowości na egzamin
 end note
 
-class InstructorManager {
-    - instructorRepo: InstructorRepository&
-    - archiveInstructorRepo: InstructorRepository&
-    + registerInstructor(instructor: const Instructor&): void
-    + unregisterInstructor(instructorId: int): void
-    + findInstructor(predicate: const InstructorPredicate&): std::vector<Instructor>
-    + findAllInstructors(): std::vector<Instructor>
-    + assignToCategory(instructorId: int, category: Category): void
-    + getAvailableInstructors(category: Category): std::vector<Instructor>
-}
 note bottom of InstructorManager
-  instructorRepo InstructorReposiotry& - przechowuje instruktorów
-  registerInstructor - Tworzy nowego instruktora
-  unregisterInstructor - Usuwua instruktora z listy, odwołuje jego
-     zaplanowane jazdy
-  assignToCategory - Nadaje prawo do uczenia danej kategorii
-  getAvailableInstructors - zwraca listę instruktorów z uprawnieniami
+  instructorRepo - baza aktywnych instruktorów
+  archiveInstructorRepo - kadra przeniesiona do archiwum
+  unregisterInstructor - usuwa instruktora i czyści jego nadchodzący grafik sesji
+  assignToCategory - nadaje nowe uprawnienia szkoleniowe do profilu
 end note
 
-
-class DrivingSessionManager {
-    - drivingSessionRepo: DrivingSessionRepository&
-    - archiveDrivingSessionRepo: DrivingSessionRepository&
-    + scheduleSession(studentId: int, instructorId: int, vehicleId: int, range: TimeRange): void
-    + cancelSession(sessionId: int): void
-    + findDrivingSession(predicate: const DrivingSessionPredicate&): std::vector<DrivingSession>
-    + findAllDrivingSession(): std::vector<DrivingSession>
-    + getTotalHoursForCourse(courseId: int): double
-}
 note bottom of DrivingSessionManager
-  cancelSession - Odwołuje jazdę i zwalnia zasoby
-  getTotalHoursForCourse - Zwraca liczbę godzin wyjeżdżonych dla
-    danego kursu
-end note
-note right of DrivingSessionManager::scheduleSession
-  Weryfikacja konfliktów:
-  - Brak kolizji w grafiku instruktora
-  - Dostępność pojazdu
-  - Wolny termin kursanta
+  cancelSession - odwołuje wybraną jazdę i natychmiast zwalnia zasoby
 end note
 
-class VehicleManager {
-    - vehicleRepo: VehicleRepository&
-    + registerVehicle(vehicle: std::shared_ptr<Vehicle>): void
-    + unregisterVehicle(vehicleId: int): void
-    + findVehicles(predicate: const VehiclePredicate&): std::vector<std::shared_ptr<Vehicle>>
-    + findAllVehicles(): std::vector<std::shared_ptr<Vehicle>>
-    + getAvailableVehicles(category: Category, range: TimeRange): std::vector<std::shared_ptr<Vehicle>>
-}
 note bottom of VehicleManager
-  registerVehicle - Dodaje nowy pojazd do floty
-  unregisterVehicle - Usuwa pojazd z systemu, sprawdza czy do
-    pojazdu nie są przypisane jazdy
-  findVehicles - Wyszukuje pojazdy spełniające kryteria
-  findAllVehicles - Zwraca wszystkie pojazdy w centrum
-  getAvailableVehicles - Zwraca listę pojazdów danej kategorii, które nie
-    mają w danym czasie przypisanej żadnej sesji w DrivingSessionManager
+  registerVehicle - wprowadza nowy pojazd do floty szkoły jazdy
+  unregisterVehicle - wycofuje pojazd (wymaga braku powiązanych sesji)
 end note
-
-CourseManager ..> Course
-CourseManager ..> CoursePredicate
-
-StudentManager ..> Student
-StudentManager ..> StudentPredicate
-
-InstructorManager ..> Instructor
-InstructorManager ..> InstructorPredicate
-
-DrivingSessionManager ..> DrivingSession
-DrivingSessionManager ..> DrivingSessionPredicate
-
-VehicleManager ..> Vehicle
-VehicleManager ..> VehiclePredicate
 
 @enduml
