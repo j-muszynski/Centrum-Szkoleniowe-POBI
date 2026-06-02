@@ -4,19 +4,38 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <boost/date_time/gregorian/gregorian.hpp>
 #include "model/Address.h"
 #include "model/Category.h"
 
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+//#include <boost/date_time/gregorian/greg_serialize.hpp>
+#include <boost/date_time/gregorian/gregorian.hpp>
+
 class Person {
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, [[maybe_unused]] const unsigned int version) {
+        ar & id;
+        ar & firstName;
+        ar & lastName;
+        ar & pesel;
+        ar & birthDate;
+        ar & address;
+    }
 private:
-    int id;
+    int id = -1;
     std::string firstName;
     std::string lastName;             // Imie nazwisko
-    const std::string pesel;          // Pesel
+    std::string pesel;          // Pesel (usunieto const bo nie dzialalo wtedy zapisywanie do pliku)
     boost::gregorian::date birthDate; // Data urodzenia
     std::shared_ptr<Address> address; // Adres
     std::vector<Category> licenses;   // Jakie prawko już ma
+
+protected:
+    Person() = default;
 
 public:
     Person(int id, const std::string& firstName, const std::string& lastName,

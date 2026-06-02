@@ -1,17 +1,27 @@
 @startuml
 skinparam classAttributeIconSize 0
 
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+
 !include model/entities.puml
 !include model/person.puml
 !include model/vehicle.puml
 
-Person "1" *-r-> "1 address" Address : contains >
 
-Course "1" --> "1 instructor" Instructor : taught by >
-Course "1" --> "1 student" Student : attended by >
+"Typy Wyliczeniowe (Enums)" -[hidden]down-> "Użytkownicy i Role (Users & Roles)"
 
-DrivingSession "0..*" --> "1 instructor" Instructor : conducted by >
-DrivingSession "0..*" --> "1 student" Student : attended by >
-DrivingSession "0..*" --> "1 vehicle" Vehicle : uses >
+Person "1" -left-> "1" Address : has >
+
+Course "1" -down-> "1" Instructor : taught by >
+Course "1" -down-> "1" Student : attended by >
+
+
+DrivingSession "0..*" -up-> "1" Instructor : conducted by >
+DrivingSession "0..*" -up-> "1" Student : attended by >
+
+
+DrivingSession "0..*" -right-> "1" Vehicle : uses >
 
 @enduml

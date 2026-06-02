@@ -38,6 +38,8 @@ public:
     const std::string& getStatus() const;
 
     void setStatus(const std::string& status);
+
+    std::string getInfo();
 };
 
 #endif

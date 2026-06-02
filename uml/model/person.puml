@@ -1,32 +1,49 @@
 @startuml
 skinparam classAttributeIconSize 0
-abstract class Person {
-    - id: int
-    - firstName: std::string
-    - lastName: std::string
-    - pesel: const std::string
-    - birthDate: boost::gregorian::date
-    - address: Address*
-    - licenses: std::vector<Category>
+
+package "Typy Wyliczeniowe (Enums)" {
+    enum Category <<enumeration>>
 }
 
-class Instructor {
-    - qualifications: std::vector<Category>
-}
-note bottom of Instructor
- Lista kategorii, których instruktor może nauczać
-end note
+package "Użytkownicy i Role (Users & Roles)" {
+    abstract class Person {
+        - id: int
+        - firstName: std::string
+        - lastName: std::string
+        - pesel: const std::string
+        - birthDate: boost::gregorian::date
+        - licenses: std::vector<Category>
+    }
 
-class Student {
-    - pkkNumber: std::string
-    - isReadyForExam: bool
+    class Instructor {
+        - qualifications: std::vector<Category>
+    }
+    note bottom of Instructor
+      Lista kategorii, których instruktor może nauczać
+    end note
+
+    class Student {
+        - pkkNumber: std::string
+        - isReadyForExam: bool
+    }
+    note bottom of Student
+      pkkNumber - Numer Profilu Kandydata na Kierowcę.
+      isReadyForExam - Czy wyjechał wymaganą liczbę godzin
+    end note
 }
-note bottom of Student
-  pkkNumber - Numer Profilu Kandydata na Kierowcę.
-  isReadyForExam -  Czy wyjechał wymaganą liczbę godzin
-end note
+
+package "Dane Wspólne (Common Data)" {
+    class Address {
+        - city: std::string
+        - street: std::string
+        - number: std::string
+    }
+}
 
 Person <|-- Instructor
 Person <|-- Student
+
+Person "1" -right-> "1" Address : has >
+Person ..> Category : <<uses>>
 
 @enduml

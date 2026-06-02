@@ -1,40 +1,35 @@
 @startuml
 skinparam classAttributeIconSize 0
 
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 60
+
 !include model/entities.puml
 !include model/person.puml
 !include model/vehicle.puml
 !include model/repositories.puml
 !include model/managers.puml
 
-Person <|-d- Instructor
-Person <|-d- Student
 
-Vehicle <|-d- Motorcycle
-Vehicle <|-d- HeavyVehicle
-Vehicle <|-d- PassengerCar
-HeavyVehicle <|-d- Truck
-HeavyVehicle <|-d- Bus
+"Typy Wyliczeniowe (Enums)" -[hidden]down-> "Użytkownicy i Role (Users & Roles)"
+"Użytkownicy i Role (Users & Roles)" -[hidden]down-> "Warstwa Logiki Biznesowej (BLL)"
+"Warstwa Logiki Biznesowej (BLL)" -[hidden]down-> "Warstwa Składowania Danych (DAL)"
 
-Person "1" *-r-> "1 address" Address : contains >
+Person "1" -left-> "1" Address : has >
 
-Course "1" --> "1 instructor" Instructor : taught by >
-Course "1" --> "1 student" Student : attended by >
+Course "1" -down-> "1" Instructor : taught by >
+Course "1" -down-> "1" Student : attended by >
 
-DrivingSession "0..*" --> "1 instructor" Instructor : conducted by >
-DrivingSession "0..*" --> "1 student" Student : attended by >
-DrivingSession "0..*" --> "1 vehicle" Vehicle : uses >
+DrivingSession "0..*" -up-> "1" Instructor : conducted by >
+DrivingSession "0..*" -up-> "1" Student : attended by >
 
-CourseRepository "1" *-- "0..* courses" Course : manages >
-VehicleRepository "1" *-- "0..* vehicles" Vehicle : manages >
-StudentRepository "1" *-- "0..* students" Student : manages >
-InstructorRepository "1" *-- "0..* instructors" Instructor : manages >
-DrivingSessionRepository "1" *-- "0..* sessions" DrivingSession : manages >
+DrivingSession "0..*" -right-> "1" Vehicle : uses >
 
-CourseManager "1" o-d-> "1" CourseRepository : uses >
-VehicleManager "1" o-d-> "1" VehicleRepository : uses >
-StudentManager "1" o-d-> "1" StudentRepository : uses >
-InstructorManager "1" o-d-> "1" InstructorRepository : uses >
-DrivingSessionManager "1" o-d-> "1" DrivingSessionRepository : uses >
+CourseManager "1" --> "1" IRepository : uses >
+VehicleManager "1" --> "1" IRepository : uses >
+StudentManager "1" --> "1" IRepository : uses >
+InstructorManager "1" --> "1" IRepository : uses >
+DrivingSessionManager "1" --> "1" IRepository : uses >
 
 @enduml
