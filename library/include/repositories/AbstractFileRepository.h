@@ -18,16 +18,16 @@
  */
 template <typename T>
 class AbstractFileRepository : public IRepository<T> {
+protected:
+    std::string filePath; ///< Target file system path for data operations.
+    std::vector<T> repo; ///< In-memory storage container holding the active dataset.
+
 private:
     /**
      * @brief Reference to the interface.
      * @details Implements the "uses" relation from the UML specification by delegating save/load actions.
      */
     IDataStorage<T>& storage;
-
-protected:
-    std::string filePath; ///< Target file system path for data operations.
-    std::vector<T> repo; ///< In-memory storage container holding the active dataset.
 
 public:
     /**
@@ -106,7 +106,7 @@ public:
      * @brief Computes the total quantity of entities currently loaded into memory.
      * @return Integer count representation of the collection size.
      */
-    int getSize() const override {
+    [[nodiscard]] int getSize() const override {
         return static_cast<int>(repo.size());
     }
 
