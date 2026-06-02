@@ -1,33 +1,11 @@
 #pragma once
+#include "AbstractFileRepository.h"
+#include "model/Course.h"
 
 #include "typedefs.h"
-#include <fstream>
-#include <vector>
 
-class CourseRepository{
-private:
-    std::vector<CoursePtr> courseRepo;
-
+class CourseRepository : public AbstractFileRepository<CoursePtr> {
 public:
-    CourseRepository() = default;
-
-    [[nodiscard]] CoursePtr getCourse(int id) const;
-
-    [[nodiscard]] int getSize() const;
-
-    void addCourse(const CoursePtr& newCourse);
-
-    void removeCourse(int id);
-
-    [[nodiscard]] std::string reportCourses() const;
-
-    static bool alwaysTrue(const CoursePtr& course);
-
-    [[nodiscard]] std::vector<CoursePtr> findBy(const CoursePredicate& predicate) const;
-
-    [[nodiscard]] std::vector<CoursePtr> findAll() const;
-
-    [[nodiscard]] bool saveData();
-
-    [[nodiscard]] bool loadData();
+    CourseRepository(const std::string& filePath, IDataStorage<CoursePtr>& storage);
+    std::string reportCourses() const;
 };
