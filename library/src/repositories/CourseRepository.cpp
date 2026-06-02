@@ -1,7 +1,6 @@
 #include "repositories/CourseRepository.h"
 #include "model/Course.h"
 #include "model/Student.h"
-#include "model/Instructor.h"
 #include <fstream>
 
 #include <boost/date_time/gregorian/gregorian.hpp>
@@ -71,7 +70,6 @@ bool CourseRepository::saveData() {
     }
 }
 
-// logic yet to come
 bool CourseRepository::loadData() {
     try {
         // opening a file with data to load
@@ -89,6 +87,14 @@ bool CourseRepository::loadData() {
         // catching exceptions
         std::cerr << "Błąd podczas wczytywania repozytorium: " << e.what() << std::endl;
         return false;
+    }
+}
+
+void CourseRepository::removeCourse(int id) {
+    if (courseRepo.empty()) return;
+
+    if (id >= 0 && id < getSize()) {
+        courseRepo.erase(std::remove(courseRepo.begin(), courseRepo.end(), courseRepo[id]), courseRepo.end());
     }
 }
 
