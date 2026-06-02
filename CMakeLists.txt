@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.20)
 
+enable_testing()
+
 # 1. Konfiguracja pod maca
 if(APPLE AND EXISTS "/opt/homebrew")
     set(CMAKE_PREFIX_PATH "/opt/homebrew")
     set(Boost_ROOT "/opt/homebrew")
-    set(Boost_USE_STATIC_LIBS ON)       # Wymuszenie bezpiecznych plikow .a zamiast .dylib
+    #set(Boost_USE_STATIC_LIBS OFF)       # Wymuszenie bezpiecznych plikow .a zamiast .dylib
     set(Boost_USE_MULTITHREADED ON)
 endif()
 
@@ -30,4 +32,3 @@ endif()
 add_subdirectory(library)
 add_subdirectory(program)
 
-enable_testing()
