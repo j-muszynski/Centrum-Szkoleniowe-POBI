@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(Test_Save_And_Load_Real_File) {
     // saving data to disk
     storage.save(dataToSend);
 
-    // Use BOOST_TEST with .requirement() to halt the test immediately if the file cannot be opened.
+    // Using BOOST_REQUIRE to check whether
     std::ifstream checkFile(testFilename);
     BOOST_REQUIRE(checkFile.good() == true);
     checkFile.close();

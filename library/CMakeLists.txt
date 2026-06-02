@@ -9,7 +9,7 @@
             # ------ Header files ------
             include/repositories/IRepository.h
             include/repositories/CourseRepository.h
-            include/repositories/DrvingSessionRepository.h
+            include/repositories/DrivingSessionRepository.h
             include/repositories/InstructorRepository.h
             include/repositories/StudentRepository.h
             include/repositories/VehicleRepository.h
@@ -32,7 +32,7 @@
             src/model/Course.cpp
             src/model/DrivingSession.cpp
             src/repositories/CourseRepository.cpp
-            src/repositories/DrvingSessionRepository.cpp
+            src/repositories/DrivingSessionRepository.cpp
             src/repositories/InstructorRepository.cpp
             src/repositories/StudentRepository.cpp
             src/repositories/VehicleRepository.cpp

@@ -1,4 +1,4 @@
-#include "repositories/DrvingSessionRepository.h"
+#include "repositories/DrivingSessionRepository.h"
 
 DrivingSessionRepository::DrivingSessionRepository(const std::string& filePath, IDataStorage<DrivingSessionPtr>& storage)
     : AbstractFileRepository<DrivingSessionPtr>(filePath, storage) {}
