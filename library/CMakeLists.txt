@@ -2,6 +2,19 @@ cmake_minimum_required(VERSION 3.20)
 project(Library)
 
 set(SOURCE_FILES
+        # ------ Header files ------
+        include/repositories/IRepository.h
+        include/repositories/CourseRepository.h
+        include/repositories/DrvingSessionRepository.h
+        include/repositories/InstructorRepository.h
+        include/repositories/StudentRepository.h
+        include/repositories/VehicleRepository.h
+        include/repositories/IDataStorage.h
+        include/repositories/AbstractFileRepository.h
+        include/repositories/FileStorage.h
+        include/typedefs.h
+
+        # ------ Source files ------
         src/model/Address.cpp
         src/model/Vehicle.cpp
         src/model/PassengerCar.cpp
@@ -32,7 +45,8 @@ target_link_libraries(Library PUBLIC
 )
 
 # Konfiguracja testera
-set(SOURCE_TEST_FILES test/master.cpp)
+set(SOURCE_TEST_FILES test/master.cpp
+        test/IRepositoryTest.cpp)
 add_executable(LibraryTester ${SOURCE_TEST_FILES})
 
 target_link_libraries(LibraryTester
