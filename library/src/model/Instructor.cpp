@@ -1,4 +1,7 @@
 #include "model/Instructor.h"
+#include <boost/serialization/export.hpp>
+#include <boost/date_time/gregorian/greg_serialize.hpp>
+BOOST_CLASS_EXPORT(Instructor)
 
 Instructor::Instructor(int id, const std::string& firstName, const std::string& lastName,
                        const std::string& pesel, const boost::gregorian::date& birthDate,
