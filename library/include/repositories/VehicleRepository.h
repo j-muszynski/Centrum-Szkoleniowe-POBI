@@ -27,5 +27,5 @@ public:
      * @brief Generates a text report of all vehicles in the repository.
      * @return A string containing detailed information about every vehicle.
      */
-    std::string reportVehicles() const;
+    [[nodiscard]] std::string reportVehicles() const;
 };
