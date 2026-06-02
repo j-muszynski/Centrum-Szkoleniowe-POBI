@@ -27,5 +27,5 @@ public:
      * @brief Generates a text report of all instructors in the repository.
      * @return A string containing detailed information about every instructor.
      */
-    std::string reportInstructors() const;
+    [[nodiscard]] std::string reportInstructors() const;
 };
