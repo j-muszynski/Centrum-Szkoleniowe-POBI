@@ -64,4 +64,10 @@ public:
      * @return The total item count.
      */
     [[nodiscard]] virtual int getSize() const = 0;
+
+    /**
+      * @brief virtual function which allows for getting unique id for repo classes.
+      * @return Integer that represents unique id number.
+      */
+    [[nodiscard]] virtual int getNextID() = 0;
 };
