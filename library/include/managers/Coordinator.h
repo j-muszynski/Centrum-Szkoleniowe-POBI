@@ -1,44 +1,22 @@
-#ifndef COORDINATOR_H
-#define COORDINATOR_H
+#pragma once
 
-#include <memory>
-#include <vector>
-#include <boost/date_time/posix_time/posix_time.hpp>
-
-class CourseManager;
-class StudentManager;
-class InstructorManager;
-class DrivingSessionManager;
-class VehicleManager;
-
-#include "model/Category.h"
-#include "model/Vehicle.h"
-#include "model/Instructor.h"
-#include "model/Student.h"
-#include "model/Course.h"
-#include "model/DrivingSession.h"
-
-struct TimeRange {
-    boost::posix_time::ptime startTime;
-    boost::posix_time::ptime endTime;
-};
+#include "managers/InstructorManager.h"
+#include "managers/StudentManager.h"
+#include "managers/DrivingSessionManager.h"
+#include "managers/VehicleManager.h"
+#include "managers/CourseManager.h"
 
 class Coordinator {
 private:
-    std::shared_ptr<CourseManager> courseManager;
-    std::shared_ptr<StudentManager> studentManager;
-    std::shared_ptr<InstructorManager> instructorManager;
-    std::shared_ptr<DrivingSessionManager> drivingSessionManager;
-    std::shared_ptr<VehicleManager> vehicleManager;
+    InstructorManager& instructorRepo;
+    StudentManager& studentRepo;
+    DrivingSession& drivingSessionRepo;
+    VehicleManager& vehicleRepo;
+    CourseManager& courseRepo;
 
 public:
-    Coordinator(std::shared_ptr<CourseManager> courseManager,
-                std::shared_ptr<StudentManager> studentManager,
-                std::shared_ptr<InstructorManager> instructorManager,
-                std::shared_ptr<DrivingSessionManager> drivingSessionManager,
-                std::shared_ptr<VehicleManager> vehicleManager);
-
-    ~Coordinator() = default;
+    Coordinator(InstructorManager& instructorRepo, StudentManager& studentRepo, DrivingSession& drivingSessionRepo,
+                VehicleManager& vehicleRepo, CourseManager& courseRepo);
 
     double calculateRevenue();
     double calculateTotalCourseCost(int courseId);
@@ -56,5 +34,3 @@ public:
     std::shared_ptr<Course> getCourseById(int id);
     std::shared_ptr<DrivingSession> getDrivingSessionById(int id);
 };
-
-#endif
