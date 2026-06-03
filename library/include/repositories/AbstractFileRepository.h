@@ -29,6 +29,9 @@ private:
      */
     IDataStorage<T>& storage;
 
+    /** @brief a variable which allows to give entity in repo unique id number */
+    int nextID = 0;
+
 public:
     /**
      * @brief Constructs the repository with a specified file destination and data storage interface.
@@ -108,6 +111,14 @@ public:
      */
     [[nodiscard]] int getSize() const override {
         return static_cast<int>(repo.size());
+    }
+
+    /**
+     * @brief helpful function which allows for getting unique id for repo classes.
+     * @return Integer that represents unique id number.
+     */
+    [[nodiscard]] int getNextID() override {
+        return ++nextID;
     }
 
     // ---- Delegation to IDataStorage ----
