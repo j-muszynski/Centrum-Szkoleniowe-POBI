@@ -54,3 +54,35 @@ public:
      * @return std::vector<InstructorPtr> List containing all instructors.
      */
     std::vector<InstructorPtr> findAllArchiveInstructors() const;
+
+    /**
+     * @brief Registers a new instructor in the repository using a generated unique ID.
+     * @param instructor Instructor shared_pointer, which will be registered into system.
+     */
+    void registerInstructor(InstructorPtr instructor);
+
+    /**
+     * @brief Unregisters instructor which is already in the repository.
+     * @param instructorID id of instructor which is currently in instructorRepo.
+     */
+    void unregisterInstructor(int instructorID);
+
+    /**
+    * @brief Allows for broadening instructors competence.
+    * @param instructorID id of instructor which is currently in instructorRepo.
+    * @param category category which given instructor will be able to start teaching.
+    */
+    void assignToCategory(int instructorID, Category category);
+
+    /**
+     * @brief Generates a text report of all instructors.
+     * @return std::string Formatted report string.
+     */
+    std::string getInstructorReport() const;
+
+    /**
+     * @brief Generates a text report of all archive instructors.
+     * @return std::string Formatted report string.
+     */
+    std::string getArchiveInstructorReport() const;
+};
