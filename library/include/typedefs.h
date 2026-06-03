@@ -26,5 +26,6 @@ typedef std::shared_ptr<const Vehicle> ConstVehiclePtr;
 
 typedef std::function<bool(VehiclePtr)> VehiclePredicate;
 typedef std::function<bool(InstructorPtr)> InstructorPredicate;
+typedef std::function<bool(StudentPtr)> StudentPredicate;
 typedef std::function<bool(CoursePtr)> CoursePredicate;
 typedef std::function<bool(DrivingSession)> DrivingSessionPredicate;
