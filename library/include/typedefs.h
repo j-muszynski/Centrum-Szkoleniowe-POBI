@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <memory> // dodane bo wywalalo bledy
 
 class Course;
@@ -28,4 +29,6 @@ typedef std::function<bool(VehiclePtr)> VehiclePredicate;
 typedef std::function<bool(InstructorPtr)> InstructorPredicate;
 typedef std::function<bool(StudentPtr)> StudentPredicate;
 typedef std::function<bool(CoursePtr)> CoursePredicate;
-typedef std::function<bool(DrivingSession)> DrivingSessionPredicate;
+typedef std::function<bool(DrivingSessionPtr)> DrivingSessionPredicate;
+
+using TimeRange = std::pair<boost::posix_time::ptime, boost::posix_time::ptime>;
