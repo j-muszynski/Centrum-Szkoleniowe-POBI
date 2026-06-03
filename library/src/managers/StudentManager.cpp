@@ -50,7 +50,7 @@ void StudentManager::updateExamStatus(int studentID) {
     StudentPtr student = v[0];
 
     student->setReadyForExam(true);
-    unregisterStudent(studentID); // student that finished his exam is supposed to be in archive repo
+    unregisterStudent(studentID); // student that finished his course is supposed to be in archive repo
 }
 
 std::string StudentManager::getStudentReport() const {
