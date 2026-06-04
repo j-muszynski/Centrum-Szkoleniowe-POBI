@@ -75,4 +75,18 @@ public:
      * @return std::string Formatted report containing details of each course.
      */
     std::string getArchiveCourseReport() const;
+
+    /**
+     * @brief Retrieves a course entity by its unique identifier from active repository.
+     * @param courseId The unique ID of the target course.
+     * @return CoursePtr A shared pointer to the Course object, or nullptr if not found.
+     */
+    CoursePtr getCourseById(int courseId) const;
+
+    /**
+     * @brief Retrieves a course entity by its unique identifier from archived repository.
+     * @param courseId The unique ID of the target course.
+     * @return CoursePtr A shared pointer to the Course object, or nullptr if not found.
+     */
+    CoursePtr getArchiveCourseById(int courseId) const;
 };

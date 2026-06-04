@@ -85,4 +85,18 @@ public:
      * @return std::string Formatted report string.
      */
     std::string getArchiveInstructorReport() const;
+
+    /**
+     * @brief Retrieves an instructor entity by its unique identifier.
+     * @param instructorId The unique ID of the target instructor.
+     * @return InstructorPtr A shared pointer to the Instructor object, or nullptr if not found.
+     */
+    InstructorPtr getInstructorById(int instructorId) const;
+
+    /**
+    * @brief Retrieves an archive instructor entity by its unique identifier.
+    * @param instructorId The unique ID of the target instructor.
+    * @return InstructorPtr A shared pointer to the Instructor object, or nullptr if not found.
+    */
+    InstructorPtr getArchiveInstructorById(int instructorId) const;
 };

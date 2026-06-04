@@ -86,4 +86,18 @@ public:
      * @return std::string Formatted report containing details of each drivingSession.
      */
     std::string getArchiveDrivingSessionReport() const;
+
+    /**
+     * @brief Retrieves a scheduled or currently lasting driving session entity by its unique identifier.
+     * @param sessionId The unique ID of the target driving session.
+     * @return DrivingSessionPtr A shared pointer to the DrivingSession object, or nullptr if not found.
+     */
+    DrivingSessionPtr getDrivingSessionById(int sessionId) const;
+
+    /**
+     * @brief Retrieves an archive driving session entity by its unique identifier.
+     * @param sessionId The unique ID of the target driving session.
+     * @return DrivingSessionPtr A shared pointer to the DrivingSession object, or nullptr if not found.
+     */
+    DrivingSessionPtr getArchiveDrivingSessionById(int sessionId) const;
 };

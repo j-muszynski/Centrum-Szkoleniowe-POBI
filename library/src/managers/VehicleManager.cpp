@@ -9,11 +9,9 @@ std::vector<VehiclePtr> VehicleManager::findVehicles(const VehiclePredicate& pre
     return vehicleRepo.findBy(predicate);
 }
 
-
 std::vector<VehiclePtr> VehicleManager::findAllVehicles() const {
     return vehicleRepo.findAll();
 }
-
 
 void VehicleManager::registerVehicle(VehiclePtr newVehicle) {
     if (newVehicle == nullptr) return;
@@ -36,5 +34,9 @@ std::string VehicleManager::getVehicleReport() const {
         }
     }
     return report;
+}
+
+VehiclePtr VehicleManager::getVehicleById(int vehicleId) const {
+    return vehicleRepo.getById(vehicleId);
 }
 
