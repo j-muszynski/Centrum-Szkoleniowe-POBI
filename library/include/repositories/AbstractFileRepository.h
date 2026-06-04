@@ -82,8 +82,8 @@ public:
     }
 
     /**
-     * @brief Removes a single item located at the given index position.
-     * @param id The vector positional index of the target element.
+     * @brief Removes a single item containing a matching unique identifier.
+     * @param id The id of object that will be removed.
      */
     void remove(int id) override {
         auto newEnd = std::remove_if(repo.begin(), repo.end(), [id](const T& item) {

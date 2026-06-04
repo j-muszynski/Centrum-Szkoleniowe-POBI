@@ -82,7 +82,7 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
 
     // if conflict appeared, session cannot be scheduled
     if (conflict == true) {
-        std::cout << "Sorry, no available dates. Plesase try different date\n";
+        std::cout << "Sorry, no available dates. Please try different date\n";
         return;
     }
 
@@ -103,9 +103,14 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
     drivingSessionRepo.add(newSession);
 }
 
-// logic yet to come
 void DrivingSessionManager::cancelSession(int drivingSessionID, Coordinator& coordinator) {
-    ;
+    auto drivingSessionPtr = coordinator.getDrivingSessionById(drivingSessionID); // such methods do not exist (yet)
+    if (drivingSessionPtr == nullptr) {
+        std::cout << "Such driving session does not exist in database!\n";
+        return;
+    }
+
+    drivingSessionRepo.remove(drivingSessionID);
 }
 
 std::string DrivingSessionManager::getDrivingSessionReport() const {
