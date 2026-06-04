@@ -25,10 +25,82 @@ std::vector<DrivingSessionPtr> DrivingSessionManager::findAllArchiveDrivingSessi
     return archiveDrivingSessionRepo.findAll();
 }
 
-// logic for scheduling REQUIRED
+/*
+ * exceptions later on
+ * add functionality to propose different vehicle or instructor
+ * should student, instructor and vehicle be checked for existence?
+ */
 void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructorID, int vehicleID, TimeRange timeRange,
                                                    Coordinator& coordinator) {
-    ;
+
+/*
+    // ---- Validation existence of entities ----
+    auto studentPtr = coordinator.getStudentById(studentID); // such methods do not exist (yet?)
+    auto instructorPtr = coordinator.getInstructorById(instructorID);
+    auto vehiclePtr = coordinator.getVehicleById(vehicleID);
+
+    // if one of pointers is nullptr -> abort scheduling
+    if (studentPtr == nullptr || instructorPtr == nullptr || vehiclePtr == nullptr) {
+        return;
+    }
+*/
+
+    // preparing time period
+    boost::posix_time::time_period requestedPeriod(timeRange.first, timeRange.second);
+
+    // getting all sessions to check for conflicts
+    const auto& allSessions = drivingSessionRepo.findAll();
+
+    bool conflict = false;
+    for (const auto& session : allSessions) {
+        if (session != nullptr && session->getStatus() != "Cancelled") {
+            // time period for current session (for loop session)
+            boost::posix_time::time_period sessionPeriod(session->getStartTime(), session->getEndTime());
+
+            // looking for conflicts
+            if (requestedPeriod.intersects(sessionPeriod)) {
+                // Instructor conflict
+                if (session->getInstructor()->getId() == instructorID) {
+                    std::cout << "Instructor is already booked for this time period.\n";
+                    conflict = true;
+                }
+
+                // Vehicle conflict
+                if (session->getVehicle()->getId() == vehicleID) {
+                    std::cout << "Vehicle is already booked for this time period.\n";
+                    conflict = true;
+                }
+
+                // student conflict
+                if (session->getStudent()->getId() == studentID) {
+                    std::cout << "Student already has a session scheduled for this time period.\n";
+                    conflict = true;
+                }
+            }
+        }
+    }
+
+    // if conflict appeared, session cannot be scheduled
+    if (conflict == true) {
+        std::cout << "Sorry, no available dates. Plesase try different date\n";
+        return;
+    }
+
+    // getting unique id for new driving session
+    int newSessionId = drivingSessionRepo.getNextID();
+
+    // Creating new DrivingSession object
+    auto newSession = std::make_shared<DrivingSession>(
+        newSessionId,
+        timeRange.first,
+        timeRange.second,
+        instructorPtr,
+        studentPtr,
+        vehiclePtr
+    );
+
+    // adding to repo
+    drivingSessionRepo.add(newSession);
 }
 
 // logic yet to come
