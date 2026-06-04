@@ -10,7 +10,10 @@ if(APPLE AND EXISTS "/opt/homebrew")
     set(Boost_USE_MULTITHREADED ON)
 endif()
 
-cmake_policy(SET CMP0167 NEW)
+if(POLICY CMP0167) #dodalem ifa bo mam starego cmake'a
+    cmake_policy(SET CMP0167 NEW)
+endif()
+
 project(CentrumSzkoleniowe LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -31,4 +34,3 @@ endif()
 # Rejestrujemy podprojekty
 add_subdirectory(library)
 add_subdirectory(program)
-
