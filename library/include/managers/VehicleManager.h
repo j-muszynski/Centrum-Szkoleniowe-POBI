@@ -49,4 +49,11 @@ public:
      * @return std::string Formatted report containing details of each vehicle.
      */
     std::string getVehicleReport() const;
+
+    /**
+     * @brief Retrieves a vehicle entity by its unique identifier.
+     * @param vehicleId The unique ID of the target vehicle.
+     * @return VehiclePtr A shared pointer to the Vehicle object, or nullptr if not found.
+     */
+    VehiclePtr getVehicleById(int vehicleId) const;
 };
