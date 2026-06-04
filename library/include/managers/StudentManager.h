@@ -83,4 +83,18 @@ public:
      * @return std::string Formatted report string.
      */
     std::string getArchiveStudentReport() const;
+
+    /**
+     * @brief Retrieves a student entity by its unique identifier.
+     * @param studentId The unique ID of the target student.
+     * @return StudentPtr A shared pointer to the Student object, or nullptr if not found.
+     */
+    StudentPtr getStudentById(int studentId) const;
+
+    /**
+     * @brief Retrieves an archive student entity by its unique identifier.
+     * @param studentId The unique ID of the target student.
+     * @return StudentPtr A shared pointer to the Student object, or nullptr if not found.
+     */
+    StudentPtr getArchiveStudentById(int studentId) const;
 };

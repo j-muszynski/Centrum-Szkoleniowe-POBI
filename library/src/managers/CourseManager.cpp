@@ -65,3 +65,11 @@ std::string CourseManager::getArchiveCourseReport() const {
     }
     return report;
 }
+
+CoursePtr CourseManager::getCourseById(int courseId) const {
+    return courseRepo.getById(courseId);
+}
+
+CoursePtr CourseManager::getArchiveCourseById(int courseId) const {
+    return archiveCourseRepo.getById(courseId);
+}

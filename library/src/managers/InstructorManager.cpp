@@ -28,26 +28,14 @@ void InstructorManager::registerInstructor(InstructorPtr instructor) {
 }
 
 void InstructorManager::unregisterInstructor(int instructorID) {
-    std::vector<InstructorPtr> v = findInstructors([instructorID](InstructorPtr ins) {
-        return ins->getId() == instructorID;
-    });
-
-    if (v.empty()) return;
-
-    InstructorPtr instructor = v[0];
+    InstructorPtr instructor = getInstructorById(instructorID);
 
     instructorRepo.remove(instructorID);
     archiveInstructorRepo.add(instructor);
 }
 
 void InstructorManager::assignToCategory(int instructorID, Category category) {
-    std::vector<InstructorPtr> v = findInstructors([instructorID](InstructorPtr ins) {
-        return ins->getId() == instructorID;
-    });
-
-    if (v.empty()) return;
-
-    InstructorPtr instructor = v[0];
+    InstructorPtr instructor = getInstructorById(instructorID);
 
     instructor->addQualification(category);
 }
@@ -82,4 +70,12 @@ std::string InstructorManager::getArchiveInstructorReport() const {
         }
     }
     return report;
+}
+
+InstructorPtr InstructorManager::getInstructorById(int instructorId) const {
+    return instructorRepo.getById(instructorId);
+}
+
+InstructorPtr InstructorManager::getArchiveInstructorById(int instructorId) const {
+    return archiveInstructorRepo.getById(instructorId);
 }

@@ -68,3 +68,11 @@ std::string DrivingSessionManager::getArchiveDrivingSessionReport() const {
     }
     return report;
 }
+
+DrivingSessionPtr DrivingSessionManager::getDrivingSessionById(int sessionId) const {
+    return drivingSessionRepo.getById(sessionId);
+}
+
+DrivingSessionPtr DrivingSessionManager::getArchiveDrivingSessionById(int sessionId) const {
+    return archiveDrivingSessionRepo.getById(sessionId);
+}
