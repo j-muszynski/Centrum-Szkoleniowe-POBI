@@ -6,15 +6,30 @@
 #include "model/Instructor.h"
 #include "model/Student.h"
 
+#include <boost/serialization/access.hpp>
+
+
 class Course {
 private:
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, [[maybe_unused]] const unsigned int version) {
+        ar & id;
+        ar & type;
+        ar & instructor;
+        ar & student;
+        ar & isFinished;
+        ar & price;
+    }
     int id;
     Category type; // Kategoria kursu
     std::shared_ptr<Instructor> instructor; // Wskaźnik na przypisanego instruktora prowadzącego
     std::shared_ptr<Student> student; // Na kursanta
     bool isFinished; // 1 = godziny wyjeżdżone 0 = wiadomo co
     double price;    // Cena
-
+protected:
+    Course() = default;
 public:
     Course(int id, Category type, std::shared_ptr<Instructor> instructor,
            std::shared_ptr<Student> student, double price);

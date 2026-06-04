@@ -1,13 +1,24 @@
 cmake_minimum_required(VERSION 3.20)
 project(Library)
 
-if(MSVC)
-    add_compile_options(/W4 /WX)
-else()
-    add_compile_options(-Wall -Wextra -Werror)
+if(NOT Boost_FOUND)
+    find_package(Boost REQUIRED COMPONENTS date_time serialization unit_test_framework)
 endif()
 
 set(SOURCE_FILES
+        # ------ Header files ------
+        include/repositories/IRepository.h
+        include/repositories/CourseRepository.h
+        include/repositories/DrivingSessionRepository.h
+        include/repositories/InstructorRepository.h
+        include/repositories/StudentRepository.h
+        include/repositories/VehicleRepository.h
+        include/repositories/IDataStorage.h
+        include/repositories/AbstractFileRepository.h
+        include/repositories/FileStorage.h
+        include/typedefs.h
+
+        # ------ Source files ------
         src/model/Address.cpp
         src/model/Vehicle.cpp
         src/model/PassengerCar.cpp
@@ -20,42 +31,54 @@ set(SOURCE_FILES
         src/model/Instructor.cpp
         src/model/Course.cpp
         src/model/DrivingSession.cpp
+        src/repositories/CourseRepository.cpp
+        src/repositories/DrivingSessionRepository.cpp
+        src/repositories/InstructorRepository.cpp
+        src/repositories/StudentRepository.cpp
+        src/repositories/VehicleRepository.cpp
 )
 
-add_library(Library ${SOURCE_FILES})
+add_library(Library STATIC ${SOURCE_FILES})
 
 target_include_directories(Library PUBLIC include)
 
-enable_testing()
+if (APPLE)
+    target_include_directories(Library PUBLIC "/opt/homebrew/include")
+endif ()
 
-find_package(Boost 1.80.0 COMPONENTS "unit_test_framework" "date_time" REQUIRED)
+target_link_libraries(Library PUBLIC Boost::date_time Boost::serialization)
 
-include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${Boost_INCLUDE_DIRS}
-)
-
-target_link_libraries(Library PUBLIC Boost::date_time)
+# Konfiguracja testera
 set(SOURCE_TEST_FILES
         test/master.cpp
-        # test/AddressTest.cpp tu bedzie reszta
+        test/AbstractFileRepositoryTest.cpp
+        test/FileStorageTest.cpp
+        test/AddressTest.cpp
+        test/PersonTest.cpp
+        test/VehicleTest.cpp
+        test/CourseAndSessionTest.cpp
 )
+
 add_executable(LibraryTester ${SOURCE_TEST_FILES})
 
-target_link_libraries(LibraryTester
+target_include_directories(LibraryTester PRIVATE
+        include
+)
+if(APPLE)
+    target_include_directories(LibraryTester PRIVATE "/opt/homebrew/include")
+endif()
+
+target_link_libraries(LibraryTester PRIVATE
         Library
         Boost::unit_test_framework
         Boost::date_time
+        Boost::serialization
 )
 
 add_test(LibraryTest LibraryTester
         --report_level=detailed
         --log_level=all
         --color_output=yes
-        src/test/AddressTest.cpp
-        src/test/PersonTest.cpp
-        src/test/VehicleTest.cpp
-        src/test/CourseAndSessionTest.cpp
 )
 
 add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1 BOOST_TEST_LOG_LEVEL=all

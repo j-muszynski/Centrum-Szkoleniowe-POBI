@@ -1,4 +1,8 @@
 #include "model/Student.h"
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/date_time/gregorian/greg_serialize.hpp>
+BOOST_CLASS_EXPORT(Student)
 
 Student::Student(int id, const std::string& firstName, const std::string& lastName,
                  const std::string& pesel, const boost::gregorian::date& birthDate,
@@ -7,9 +11,11 @@ Student::Student(int id, const std::string& firstName, const std::string& lastNa
       pkkNumber(pkkNumber), isReadyForExam(false) {} // Domyślnie uczeń nie jest gotowy na egzamin
 
 const std::string& Student::getPkkNumber() const { return pkkNumber; }
+
 bool Student::getIsReadyForExam() const { return isReadyForExam; }
 
-void Student::setPkkNumber(const std::string& pkkNumber) { this->pkkNumber = pkkNumber; }
+void Student::setPkkNumber(const std::string& newPkkNumber) { this->pkkNumber = newPkkNumber; }
+
 void Student::setReadyForExam(bool isReady) { isReadyForExam = isReady; }
 
 std::string Student::getInfo() const {
