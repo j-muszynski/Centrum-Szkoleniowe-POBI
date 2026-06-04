@@ -27,6 +27,7 @@ public:
     void setCategory(Category category);
 
     virtual std::string getVehicleInfo() const = 0;
+    virtual double getBaseHourlyCost() const = 0; // zgodnie z UML
 };
 
 #endif

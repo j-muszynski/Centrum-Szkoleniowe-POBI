@@ -16,6 +16,7 @@ public:
 
     double getCargoCapacity() const;
     std::string getVehicleInfo() const override;
+    double getBaseHourlyCost() const override; // zgodnie z UML
 };
 
 #endif

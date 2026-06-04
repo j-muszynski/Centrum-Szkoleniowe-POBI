@@ -15,6 +15,7 @@ public:
 
     double getGrossVehicleWeight() const;
     bool getHasTrailer() const;
+    double getBaseHourlyCost() const override = 0; // zgodnie z UML
 
 };
 

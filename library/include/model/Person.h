@@ -29,7 +29,7 @@ private:
     int id = -1;
     std::string firstName;
     std::string lastName;             // Imie nazwisko
-    std::string pesel;          // Pesel (usunieto const bo nie dzialalo wtedy zapisywanie do pliku)
+    const std::string pesel;          // Pesel
     boost::gregorian::date birthDate; // Data urodzenia
     std::shared_ptr<Address> address; // Adres
     std::vector<Category> licenses;   // Jakie prawko już ma
