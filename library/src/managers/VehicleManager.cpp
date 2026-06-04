@@ -1,4 +1,5 @@
 #include "managers/VehicleManager.h"
+#include "repositories/VehicleRepository.h"
 
 #include "model/Student.h"
 
@@ -20,20 +21,9 @@ void VehicleManager::registerVehicle(VehiclePtr newVehicle) {
 }
 
 std::string VehicleManager::getVehicleReport() const {
-    std::string report;
-    const auto& activeVehicles = vehicleRepo.findAll();
+    const auto& concreteRepo = dynamic_cast<const VehicleRepository&>(vehicleRepo);
 
-    if (activeVehicles.empty()) {
-        report += "No active vehicles found.\n";
-        return report;
-    }
-
-    for (const auto& vehicle : activeVehicles) {
-        if (vehicle != nullptr) {
-            report += vehicle->getVehicleInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteRepo.reportVehicles();
 }
 
 VehiclePtr VehicleManager::getVehicleById(int vehicleId) const {

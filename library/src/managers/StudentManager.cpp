@@ -1,4 +1,5 @@
 #include "managers/StudentManager.h"
+#include "repositories/StudentRepository.h"
 
 #include "model/Student.h"
 
@@ -42,36 +43,14 @@ void StudentManager::updateExamStatus(int studentID) {
 }
 
 std::string StudentManager::getStudentReport() const {
-    std::string report;
-    const auto& students = studentRepo.findAll();
+    const auto& concreteRepo = dynamic_cast<const StudentRepository&>(studentRepo);
 
-    if (students.empty()) {
-        report += "No students found.\n";
-        return report;
-    }
-
-    for (const auto& std : students) {
-        if (std != nullptr) {
-            report += std->getInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteRepo.reportStudents();
 }
 std::string StudentManager::getArchiveStudentReport() const {
-    std::string report;
-    const auto& students = archiveStudentRepo.findAll();
+    const auto& concreteRepo = dynamic_cast<const StudentRepository&>(archiveStudentRepo);
 
-    if (students.empty()) {
-        report += "No students found.\n";
-        return report;
-    }
-
-    for (const auto& std : students) {
-        if (std != nullptr) {
-            report += std->getInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteRepo.reportStudents();
 }
 
 StudentPtr StudentManager::getStudentById(int studentId) const {
