@@ -1,4 +1,5 @@
 #include "managers/DrivingSessionManager.h"
+#include "repositories/DrivingSessionRepository.h"
 
 #include "model/Student.h"
 
@@ -36,37 +37,15 @@ void DrivingSessionManager::cancelSession(int drivingSessionID, Coordinator& coo
 }
 
 std::string DrivingSessionManager::getDrivingSessionReport() const {
-    std::string report;
-    const auto& activeDrivingSessions = drivingSessionRepo.findAll();
+    const auto& concreteRepo = dynamic_cast<const DrivingSessionRepository&>(drivingSessionRepo);
 
-    if (activeDrivingSessions.empty()) {
-        report += "No active drivingSessions found.\n";
-        return report;
-    }
-
-    for (const auto& drivingSession : activeDrivingSessions) {
-        if (drivingSession != nullptr) {
-            report += drivingSession->getInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteRepo.reportDrivingSession();
 }
 
 std::string DrivingSessionManager::getArchiveDrivingSessionReport() const {
-    std::string report;
-    const auto& archivedDrivingSessions = archiveDrivingSessionRepo.findAll();
+    const auto& concreteRepo = dynamic_cast<const DrivingSessionRepository&>(archiveDrivingSessionRepo);
 
-    if (archivedDrivingSessions.empty()) {
-        report += "No archived drivingSessions found.\n";
-        return report;
-    }
-
-    for (const auto& drivingSession : archivedDrivingSessions) {
-        if (drivingSession != nullptr) {
-            report += drivingSession->getInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteRepo.reportDrivingSession();
 }
 
 DrivingSessionPtr DrivingSessionManager::getDrivingSessionById(int sessionId) const {
