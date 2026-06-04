@@ -86,9 +86,10 @@ public:
      * @param id The vector positional index of the target element.
      */
     void remove(int id) override {
-        if (id >= 0 && id < getSize()) {
-            repo.erase(std::remove(repo.begin(), repo.end(), repo[id]), repo.end());
-        }
+        auto newEnd = std::remove_if(repo.begin(), repo.end(), [id](const T& item) {
+            return item != nullptr && item->getId() == id;
+        });
+        repo.erase(newEnd, repo.end());
     }
 
     /**
