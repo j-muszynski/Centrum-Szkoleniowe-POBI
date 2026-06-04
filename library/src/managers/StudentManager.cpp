@@ -28,26 +28,14 @@ void StudentManager::registerStudent(StudentPtr student) {
 }
 
 void StudentManager::unregisterStudent(int studentID) {
-    std::vector<StudentPtr> v = findStudents([studentID](StudentPtr std) {
-        return std->getId() == studentID;
-    });
-
-    if (v.empty()) return;
-
-    StudentPtr student = v[0];
+    StudentPtr student = getStudentById(studentID);
 
     studentRepo.remove(studentID);
     archiveStudentRepo.add(student);
 }
 
 void StudentManager::updateExamStatus(int studentID) {
-    std::vector<StudentPtr> v = findStudents([studentID](StudentPtr std) {
-        return std->getId() == studentID;
-    });
-
-    if (v.empty()) return;
-
-    StudentPtr student = v[0];
+    StudentPtr student = getStudentById(studentID);
 
     student->setReadyForExam(true);
     unregisterStudent(studentID); // student that finished his course is supposed to be in archive repo
@@ -84,4 +72,12 @@ std::string StudentManager::getArchiveStudentReport() const {
         }
     }
     return report;
+}
+
+StudentPtr StudentManager::getStudentById(int studentId) const {
+    return studentRepo.getById(studentId);
+}
+
+StudentPtr StudentManager::getArchiveStudentById(int studentId) const {
+    return archiveStudentRepo.getById(studentId);
 }
