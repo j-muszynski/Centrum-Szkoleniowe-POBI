@@ -1,4 +1,5 @@
 #include "managers/CourseManager.h"
+#include "repositories/CourseRepository.h"
 
 #include "model/Student.h"
 
@@ -33,37 +34,16 @@ void CourseManager::registerCourse(StudentPtr studentPtr, InstructorPtr instruct
 }
 
 std::string CourseManager::getCourseReport() const {
-    std::string report;
-    const auto& activeCourses = courseRepo.findAll();
+    const auto& concreteRepo = dynamic_cast<const CourseRepository&>(courseRepo);
 
-    if (activeCourses.empty()) {
-        report += "No active courses found.\n";
-        return report;
-    }
-
-    for (const auto& course : activeCourses) {
-        if (course != nullptr) {
-            report += course->getCourseInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteRepo.reportCourses();
 }
 
 std::string CourseManager::getArchiveCourseReport() const {
-    std::string report;
-    const auto& archivedCourses = archiveCourseRepo.findAll();
+    // casting IRepository to concrete type to be able to use report method
+    const auto& concreteArchiveRepo = dynamic_cast<const CourseRepository&>(archiveCourseRepo);
 
-    if (archivedCourses.empty()) {
-        report += "No archived courses found.\n";
-        return report;
-    }
-
-    for (const auto& course : archivedCourses) {
-        if (course != nullptr) {
-            report += course->getCourseInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteArchiveRepo.reportCourses();
 }
 
 CoursePtr CourseManager::getCourseById(int courseId) const {

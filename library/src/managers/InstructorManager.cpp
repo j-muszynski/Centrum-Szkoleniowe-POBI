@@ -1,4 +1,5 @@
 #include "managers/InstructorManager.h"
+#include "repositories/InstructorRepository.h"
 
 #include "model/Instructor.h"
 
@@ -40,36 +41,14 @@ void InstructorManager::assignToCategory(int instructorID, Category category) {
     instructor->addQualification(category);
 }
 std::string InstructorManager::getInstructorReport() const {
-    std::string report;
-    const auto& instructors = instructorRepo.findAll();
+    const auto& concreteRepo = dynamic_cast<const InstructorRepository&>(instructorRepo);
 
-    if (instructors.empty()) {
-        report += "No instructors found.\n";
-        return report;
-    }
-
-    for (const auto& ins : instructors) {
-        if (ins != nullptr) {
-            report += ins->getInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteRepo.reportInstructors();
 }
 std::string InstructorManager::getArchiveInstructorReport() const {
-    std::string report;
-    const auto& instructors = archiveInstructorRepo.findAll();
+    const auto& concreteRepo = dynamic_cast<const InstructorRepository&>(archiveInstructorRepo);
 
-    if (instructors.empty()) {
-        report += "No instructors found.\n";
-        return report;
-    }
-
-    for (const auto& ins : instructors) {
-        if (ins != nullptr) {
-            report += ins->getInfo() + "\n";
-        }
-    }
-    return report;
+    return concreteRepo.reportInstructors();
 }
 
 InstructorPtr InstructorManager::getInstructorById(int instructorId) const {
