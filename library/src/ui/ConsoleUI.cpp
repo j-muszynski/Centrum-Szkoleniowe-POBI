@@ -145,11 +145,11 @@ void ConsoleUI::start() {
                 break;
             }
             }
-            case 6: {
-                // DO ZMIANY JAK DOSTANE MANAGERÓW
-                std::cout << "-> Lista wszystkich TRWAJACYCH kursow (symulacja):\n";
-                break;
-            }
+        case 6: {
+            std::cout << "-> Lista wszystkich TRWAJACYCH kursow:\n";
+            std::cout << coordinator.getCourseManager().getCourseReport();
+            break;
+        }
             case 7: {
                 // DO ZMIANY JAK DOSTANE MANAGERÓW
                 std::cout << "-> Lista wszystkich ZAKONCZONYCH kursow (symulacja):\n";
