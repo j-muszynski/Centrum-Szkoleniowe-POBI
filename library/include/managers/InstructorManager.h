@@ -62,7 +62,7 @@ public:
     void registerInstructor(InstructorPtr instructor);
 
     /**
-     * @brief Unregisters instructor which is already in the repository.
+     * @brief Unregisters instructor which is already in the repository (transfers the instructor to archive repo).
      * @param instructorID id of instructor which is currently in instructorRepo.
      */
     void unregisterInstructor(int instructorID);
