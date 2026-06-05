@@ -242,7 +242,7 @@ void ConsoleUI::start() {
                 std::cout << coordinator.getInstructorManager().getInstructorReport();
                 break;
             }
-            case 11: { // Do poprawy
+            case 11: {
                 int vehicleType;
                 std::string plateNumber;
 
@@ -254,18 +254,97 @@ void ConsoleUI::start() {
                 std::cout << "Wybierz (1-4): ";
                 std::cin >> vehicleType;
 
+                // Czy liczba i czy w przedziale 1-4
+                if (std::cin.fail() || vehicleType < 1 || vehicleType > 4) {
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Nieprawidlowy wybor! Musisz podac liczbe od 1 do 4.\n";
+                    break;
+                }
+
                 std::cout << "Podaj numer rejestracyjny: ";
-                std::cin >> plateNumber;
+                std::getline(std::cin >> std::ws, plateNumber);
 
-                // DO ZMIANY JAK DOSTANE MANAGERÓW
+                int nextId = 1;
+                auto allVehicles = coordinator.getVehicleManager().findAllVehicles();
+                if (!allVehicles.empty()) {
+                    for (const auto& v : allVehicles) {
+                        if (v != nullptr && v->getId() >= nextId) {
+                            nextId = v->getId() + 1;
+                        }
+                    }
+                }
+
+                VehiclePtr newVehicle = nullptr;
                 std::string typeName = "Nieznany pojazd";
-                if (vehicleType == 1) typeName = "Samochod osobowy";
-                else if (vehicleType == 2) typeName = "Motocykl";
-                else if (vehicleType == 3) typeName = "Ciezarowka";
-                else if (vehicleType == 4) typeName = "Autobus";
 
-                // DO ZMIANY JAK DOSTANE MANAGERÓW
-                std::cout << "-> Dodano nowy " << typeName << " o rejestracji [" << plateNumber << "] do floty (symulacja).\n";
+                if (vehicleType == 1) {
+                    newVehicle = std::make_shared<PassengerCar>(nextId, plateNumber);
+                    typeName = "Samochod osobowy";
+                }
+                else if (vehicleType == 2) {
+                    int engineCapacity;
+                    double power;
+
+                    std::cout << "Podaj pojemnosc silnika (cm3): ";
+                    std::cin >> engineCapacity;
+                    if (std::cin.fail()) {
+                        std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        std::cout << "[BLAD] Pojemnosc silnika musi byc liczba!\n"; break;
+                    }
+
+                    std::cout << "Podaj moc (kW): ";
+                    std::cin >> power;
+                    if (std::cin.fail()) {
+                        std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        std::cout << "[BLAD] Moc musi byc liczba!\n"; break;
+                    }
+
+                    newVehicle = std::make_shared<Motorcycle>(nextId, plateNumber, engineCapacity, power);
+                    typeName = "Motocykl";
+                }
+                else if (vehicleType == 3) {
+                    double cargoCapacity;
+                    char trailerChoice;
+
+                    std::cout << "Podaj ladownosc (kg): ";
+                    std::cin >> cargoCapacity;
+                    if (std::cin.fail()) {
+                        std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        std::cout << "[BLAD] Ladownosc musi byc liczba!\n"; break;
+                    }
+
+                    std::cout << "Czy posiada przyczepe? (T/N): ";
+                    std::cin >> trailerChoice;
+                    bool hasTrailer = (trailerChoice == 'T' || trailerChoice == 't');
+
+                    newVehicle = std::make_shared<Truck>(nextId, plateNumber, 12000, hasTrailer, cargoCapacity);
+                    typeName = "Ciezarowka";
+                }
+                else if (vehicleType == 4) {
+                    int seats;
+                    char trailerChoice;
+
+                    std::cout << "Podaj liczbe miejsc: ";
+                    std::cin >> seats;
+                    if (std::cin.fail()) {
+                        std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        std::cout << "[BLAD] Liczba miejsc musi byc liczba calkowita!\n"; break;
+                    }
+
+                    std::cout << "Czy posiada przyczepe? (T/N): ";
+                    std::cin >> trailerChoice;
+                    bool hasTrailer = (trailerChoice == 'T' || trailerChoice == 't');
+
+                    newVehicle = std::make_shared<Bus>(nextId, plateNumber, 15000, hasTrailer, seats);
+                    typeName = "Autobus";
+                }
+
+                // Zapis
+                if (newVehicle != nullptr) {
+                    coordinator.getVehicleManager().registerVehicle(newVehicle);
+                    std::cout << "-> Dodano nowy " << typeName << " (ID: " << nextId << ") o rejestracji [" << plateNumber << "] do floty.\n";
+                }
                 break;
             }
             case 12: {
