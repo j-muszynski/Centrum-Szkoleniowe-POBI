@@ -42,7 +42,7 @@ public:
      * @brief Registers and creates a new vehicle session in the  repository.
      * @param newVehicle Pointer to vehicle which will be registered.
      */
-    void registerVehicle(VehiclePtr newVehicle);
+    void registerVehicle(const VehiclePtr& newVehicle);
 
     /**
      * @brief Generates a text report of all managed vehicles.

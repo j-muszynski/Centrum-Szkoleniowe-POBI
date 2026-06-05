@@ -14,7 +14,7 @@ std::vector<VehiclePtr> VehicleManager::findAllVehicles() const {
     return vehicleRepo.findAll();
 }
 
-void VehicleManager::registerVehicle(VehiclePtr newVehicle) {
+void VehicleManager::registerVehicle(const VehiclePtr& newVehicle) {
     if (newVehicle == nullptr) return;
 
     vehicleRepo.add(newVehicle);
