@@ -208,8 +208,8 @@ void ConsoleUI::start() {
                 break;
             }
             case 10: {
-                // DO ZMIANY JAK DOSTANE MANAGERÓW
-                std::cout << "-> Baza aktywnych instruktorow (symulacja):\n";
+                std::cout << "-> Baza aktywnych instruktorow:\n";
+                std::cout << coordinator.getInstructorManager().getInstructorReport();
                 break;
             }
         case 11: {
