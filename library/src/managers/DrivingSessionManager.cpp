@@ -31,6 +31,23 @@ std::vector<DrivingSessionPtr> DrivingSessionManager::findAllArchiveDrivingSessi
  */
 void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructorID, int vehicleID, TimeRange timeRange,
                                                    Coordinator& coordinator) {
+    if (timeRange.first >= timeRange.second) return;
+
+    boost::posix_time::time_duration duration = timeRange.second - timeRange.first;
+
+    // checking if session will be at least an hour long
+    if (duration.hours() < 1) {
+        std::cout << "Error: Driving session cannot be shorter than 1 hour (60 minutes).\n";
+        return;
+    }
+
+    // checking if session will be shorter than 8h
+    if (duration.hours() > 8) {
+        std::cout << "Error: Driving session cannot be longer than 8 hours!.\n";
+        return;
+    }
+
+
     // ---- Validation existence of entities ----
     auto studentPtr = coordinator.getStudentById(studentID); // such methods do not exist (yet?)
     auto instructorPtr = coordinator.getInstructorById(instructorID);
@@ -85,6 +102,8 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
     // getting unique id for new driving session
     int newSessionId = drivingSessionRepo.getNextID();
     int courseID = coordinator.getCourseIDByStudentID(studentID);
+
+    if (courseID == -1) return;
 
     // Creating new DrivingSession object
     auto newSession = std::make_shared<DrivingSession>(
