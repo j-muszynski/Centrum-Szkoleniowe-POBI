@@ -19,6 +19,8 @@
             include/typedefs.h
 
             # ------ Source files ------
+
+            # --- model ---
             src/model/Address.cpp
             src/model/Vehicle.cpp
             src/model/PassengerCar.cpp
@@ -31,11 +33,19 @@
             src/model/Instructor.cpp
             src/model/Course.cpp
             src/model/DrivingSession.cpp
+            # --- repo ---
             src/repositories/CourseRepository.cpp
             src/repositories/DrivingSessionRepository.cpp
             src/repositories/InstructorRepository.cpp
             src/repositories/StudentRepository.cpp
             src/repositories/VehicleRepository.cpp
+            # --- managers ---
+            src/managers/VehicleManager.cpp
+            src/managers/StudentManager.cpp
+            src/managers/InstructorManager.cpp
+            src/managers/DrivingSessionManager.cpp
+            src/managers/CourseManager.cpp
+            src/managers/Coordinator.cpp
     )
 
     add_library(Library STATIC ${SOURCE_FILES})
@@ -55,7 +65,12 @@
     # Konfiguracja testera
     set(SOURCE_TEST_FILES test/master.cpp
             test/AbstractFileRepositoryTest.cpp
-            test/FileStorageTest.cpp)
+            test/FileStorageTest.cpp
+            test/CourseManagerTest.cpp
+            test/DrivingSessionManagerTest.cpp
+            test/InstructorManagerTest.cpp
+            test/StudentManagerTest.cpp
+            test/VehicleManagerTest.cpp)
 
     add_executable(LibraryTester ${SOURCE_TEST_FILES})
 
