@@ -185,8 +185,26 @@ void ConsoleUI::start() {
                 int courseId;
                 std::cout << "Podaj ID kursu do zakonczenia: ";
                 std::cin >> courseId;
-                coordinator.completeCourse(courseId);
-                std::cout << "-> Zlecono zakonczenie kursu o ID: " << courseId << "\n";
+
+                // Czy liczba
+                if (std::cin.fail()) {
+                    std::cin.clear(); // Czyścimy flagę błędu
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Wyrzucamy śmieci z bufora
+                    std::cout << "[BLAD] ID kursu musi byc liczba!\n";
+                    break; // Wychodzimy z tego case'a
+                }
+
+                // Czy jest w bazie
+                auto course = coordinator.getCourseById(courseId);
+
+                if (course == nullptr) {
+                    // Nie ma = blad
+                    std::cout << "[BLAD] Nie znaleziono kursu o ID: " << courseId << " w systemie.\n";
+                } else {
+                    // Jest = usuwamy
+                    coordinator.completeCourse(courseId);
+                    std::cout << "-> Zmieniono status kursu o ID: " << courseId << " na zakonczony.\n";
+                }
                 break;
             }
             case 10: {
