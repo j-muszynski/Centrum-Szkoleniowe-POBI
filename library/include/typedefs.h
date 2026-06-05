@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <memory> // dodane bo wywalalo bledy
 
 class Course;
 class DrivingSession;
