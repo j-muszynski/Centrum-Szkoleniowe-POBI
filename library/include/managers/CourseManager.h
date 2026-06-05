@@ -62,7 +62,7 @@ public:
      * @param instructor Pointer to instructor that is suppose to lead the student through the driving journey.
      * @param category The driving license category type for the course.
      */
-    void registerCourse(StudentPtr student, InstructorPtr instructor, Category category);
+    void registerCourse(const StudentPtr& student, const InstructorPtr& instructor, Category category);
 
     /**
      * @brief Generates a text report of all managed courses.
