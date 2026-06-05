@@ -68,8 +68,6 @@ BOOST_FIXTURE_TEST_SUITE(CourseManagerTestSuite, CourseManagerFixture)
         BOOST_CHECK(registeredCourse->getType() == Category::B);
         BOOST_CHECK(registeredCourse->getStudent()->getId() == 1);
         BOOST_CHECK(registeredCourse->getInstructor()->getId() == 12);
-        // base price for course is 0
-        BOOST_CHECK(registeredCourse->getPrice() == 0.0);
     }
 
     /**

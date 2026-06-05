@@ -9,6 +9,7 @@ public:
     ~PassengerCar() override = default;
 
     std::string getVehicleInfo() const override;
+    double getBaseHourlyCost() const override; // zgodnie z UML
 };
 
 #endif

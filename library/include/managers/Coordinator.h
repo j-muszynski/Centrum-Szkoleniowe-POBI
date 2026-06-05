@@ -1,36 +1,41 @@
 #pragma once
 
-#include "managers/InstructorManager.h"
-#include "managers/StudentManager.h"
-#include "managers/DrivingSessionManager.h"
-#include "managers/VehicleManager.h"
-#include "managers/CourseManager.h"
+#include "typedefs.h"
+
+enum class Category;
+class InstructorManager;
+class StudentManager;
+class DrivingSessionManager;
+class VehicleManager;
+class CourseManager;
 
 class Coordinator {
 private:
-    InstructorManager& instructorRepo;
-    StudentManager& studentRepo;
-    DrivingSession& drivingSessionRepo;
-    VehicleManager& vehicleRepo;
-    CourseManager& courseRepo;
+    InstructorManager& instructorManager;
+    StudentManager& studentManager;
+    DrivingSessionManager& drivingSessionManager;
+    VehicleManager& vehicleManager;
+    CourseManager& courseManager;
 
 public:
-    Coordinator(InstructorManager& instructorRepo, StudentManager& studentRepo, DrivingSession& drivingSessionRepo,
-                VehicleManager& vehicleRepo, CourseManager& courseRepo);
+    Coordinator(InstructorManager& instructorManger, StudentManager& studentManager, DrivingSessionManager& drivingSessionManager,
+                VehicleManager& vehicleManger, CourseManager& courseManager);
 
     double calculateRevenue();
+    double calculateTotalCourseCost(int courseId);
+    void completeCourse(int courseId);
+    double checkStudentCourseBalance(int studentId);
+    double getTotalHoursForCourse(int courseId);
+    double getStudentHours(int studentId);
 
-    void completeCourse(int courseID);
+    std::vector<std::shared_ptr<Vehicle>> getAvailableVehicles(Category category, TimeRange range);
+    std::vector<std::shared_ptr<Instructor>> getAvailableInstructors(Category category, TimeRange range);
 
-    double checkStudentCourseBalance(int courseID);
+    StudentPtr getStudentById(int id);
+    InstructorPtr getInstructorById(int id);
+    VehiclePtr getVehicleById(int id);
+    CoursePtr getCourseById(int id);
+    DrivingSessionPtr getDrivingSessionById(int id);
 
-    double getTotalHoursForCourse(int courseID);
-
-    double getStudentHours(int studentID);
-
-    std::vector<VehiclePtr> getAvailableVehicles(Category category, TimeRange timeRange);
-
-    std::vector<InstructorPtr> getAvailableInstructors(Category category, TimeRange timeRange);
-
-
+    int getCourseIDByStudentID(int studentID);
 };

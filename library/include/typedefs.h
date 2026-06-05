@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <memory> // dodane bo wywalalo bledy
 
 class Course;
 class DrivingSession;

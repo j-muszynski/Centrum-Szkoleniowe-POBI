@@ -3,9 +3,12 @@ skinparam classAttributeIconSize 0
 
 package "Warstwa Składowania Danych (DAL)" {
 
-    interface IRepository<T> {
+    interface IDataStorage<T> {
         + save(data: std::vector<T>) : void
         + load() : std::vector<T>
+    }
+
+    interface IRepository<T> {
         + findAll() : std::vector<T>
         + findBy(predicate: Predicate<T>) : std::vector<T>
         + add(item: T) : void
@@ -16,9 +19,15 @@ package "Warstwa Składowania Danych (DAL)" {
 
     abstract class AbstractFileRepository<T> {
         # filePath : std::string
+        ' Referencja
+        - storage : IDataStorage<T>&
     }
 
     IRepository <|.. AbstractFileRepository
+
+    ' Agregacja, bo AbstractFileRepository posiada mechanizm zapisu,
+    ' ale go nie tworzy, nwm czy nie dac notki na UML zeby sie znowu nie czepil
+    AbstractFileRepository "1" o-right-> "1" IDataStorage : uses >
 
     class CourseRepository {
         + reportCourses(): std::string
@@ -45,8 +54,5 @@ package "Warstwa Składowania Danych (DAL)" {
     AbstractFileRepository <|-- InstructorRepository
     AbstractFileRepository <|-- StudentRepository
     AbstractFileRepository <|-- VehicleRepository
-
-    note "Klasy (np. CourseRepository, VehicleRepository itd.)\nw pełni implementują oraz nadpisują wszystkie metody\nczysto wirtualne zdefiniowane w interfejsie IRepository<T>\n(w tym operacje zapisu, odczytu oraz zarządzania kolekcją)." as DAL_Note
-    AbstractFileRepository .. DAL_Note
 }
 @enduml
