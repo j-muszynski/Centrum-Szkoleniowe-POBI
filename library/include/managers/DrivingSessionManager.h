@@ -100,4 +100,10 @@ public:
      * @return DrivingSessionPtr A shared pointer to the DrivingSession object, or nullptr if not found.
      */
     DrivingSessionPtr getArchiveDrivingSessionById(int sessionId) const;
+
+    /**
+     * @brief Marks a specific driving session as completed and transfers it to the archive.
+     * * @param drivingSessionID The unique identifier of the driving session to be completed.
+     */
+    void setDrivingSessionAsCompleted(int drivingSessionID);
 };

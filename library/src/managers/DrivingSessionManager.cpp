@@ -149,3 +149,12 @@ DrivingSessionPtr DrivingSessionManager::getDrivingSessionById(int sessionId) co
 DrivingSessionPtr DrivingSessionManager::getArchiveDrivingSessionById(int sessionId) const {
     return archiveDrivingSessionRepo.getById(sessionId);
 }
+
+void DrivingSessionManager::setDrivingSessionAsCompleted(int drivingSessionID) {
+    DrivingSessionPtr session = getDrivingSessionById(drivingSessionID);
+    if (session == nullptr) return;
+    session->setStatus("COMPLETED");
+
+    drivingSessionRepo.remove(drivingSessionID);
+    archiveDrivingSessionRepo.add(session);
+}
