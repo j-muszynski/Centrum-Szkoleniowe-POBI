@@ -160,8 +160,25 @@ void ConsoleUI::start() {
                 std::cout << "Podaj ID sesji jazd do odwolania: ";
                 std::cin >> sessionId;
 
-                // DO ZMIANY JAK DOSTANE MANAGERÓW
-                std::cout << "-> Jazda " << sessionId << " odwolana. Zasoby (Instruktor, Pojazd) zostaly zwolnione (symulacja).\n";
+                // Czy wpisano liczbe?
+                if (std::cin.fail()) {
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID sesji musi byc liczba!\n";
+                    break; // Wracamy do menu
+                }
+
+                // Czy jest w bazie?
+                auto session = coordinator.getDrivingSessionById(sessionId);
+
+                if (session == nullptr) {
+                    // Nie ma = blad
+                    std::cout << "[BLAD] Nie znaleziono sesji jazd o ID: " << sessionId << " w systemie.\n";
+                } else {
+                    // Jest = usuwamy
+                    coordinator.getDrivingSessionManager().cancelSession(sessionId, coordinator);
+                    std::cout << "-> Zlecono odwolanie jazdy o ID: " << sessionId << ".\n";
+                }
                 break;
             }
             case 9: {
