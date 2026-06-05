@@ -243,8 +243,26 @@ void ConsoleUI::start() {
                 std::cout << "Podaj ID pojazdu do wycofania z floty: ";
                 std::cin >> vehicleId;
 
-                // DO ZMIANY JAK DOSTANE MANAGERÓW
-                std::cout << "-> Pojazd " << vehicleId << " wycofany i usuniety ze stanu (symulacja).\n";
+                // Czy liczba
+                if (std::cin.fail()) {
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID pojazdu musi byc liczba!\n";
+                    break;
+                }
+
+                // Czy pojazd o takim ID istnieje bazie?
+                auto vehicle = coordinator.getVehicleById(vehicleId);
+
+                if (vehicle == nullptr) {
+                    // Nie = blad
+                    std::cout << "[BLAD] Nie znaleziono pojazdu o ID: " << vehicleId << " w systemie floty.\n";
+                } else {
+                    // Tak = usuwamy
+                    coordinator.getVehicleManager().unregisterVehicle(vehicleId);
+
+                    std::cout << "-> Wycofano pojazd o ID: " << vehicleId << " z aktywnej floty osrodka.\n";
+                }
                 break;
             }
             case 0: {

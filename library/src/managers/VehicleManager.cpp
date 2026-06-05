@@ -30,3 +30,9 @@ VehiclePtr VehicleManager::getVehicleById(int vehicleId) const {
     return vehicleRepo.getById(vehicleId);
 }
 
+void VehicleManager::unregisterVehicle(int vehicleId) {
+    VehiclePtr vehicle = getVehicleById(vehicleId);
+    if (vehicle != nullptr) {
+        vehicleRepo.remove(vehicleId);
+    }
+}

@@ -56,4 +56,5 @@ public:
      * @return VehiclePtr A shared pointer to the Vehicle object, or nullptr if not found.
      */
     VehiclePtr getVehicleById(int vehicleId) const;
+    void unregisterVehicle(int vehicleId);
 };
