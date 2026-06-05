@@ -58,7 +58,7 @@ public:
      * @brief Registers a new student in the repository using a generated unique ID.
      * @param student Student shared_pointer, which will be registered into system.
      */
-    void registerStudent(StudentPtr student);
+    void registerStudent(const StudentPtr& student);
 
     /**
      * @brief Unregisters student which is already in the repository.
