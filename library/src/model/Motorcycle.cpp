@@ -19,3 +19,6 @@ std::string Motorcycle::getVehicleInfo() const {
            ", Rejestracja: " + getPlateNumber() +
            ", Pojemnosc: " + std::to_string(engineCapacity) + "ccm]";
 }
+    double Motorcycle::getBaseHourlyCost() const {
+        return 60.0; // Przykładowa stawka dla motocykla
+}
