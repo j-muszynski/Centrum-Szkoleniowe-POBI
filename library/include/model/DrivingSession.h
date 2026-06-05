@@ -40,6 +40,7 @@ public:
     void setStatus(const std::string& status);
 
     std::string getInfo();
+    double getSessionCost() const; // zgodnie z UML
 };
 
 #endif

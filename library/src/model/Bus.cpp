@@ -20,3 +20,6 @@ std::string Bus::getVehicleInfo() const {
            ", Rejestracja: " + getPlateNumber() + 
            ", Miejsca: " + std::to_string(numberOfSeats) + "]";
 }
+    double Bus::getBaseHourlyCost() const {
+    return 180.0; // Stawka dla autobusu
+}
