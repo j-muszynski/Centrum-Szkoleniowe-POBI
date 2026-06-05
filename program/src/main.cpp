@@ -48,6 +48,11 @@ int main() {
     Coordinator coordinator(instructorManager, studentManager, sessionManager, vehicleManager, courseManager);
 
     ConsoleUI ui(coordinator);
+
+    auto inst = std::make_shared<Instructor>(1, "Jan", "Kowalski", "12345", boost::gregorian::date(1980,1,1), std::make_shared<Address>("Lodz","Wiosenna","1"));
+    inst->addQualification(Category::B);
+    instructorManager.registerInstructor(inst);
+
     ui.start();
 
     studentRepo.executeSave();
