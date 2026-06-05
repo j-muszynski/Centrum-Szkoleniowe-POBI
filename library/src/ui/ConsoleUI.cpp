@@ -3,6 +3,20 @@
 #include <limits>
 #include <string>
 
+static bool isDateValid(int year, int month, int day) {
+    if (year < 1900 || year > 2030) return false;
+    if (month < 1 || month > 12) return false;
+    if (day < 1) return false;
+
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+    if (month == 2 && ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))) {
+        daysInMonth[1] = 29;
+    }
+
+    return day <= daysInMonth[month - 1];
+}
+
 ConsoleUI::ConsoleUI(Coordinator& coordinator) : coordinator(coordinator) {}
 
 void ConsoleUI::displayMenu() {
@@ -15,16 +29,17 @@ void ConsoleUI::displayMenu() {
     std::cout << "--- ZARZADZANIE KURSANTAMI ---\n";
     std::cout << " 3. Zarejestruj nowego kursanta\n";
     std::cout << " 4. Sprawdz wyjezdzone godziny kursanta (po ID)\n";
-    std::cout << " 5. Wyswietl profil kursanta \n";
-    std::cout << "--- ZARZADZANIE KURSAMI I JAZDAMI ---\n";
-    std::cout << " 6. Wyswietl wszystkie trwajace kursy\n";
-    std::cout << " 7. Wyswietl wszystkie zakonczone kursy\n";
-    std::cout << " 8. Odwolaj jazde \n";
-    std::cout << " 9. Zmien status kursu na zakonczony (po ID)\n";
+    std::cout << " 5. Rozpocznij kurs \n";
+    std::cout << " 6. Zaplanuj jazdy \n";
+    std::cout << " 7. Wyswietl profil kursanta \n";
+    std::cout << " 8. Wyswietl wszystkie trwajace kursy\n";
+    std::cout << " 9. Wyswietl wszystkie zakonczone kursy\n";
+    std::cout << " 10. Odwolaj jazde \n";
+    std::cout << " 11. Zmien status kursu na zakonczony (po ID)\n";
     std::cout << "--- ZASOBY OSRODKA (POJAZDY I INSTRUKTORZY) ---\n";
-    std::cout << "10. Wyswietl baze aktywnych instruktorow\n";
-    std::cout << "11. Wprowadz nowy pojazd do floty\n";
-    std::cout << "12. Wycofaj pojazd z floty (po ID)\n";
+    std::cout << "12. Wyswietl baze aktywnych instruktorow\n";
+    std::cout << "13. Wprowadz nowy pojazd do floty\n";
+    std::cout << "14. Wycofaj pojazd z floty (po ID)\n";
     std::cout << "=======================================================\n";
     std::cout << " 0. Wyjdz z programu\n";
     std::cout << "Wybierz opcje: ";
@@ -106,11 +121,11 @@ void ConsoleUI::start() {
                     std::cout << "[BLAD] Miesiac musi byc liczba od 1 do 12!\n"; break;
                 }
 
-                std::cout << "Podaj dzien (1-31): ";
+                std::cout << "Podaj dzien (1-31, bez zera na poczatku): ";
                 std::cin >> day;
-                if (std::cin.fail() || day < 1 || day > 31) {
+                if (std::cin.fail() || !isDateValid(year, month, day)) {
                     std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    std::cout << "[BLAD] Dzien musi byc liczba od 1 do 31!\n"; break;
+                    std::cout << "[BLAD] Podana data jest nieprawidlowa w kalendarzu!\n"; break;
                 }
 
                 // Przypisujemy ID
@@ -154,6 +169,138 @@ void ConsoleUI::start() {
                 break;
             }
             case 5: {
+                int studentId, instructorId;
+                std::string catStr;
+
+                std::cout << "Podaj ID kursanta: ";
+                std::cin >> studentId;
+                if (std::cin.fail()) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID kursanta musi byc liczba!\n";
+                    break;
+                }
+
+                std::cout << "Podaj ID instruktora: ";
+                std::cin >> instructorId;
+                if (std::cin.fail()) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID instruktora musi byc liczba!\n";
+                    break;
+                }
+
+                std::cout << "Podaj kategorie (AM, A1, A2, A, B, BE, C, CE, D, DE): ";
+                std::cin >> catStr;
+
+                // Mapowanie stringa na Enum
+                Category cat;
+                if (catStr == "AM") cat = Category::AM;
+                else if (catStr == "A1") cat = Category::A1;
+                else if (catStr == "A2") cat = Category::A2;
+                else if (catStr == "A") cat = Category::A;
+                else if (catStr == "B") cat = Category::B;
+                else if (catStr == "BE") cat = Category::BE;
+                else if (catStr == "C") cat = Category::C;
+                else if (catStr == "CE") cat = Category::CE;
+                else if (catStr == "D") cat = Category::D;
+                else if (catStr == "DE") cat = Category::DE;
+                else {
+                    std::cout << "[BLAD] Podana kategoria (" << catStr << ") nie istnieje w systemie!\n";
+                    break;
+                }
+
+                try {
+                    StudentPtr student = coordinator.getStudentById(studentId);
+                    InstructorPtr instructor = coordinator.getInstructorById(instructorId);
+
+                    if (student != nullptr && instructor != nullptr) {
+                        coordinator.getCourseManager().registerCourse(student, instructor, cat);
+                        std::cout << "-> Kurs na kategorie " << catStr << " pomyslnie utworzony!\n";
+                    } else {
+                        std::cout << "[BLAD] Nie znaleziono kursanta lub instruktora o podanym ID.\n";
+                    }
+                } catch (const std::exception& e) {
+                    std::cout << "[BLAD] Nie udalo sie utworzyc kursu: " << e.what() << "\n";
+                }
+            break;
+        }
+            case 6: {
+                int studentId, instructorId, vehicleId;
+                int year, month, day, startHour, endHour;
+
+                std::cout << "Podaj ID kursanta: ";
+                std::cin >> studentId;
+                if (std::cin.fail()) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID musi byc liczba!\n"; break;
+                }
+
+                std::cout << "Podaj ID instruktora: ";
+                std::cin >> instructorId;
+                if (std::cin.fail()) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID musi byc liczba!\n"; break;
+                }
+
+                std::cout << "Podaj ID pojazdu: ";
+                std::cin >> vehicleId;
+                if (std::cin.fail()) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID musi byc liczba!\n"; break;
+                }
+
+                std::cout << "--- Data jazdy ---\n";
+                std::cout << "Podaj rok (np. 2026): ";
+                std::cin >> year;
+                if (std::cin.fail() || year < 2024 || year > 2030) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Nieprawidlowy rok!\n"; break;
+                }
+
+                std::cout << "Podaj miesiac (1-12, bez zera na poczatku): ";
+                std::cin >> month;
+                if (std::cin.fail() || month < 1 || month > 12) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Miesiac musi byc liczba od 1 do 12!\n"; break;
+                }
+
+                std::cout << "Podaj dzien (1-31, bez zera na poczatku): ";
+                std::cin >> day;
+                if (std::cin.fail() || !isDateValid(year, month, day)) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Podana data jest nieprawidlowa w kalendarzu!\n"; break;
+                }
+
+                std::cout << "--- Godziny jazdy ---\n";
+                std::cout << "Podaj godzine rozpoczecia (0-23): ";
+                std::cin >> startHour;
+                if (std::cin.fail() || startHour < 0 || startHour > 23) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Nieprawidlowa godzina rozpoczecia!\n"; break;
+                }
+
+                std::cout << "Podaj godzine zakonczenia (0-23): ";
+                std::cin >> endHour;
+                if (std::cin.fail() || endHour <= startHour || endHour > 23) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Godzina zakonczenia musi byc pozniejsza niz rozpoczecia (zakres 0-23)!\n"; break;
+                }
+
+                try {
+                    boost::gregorian::date sessionDate(year, month, day);
+                    boost::posix_time::ptime start(sessionDate, boost::posix_time::hours(startHour));
+                    boost::posix_time::ptime end(sessionDate, boost::posix_time::hours(endHour));
+                    TimeRange timeRange(start, end);
+
+                    coordinator.getDrivingSessionManager().scheduleDrivingSession(studentId, instructorId, vehicleId, timeRange, coordinator);
+
+                    std::cout << "-> Jazda zostala zaplanowana na " << year << "-" << month << "-" << day
+                              << " od " << startHour << ":00 do " << endHour << ":00!\n";
+                } catch (const std::exception& e) {
+                    std::cout << "[BLAD] Nie udalo sie zaplanowac jazdy: " << e.what() << "\n";
+                }
+                break;
+            }
+            case 7: {
                 std::string lastName;
                 std::cout << "Podaj nazwisko kursanta do wyszukania: ";
 
@@ -175,17 +322,17 @@ void ConsoleUI::start() {
                 }
                 break;
             }
-            case 6: {
+            case 8: {
                 std::cout << "-> Lista wszystkich TRWAJACYCH kursow:\n";
                 std::cout << coordinator.getCourseManager().getCourseReport();
                 break;
             }
-            case 7: {
+            case 9: {
                 std::cout << "-> Lista wszystkich ZAKONCZONYCH kursow:\n";
                 std::cout << coordinator.getCourseManager().getArchiveCourseReport();
                 break;
             }
-            case 8: {
+            case 10: {
                 int sessionId;
                 std::cout << "Podaj ID sesji jazd do odwolania: ";
                 std::cin >> sessionId;
@@ -211,7 +358,7 @@ void ConsoleUI::start() {
                 }
                 break;
             }
-            case 9: {
+            case 11: {
                 int courseId;
                 std::cout << "Podaj ID kursu do zakonczenia: ";
                 std::cin >> courseId;
@@ -237,12 +384,12 @@ void ConsoleUI::start() {
                 }
                 break;
             }
-            case 10: {
+            case 12: {
                 std::cout << "-> Baza aktywnych instruktorow:\n";
                 std::cout << coordinator.getInstructorManager().getInstructorReport();
                 break;
             }
-            case 11: {
+            case 13: {
                 int vehicleType;
                 std::string plateNumber;
 
@@ -347,7 +494,7 @@ void ConsoleUI::start() {
                 }
                 break;
             }
-            case 12: {
+            case 14: {
                 int vehicleId;
                 std::cout << "Podaj ID pojazdu do wycofania z floty: ";
                 std::cin >> vehicleId;
@@ -380,7 +527,7 @@ void ConsoleUI::start() {
                 break;
             }
             default: {
-                std::cout << "[BLAD] Nieznana opcja. Wybierz liczbe od 0 do 12.\n";
+                std::cout << "[BLAD] Nieznana opcja. Wybierz liczbe od 0 do 14.\n";
                 break;
             }
         }
