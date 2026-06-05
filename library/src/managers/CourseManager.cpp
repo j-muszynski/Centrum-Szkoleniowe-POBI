@@ -28,6 +28,11 @@ std::vector<CoursePtr> CourseManager::findAllArchiveCourses() const {
  */
 void CourseManager::registerCourse(const StudentPtr& studentPtr, const InstructorPtr& instructorPtr, Category category) {
 
+    if (studentPtr == nullptr || instructorPtr == nullptr) {
+        std::cout << "Wrong data type (nullptr)\n";
+        return;
+    }
+
     std::vector<Category> licences = instructorPtr->getQualifications();
 
     auto it = std::find(licences.begin(), licences.end(), category);
