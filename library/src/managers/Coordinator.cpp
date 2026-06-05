@@ -1,9 +1,11 @@
 #include "managers/Coordinator.h"
-#include "managers/CourseManager.h"
-#include "managers/StudentManager.h"
 #include "managers/InstructorManager.h"
+#include "managers/StudentManager.h"
 #include "managers/DrivingSessionManager.h"
 #include "managers/VehicleManager.h"
+#include "managers/CourseManager.h"
+#include "model/Category.h"
+
 #include <algorithm>
 
 Coordinator::Coordinator(InstructorManager& instructorManager, StudentManager& studentManager,
@@ -18,7 +20,7 @@ std::shared_ptr<Student> Coordinator::getStudentById(int id) {
     auto students = studentManager.findAllStudents();
     for (const auto& student : students) {
         if (student->getId() == id) {
-            return std::make_shared<Student>(student);
+            return student;
         }
     }
     return nullptr;
@@ -28,7 +30,7 @@ std::shared_ptr<Instructor> Coordinator::getInstructorById(int id) {
     auto instructors = instructorManager.findAllInstructors();
     for (const auto& instructor : instructors) {
         if (instructor->getId() == id) {
-            return std::make_shared<Instructor>(instructor);
+            return instructor;
         }
     }
     return nullptr;
@@ -48,7 +50,7 @@ std::shared_ptr<Course> Coordinator::getCourseById(int id) {
     auto courses = courseManager.findAllCourses();
     for (const auto& course : courses) {
         if (course->getId() == id) {
-            return std::make_shared<Course>(course);
+            return course;
         }
     }
     return nullptr;
@@ -58,7 +60,7 @@ std::shared_ptr<DrivingSession> Coordinator::getDrivingSessionById(int id) {
     auto sessions = drivingSessionManager.findAllDrivingSessions();
     for (const auto& session : sessions) {
         if (session->getId() == id) {
-            return std::make_shared<DrivingSession>(session);
+            return session;
         }
     }
     return nullptr;
@@ -141,7 +143,7 @@ std::vector<std::shared_ptr<Vehicle>> Coordinator::getAvailableVehicles(Category
             bool isBusy = false;
             for (const auto& session : allSessions) {
                 if (session->getVehicle() != nullptr && session->getVehicle()->getId() == vehicle->getId()) {
-                    if (session->getStartTime() < range->endTime && session->getEndTime() > range->startTime) {
+                    if (session->getStartTime() < range.second && session->getEndTime() > range.first) {
                         isBusy = true;
                         break;
                     }
@@ -168,14 +170,14 @@ std::vector<std::shared_ptr<Instructor>> Coordinator::getAvailableInstructors(Ca
             bool isBusy = false;
             for (const auto& session : allSessions) {
                 if (session->getInstructor() != nullptr && session->getInstructor()->getId() == instructor->getId()) {
-                    if (session->getStartTime() < range->endTime && session->getEndTime() > range->startTime) {
+                    if (session->getStartTime() < range.second && session->getEndTime() > range.first) {
                         isBusy = true;
                         break;
                     }
                 }
             }
             if (!isBusy) {
-                available.push_back(std::make_shared<Instructor>(instructor));
+                available.push_back(instructor);
             }
         }
     }

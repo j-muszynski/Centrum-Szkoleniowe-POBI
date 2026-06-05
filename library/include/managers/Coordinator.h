@@ -1,10 +1,13 @@
 #pragma once
 
-#include "managers/InstructorManager.h"
-#include "managers/StudentManager.h"
-#include "managers/DrivingSessionManager.h"
-#include "managers/VehicleManager.h"
-#include "managers/CourseManager.h"
+#include "typedefs.h"
+
+enum class Category;
+class InstructorManager;
+class StudentManager;
+class DrivingSessionManager;
+class VehicleManager;
+class CourseManager;
 
 class Coordinator {
 private:
