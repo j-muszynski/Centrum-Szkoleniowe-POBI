@@ -60,16 +60,58 @@ void ConsoleUI::start() {
                 break;
             }
             case 3: {
-                std::string firstName, lastName, pesel;
+                std::string firstName, lastName, pesel, pkk;
+                std::string city, street, buildingNumber;
+                int year, month, day;
+
+                // Podstawowe dane
                 std::cout << "Podaj imie: ";
-                std::cin >> firstName;
+                std::getline(std::cin >> std::ws, firstName);
                 std::cout << "Podaj nazwisko: ";
-                std::cin >> lastName;
+                std::getline(std::cin >> std::ws, lastName);
                 std::cout << "Podaj PESEL: ";
                 std::cin >> pesel;
+                std::cout << "Podaj nr PKK: ";
+                std::cin >> pkk;
 
-                // DO ZMIANY JAK DOSTANE MANAGERÓW
-                std::cout << "-> Kursant " << firstName << " " << lastName << " (PESEL: " << pesel << ") pomyslnie zarejestrowany (symulacja).\n";
+                // Dane adresowe
+                std::cout << "--- Dane adresowe ---\n";
+                std::cout << "Podaj miasto: ";
+                std::getline(std::cin >> std::ws, city);
+                std::cout << "Podaj ulice: ";
+                std::getline(std::cin >> std::ws, street);
+                std::cout << "Podaj numer budynku/mieszkania: ";
+                std::cin >> buildingNumber;
+
+                // Data urodzenia
+                std::cout << "--- Dataa urodzeni ---\n";
+                std::cout << "Podaj rok urodzenia (np 2006): "; std::cin >> year;
+                std::cout << "Podaj miesiac (1-12): "; std::cin >> month;
+                std::cout << "Podaj dzien (1-31): "; std::cin >> day;
+
+                // Przypisujemy ID
+                int nextId = 1; // Domyślne ID dla pierwszej osoby
+                auto allStudents = coordinator.getStudentManager().findAllStudents();
+
+                // Czy sa kursanci?
+                if (!allStudents.empty()) {
+                    for (const auto& student : allStudents) {
+                        if (student != nullptr && student->getId() >= nextId) {
+                            nextId = student->getId() + 1;
+                        }
+                    }
+                }
+
+                // Tworzymy obiekty
+                AddressPtr address = std::make_shared<Address>(city, street, buildingNumber);
+                boost::gregorian::date birthDate(year, month, day);
+
+                StudentPtr newStudent = std::make_shared<Student>(nextId, firstName, lastName, pesel, birthDate, address, pkk);
+
+                // Zapisujemy
+                coordinator.getStudentManager().registerStudent(newStudent);
+
+                std::cout << "-> Kursant " << firstName << " " << lastName << " (ID: " << nextId << ") pomyslnie zarejestrowany w systemie.\n";
                 break;
             }
             case 4: {
