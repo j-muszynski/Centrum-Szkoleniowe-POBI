@@ -24,7 +24,8 @@ struct TestData {
      * @param version Format version number.
      */
     template<class Archive>
-    void serialize(Archive & ar, const unsigned int version) {
+    void serialize(Archive & ar, [[maybe_unused]] const unsigned int version) { // dodano [[maybe_unused]]
+                                                                                // bo wywalalo bledy przy make
         ar & id;
         ar & name;
     }
