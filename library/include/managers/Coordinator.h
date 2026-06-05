@@ -22,6 +22,12 @@ public:
     Coordinator(InstructorManager& instructorManger, StudentManager& studentManager, DrivingSessionManager& drivingSessionManager,
                 VehicleManager& vehicleManger, CourseManager& courseManager);
 
+    InstructorManager& getInstructorManager();
+    StudentManager& getStudentManager();
+    DrivingSessionManager& getDrivingSessionManager();
+    VehicleManager& getVehicleManager();
+    CourseManager& getCourseManager();
+
     double calculateRevenue();
     double calculateTotalCourseCost(int courseId);
     void completeCourse(int courseId);
