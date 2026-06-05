@@ -171,4 +171,3 @@ void ConsoleUI::start() {
             }
         }
     }
-}
