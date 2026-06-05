@@ -22,7 +22,7 @@ std::vector<StudentPtr> StudentManager::findAllArchiveStudents() const {
     return archiveStudentRepo.findAll();
 }
 
-void StudentManager::registerStudent(StudentPtr student) {
+void StudentManager::registerStudent(const StudentPtr& student) {
     if (student == nullptr) return;
 
     studentRepo.add(student);
