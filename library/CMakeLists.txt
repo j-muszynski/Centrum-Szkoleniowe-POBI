@@ -81,6 +81,7 @@ target_link_libraries(Library PUBLIC Boost::date_time Boost::serialization)
             test/PersonTest.cpp
             test/VehicleTest.cpp
             test/CourseAndSessionTest.cpp
+            test/CoordinatorTest.cpp
 )
 
 add_executable(LibraryTester ${SOURCE_TEST_FILES})
