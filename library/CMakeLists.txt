@@ -18,25 +18,35 @@ set(SOURCE_FILES
         include/repositories/FileStorage.h
         include/typedefs.h
 
-        # ------ Source files ------
-        src/model/Address.cpp
-        src/model/Vehicle.cpp
-        src/model/PassengerCar.cpp
-        src/model/HeavyVehicle.cpp
-        src/model/Truck.cpp
-        src/model/Bus.cpp
-        src/model/Motorcycle.cpp
-        src/model/Person.cpp
-        src/model/Student.cpp
-        src/model/Instructor.cpp
-        src/model/Course.cpp
-        src/model/DrivingSession.cpp
-        src/repositories/CourseRepository.cpp
-        src/repositories/DrivingSessionRepository.cpp
-        src/repositories/InstructorRepository.cpp
-        src/repositories/StudentRepository.cpp
-        src/repositories/VehicleRepository.cpp
-)
+            # ------ Source files ------
+
+            # --- model ---
+            src/model/Address.cpp
+            src/model/Vehicle.cpp
+            src/model/PassengerCar.cpp
+            src/model/HeavyVehicle.cpp
+            src/model/Truck.cpp
+            src/model/Bus.cpp
+            src/model/Motorcycle.cpp
+            src/model/Person.cpp
+            src/model/Student.cpp
+            src/model/Instructor.cpp
+            src/model/Course.cpp
+            src/model/DrivingSession.cpp
+            # --- repo ---
+            src/repositories/CourseRepository.cpp
+            src/repositories/DrivingSessionRepository.cpp
+            src/repositories/InstructorRepository.cpp
+            src/repositories/StudentRepository.cpp
+            src/repositories/VehicleRepository.cpp
+            # --- managers ---
+            src/managers/VehicleManager.cpp
+            src/managers/StudentManager.cpp
+            src/managers/InstructorManager.cpp
+            src/managers/DrivingSessionManager.cpp
+            src/managers/CourseManager.cpp
+            src/managers/Coordinator.cpp
+    )
 
 add_library(Library STATIC ${SOURCE_FILES})
 
@@ -48,15 +58,27 @@ endif ()
 
 target_link_libraries(Library PUBLIC Boost::date_time Boost::serialization)
 
-# Konfiguracja testera
-set(SOURCE_TEST_FILES
-        test/master.cpp
-        test/AbstractFileRepositoryTest.cpp
-        test/FileStorageTest.cpp
-        test/AddressTest.cpp
-        test/PersonTest.cpp
-        test/VehicleTest.cpp
-        test/CourseAndSessionTest.cpp
+    target_link_libraries(Library PUBLIC
+            Boost::date_time
+            Boost::serialization
+    )
+
+    # Konfiguracja testera
+    set(SOURCE_TEST_FILES test/master.cpp
+            test/AbstractFileRepositoryTest.cpp
+            test/FileStorageTest.cpp
+            test/CourseManagerTest.cpp
+            test/DrivingSessionManagerTest.cpp
+            test/InstructorManagerTest.cpp
+            test/StudentManagerTest.cpp
+            test/VehicleManagerTest.cpp
+            test/master.cpp
+            test/AbstractFileRepositoryTest.cpp
+            test/FileStorageTest.cpp
+            test/AddressTest.cpp
+            test/PersonTest.cpp
+            test/VehicleTest.cpp
+            test/CourseAndSessionTest.cpp
 )
 
 add_executable(LibraryTester ${SOURCE_TEST_FILES})
