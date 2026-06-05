@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(Test_Repository_Add_And_GetById) {
 }
 
 /**
- * @test Verifies that elements can be removed correctly from the repository using their index.
+ * @test Verifies that elements can be removed correctly from the repository using their unique id.
  */
 BOOST_AUTO_TEST_CASE(Test_Repository_Remove_By_Index) {
     auto mockStorage = std::make_shared<MockStorage<ExampleEntityPtr>>();
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(Test_Repository_Remove_By_Index) {
     BOOST_REQUIRE(repo.getSize() == 2);
 
     // Remove the element at index 0 (the item with ID 1)
-    repo.remove(0);
+    repo.remove(1);
 
     // Verify repository state after removal
     BOOST_TEST(repo.getSize() == 1);
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(Test_Repository_ExecuteSave_And_Load_Integration) {
     BOOST_TEST(mockStorage->mockMemory.size() == 1);
 
     // Clear the repository memory (simulate an empty/new repository state)
-    repo.remove(0);
+    repo.remove(77);
     BOOST_REQUIRE(repo.getSize() == 0);
 
     // Trigger load - repository must pull data back from mockStorage into RAM
