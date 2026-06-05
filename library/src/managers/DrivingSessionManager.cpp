@@ -28,12 +28,9 @@ std::vector<DrivingSessionPtr> DrivingSessionManager::findAllArchiveDrivingSessi
 /*
  * exceptions later on
  * add functionality to propose different vehicle or instructor
- * should student, instructor and vehicle be checked for existence?
  */
 void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructorID, int vehicleID, TimeRange timeRange,
                                                    Coordinator& coordinator) {
-
-/*
     // ---- Validation existence of entities ----
     auto studentPtr = coordinator.getStudentById(studentID); // such methods do not exist (yet?)
     auto instructorPtr = coordinator.getInstructorById(instructorID);
@@ -43,7 +40,6 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
     if (studentPtr == nullptr || instructorPtr == nullptr || vehiclePtr == nullptr) {
         return;
     }
-*/
 
     // preparing time period
     boost::posix_time::time_period requestedPeriod(timeRange.first, timeRange.second);
@@ -88,6 +84,7 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
 
     // getting unique id for new driving session
     int newSessionId = drivingSessionRepo.getNextID();
+    int courseID = coordinator.getCourseIDByStudentID(studentID);
 
     // Creating new DrivingSession object
     auto newSession = std::make_shared<DrivingSession>(
@@ -96,6 +93,7 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
         timeRange.second,
         instructorPtr,
         studentPtr,
+        courseID,
         vehiclePtr
     );
 
@@ -104,7 +102,7 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
 }
 
 void DrivingSessionManager::cancelSession(int drivingSessionID, Coordinator& coordinator) {
-    auto drivingSessionPtr = coordinator.getDrivingSessionById(drivingSessionID); // such methods do not exist (yet)
+    auto drivingSessionPtr = coordinator.getDrivingSessionById(drivingSessionID);
     if (drivingSessionPtr == nullptr) {
         std::cout << "Such driving session does not exist in database!\n";
         return;
