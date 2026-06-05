@@ -6,7 +6,7 @@ BOOST_CLASS_EXPORT(Student)
 
 Student::Student(int id, const std::string& firstName, const std::string& lastName,
                  const std::string& pesel, const boost::gregorian::date& birthDate,
-                 std::shared_ptr<Address> address, const std::string& pkkNumber)
+                 AddressPtr address, const std::string& pkkNumber)
     : Person(id, firstName, lastName, pesel, birthDate, address),
       pkkNumber(pkkNumber), isReadyForExam(false) {} // Domyślnie uczeń nie jest gotowy na egzamin
 

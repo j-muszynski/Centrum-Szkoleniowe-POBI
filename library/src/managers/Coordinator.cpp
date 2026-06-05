@@ -16,7 +16,7 @@ Coordinator::Coordinator(InstructorManager& instructorManager, StudentManager& s
                                                          vehicleManager(vehicleManager),
                                                          courseManager(courseManager) {}
 
-std::shared_ptr<Student> Coordinator::getStudentById(int id) {
+StudentPtr Coordinator::getStudentById(int id) {
     auto students = studentManager.findAllStudents();
     for (const auto& student : students) {
         if (student->getId() == id) {
@@ -26,7 +26,7 @@ std::shared_ptr<Student> Coordinator::getStudentById(int id) {
     return nullptr;
 }
 
-std::shared_ptr<Instructor> Coordinator::getInstructorById(int id) {
+InstructorPtr Coordinator::getInstructorById(int id) {
     auto instructors = instructorManager.findAllInstructors();
     for (const auto& instructor : instructors) {
         if (instructor->getId() == id) {
@@ -36,7 +36,7 @@ std::shared_ptr<Instructor> Coordinator::getInstructorById(int id) {
     return nullptr;
 }
 
-std::shared_ptr<Vehicle> Coordinator::getVehicleById(int id) {
+VehiclePtr Coordinator::getVehicleById(int id) {
     auto vehicles = vehicleManager.findAllVehicles();
     for (const auto& vehicle : vehicles) {
         if (vehicle != nullptr && vehicle->getId() == id) {
@@ -46,7 +46,7 @@ std::shared_ptr<Vehicle> Coordinator::getVehicleById(int id) {
     return nullptr;
 }
 
-std::shared_ptr<Course> Coordinator::getCourseById(int id) {
+CoursePtr Coordinator::getCourseById(int id) {
     auto courses = courseManager.findAllCourses();
     for (const auto& course : courses) {
         if (course->getId() == id) {
@@ -56,7 +56,7 @@ std::shared_ptr<Course> Coordinator::getCourseById(int id) {
     return nullptr;
 }
 
-std::shared_ptr<DrivingSession> Coordinator::getDrivingSessionById(int id) {
+DrivingSessionPtr Coordinator::getDrivingSessionById(int id) {
     auto sessions = drivingSessionManager.findAllDrivingSessions();
     for (const auto& session : sessions) {
         if (session->getId() == id) {
@@ -133,8 +133,8 @@ double Coordinator::checkStudentCourseBalance(int studentId) {
     return balance;
 }
 
-std::vector<std::shared_ptr<Vehicle>> Coordinator::getAvailableVehicles(Category category, TimeRange range) {
-    std::vector<std::shared_ptr<Vehicle>> available;
+std::vector<VehiclePtr> Coordinator::getAvailableVehicles(Category category, TimeRange range) {
+    std::vector<VehiclePtr> available;
     auto allVehicles = vehicleManager.findAllVehicles();
     auto allSessions = drivingSessionManager.findAllDrivingSessions();
 
@@ -157,8 +157,8 @@ std::vector<std::shared_ptr<Vehicle>> Coordinator::getAvailableVehicles(Category
     return available;
 }
 
-std::vector<std::shared_ptr<Instructor>> Coordinator::getAvailableInstructors(Category category, TimeRange range) {
-    std::vector<std::shared_ptr<Instructor>> available;
+std::vector<InstructorPtr> Coordinator::getAvailableInstructors(Category category, TimeRange range) {
+    std::vector<InstructorPtr> available;
     auto allInstructors = instructorManager.findAllInstructors();
     auto allSessions = drivingSessionManager.findAllDrivingSessions();
 

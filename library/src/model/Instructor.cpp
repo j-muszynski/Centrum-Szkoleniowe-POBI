@@ -5,7 +5,7 @@ BOOST_CLASS_EXPORT(Instructor)
 
 Instructor::Instructor(int id, const std::string& firstName, const std::string& lastName,
                        const std::string& pesel, const boost::gregorian::date& birthDate,
-                       std::shared_ptr<Address> address)
+                       AddressPtr address)
     : Person(id, firstName, lastName, pesel, birthDate, address) {}
 
 const std::vector<Category>& Instructor::getQualifications() const { return qualifications; }

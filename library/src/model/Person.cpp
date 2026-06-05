@@ -4,7 +4,7 @@
 
 Person::Person(int id, const std::string& firstName, const std::string& lastName,
                const std::string& pesel, const boost::gregorian::date& birthDate,
-               std::shared_ptr<Address> address)
+               AddressPtr address)
     : id(id), firstName(firstName), lastName(lastName), pesel(pesel),
       birthDate(birthDate), address(address) {}
 
@@ -18,7 +18,7 @@ const std::string& Person::getPesel() const { return pesel; }
 
 const boost::gregorian::date& Person::getBirthDate() const { return birthDate; }
 
-std::shared_ptr<Address> Person::getAddress() const { return address; }
+AddressPtr Person::getAddress() const { return address; }
 
 const std::vector<Category>& Person::getLicenses() const { return licenses; }
 
@@ -28,6 +28,6 @@ void Person::setFirstName(const std::string& newFirstName) { this->firstName = n
 
 void Person::setLastName(const std::string& newLastName) { this->lastName = newLastName; }
 
-void Person::setAddress(std::shared_ptr<Address> newAddress) { this->address = newAddress; }
+void Person::setAddress(AddressPtr newAddress) { this->address = newAddress; }
 
 void Person::addLicense(Category category) { licenses.push_back(category); }
