@@ -16,6 +16,12 @@ Coordinator::Coordinator(InstructorManager& instructorManager, StudentManager& s
                                                          vehicleManager(vehicleManager),
                                                          courseManager(courseManager) {}
 
+InstructorManager& Coordinator::getInstructorManager() { return instructorManager; }
+StudentManager& Coordinator::getStudentManager() { return studentManager; }
+DrivingSessionManager& Coordinator::getDrivingSessionManager() { return drivingSessionManager; }
+VehicleManager& Coordinator::getVehicleManager() { return vehicleManager; }
+CourseManager& Coordinator::getCourseManager() { return courseManager; }
+
 StudentPtr Coordinator::getStudentById(int id) {
     auto students = studentManager.findAllStudents();
     for (const auto& student : students) {
