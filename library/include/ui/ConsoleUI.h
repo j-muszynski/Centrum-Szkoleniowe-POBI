@@ -9,7 +9,6 @@
 #include "managers/DrivingSessionManager.h"
 #include "managers/VehicleManager.h"
 
-
 class ConsoleUI {
 private:
     Coordinator& coordinator;
