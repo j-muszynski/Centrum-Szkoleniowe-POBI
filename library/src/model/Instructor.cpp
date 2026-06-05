@@ -15,5 +15,24 @@ void Instructor::addQualification(Category category) {
 }
 
 std::string Instructor::getInfo() const {
-    return "Instruktor: " + getFirstName() + " " + getLastName();
+    std::string info = "Instruktor [ID: " + std::to_string(getId()) + "] "
+                        + getFirstName() + " " + getLastName() + " | Kategorie: ";
+
+    if (qualifications.empty()) {
+        info += "Brak";
+    } else {
+        for (const auto& cat : qualifications) {
+            if (cat == Category::AM) info += "AM ";
+            else if (cat == Category::A1) info += "A1 ";
+            else if (cat == Category::A2) info += "A2 ";
+            else if (cat == Category::A) info += "A ";
+            else if (cat == Category::B) info += "B ";
+            else if (cat == Category::BE) info += "BE ";
+            else if (cat == Category::C) info += "C ";
+            else if (cat == Category::CE) info += "CE ";
+            else if (cat == Category::D) info += "D ";
+            else if (cat == Category::DE) info += "DE ";
+        }
+    }
+    return info;
 }
