@@ -28,9 +28,20 @@ std::vector<CoursePtr> CourseManager::findAllArchiveCourses() const {
  */
 void CourseManager::registerCourse(StudentPtr studentPtr, InstructorPtr instructorPtr, Category category) {
 
-    auto newCourse = std::make_shared<Course>(courseRepo.getNextID(), category, instructorPtr, studentPtr, 0.0);
+    std::vector<Category> licences = instructorPtr->getQualifications();
 
-    courseRepo.add(newCourse);
+    auto it = std::find(licences.begin(), licences.end(), category);
+
+    if (it != licences.end()) {
+        auto newCourse = std::make_shared<Course>(courseRepo.getNextID(), category, instructorPtr, studentPtr, 0.0);
+
+        courseRepo.add(newCourse);
+    }
+    else {
+        // thorw in the future
+        std::cout << "Instructo does not have requierd license!\n";
+    }
+
 }
 
 std::string CourseManager::getCourseReport() const {
