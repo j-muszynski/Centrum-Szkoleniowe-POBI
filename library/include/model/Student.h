@@ -2,7 +2,7 @@
 #define STUDENT_H
 
 #include <random>
-
+#include "typedefs.h"
 #include "model/Person.h"
 #include <boost/serialization/base_object.hpp>
 
@@ -25,7 +25,7 @@ public:
 
     Student(int id, const std::string& firstName, const std::string& lastName,
             const std::string& pesel, const boost::gregorian::date& birthDate,
-            std::shared_ptr<Address> address, const std::string& pkkNumber);
+            AddressPtr address, const std::string& pkkNumber);
     ~Student() override = default;
 
     const std::string& getPkkNumber() const;

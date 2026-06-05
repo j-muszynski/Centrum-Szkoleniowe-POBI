@@ -2,7 +2,7 @@
 #define DRIVINGSESSION_H
 
 #include <string>
-#include <memory>
+#include "typedefs.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "model/Instructor.h"
 #include "model/Student.h"
@@ -13,28 +13,28 @@ private:
     int id;
     boost::posix_time::ptime startTime;
     boost::posix_time::ptime endTime;        // Rozpoczęcie zakończenie
-    std::shared_ptr<Instructor> instructor;  // Jaki instruktor
-    std::shared_ptr<Student> student;        // Kto jechał
+    InstructorPtr instructor;  // Jaki instruktor
+    StudentPtr student;        // Kto jechał
     int courseId;
-    std::shared_ptr<Vehicle> vehicle;        // Czym jechał
+    VehiclePtr vehicle;        // Czym jechał
     std::string status;
 
 public:
     DrivingSession(int id, const boost::posix_time::ptime& startTime,
                    const boost::posix_time::ptime& endTime,
-                   std::shared_ptr<Instructor> instructor,
-                   std::shared_ptr<Student> student,
+                   InstructorPtr instructor,
+                   StudentPtr student,
                    int courseId,
-                   std::shared_ptr<Vehicle> vehicle);
+                   VehiclePtr vehicle);
     ~DrivingSession() = default;
 
     int getId() const;
     const boost::posix_time::ptime& getStartTime() const;
     const boost::posix_time::ptime& getEndTime() const;
-    std::shared_ptr<Instructor> getInstructor() const;
-    std::shared_ptr<Student> getStudent() const;
+    InstructorPtr getInstructor() const;
+    StudentPtr getStudent() const;
     int getCourseId() const;
-    std::shared_ptr<Vehicle> getVehicle() const;
+    VehiclePtr getVehicle() const;
     const std::string& getStatus() const;
 
     void setStatus(const std::string& status);

@@ -1,7 +1,7 @@
 #ifndef COURSE_H
 #define COURSE_H
 
-#include <memory>
+#include "typedefs.h"
 #include "model/Category.h"
 #include "model/Instructor.h"
 #include "model/Student.h"
@@ -23,20 +23,20 @@ private:
     }
     int id;
     Category type; // Kategoria kursu
-    std::shared_ptr<Instructor> instructor; // Wskaźnik na przypisanego instruktora prowadzącego
-    std::shared_ptr<Student> student; // Na kursanta
+    InstructorPtr instructor; // Wskaźnik na przypisanego instruktora prowadzącego
+    StudentPtr student; // Na kursanta
     bool isFinished; // 1 = godziny wyjeżdżone 0 = wiadomo co
 protected:
     Course() = default;
 public:
-    Course(int id, Category type, std::shared_ptr<Instructor> instructor,
-           std::shared_ptr<Student> student);
+    Course(int id, Category type, InstructorPtr instructor,
+           StudentPtr student);
     ~Course() = default;
 
     int getId() const;
     Category getType() const;
-    std::shared_ptr<Instructor> getInstructor() const;
-    std::shared_ptr<Student> getStudent() const;
+    InstructorPtr getInstructor() const;
+    StudentPtr getStudent() const;
     bool getIsFinished() const;
 
     void setFinished(bool finished);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "typedefs.h"
+#include <vector>
 
 enum class Category;
 class InstructorManager;
@@ -28,8 +29,8 @@ public:
     double getTotalHoursForCourse(int courseId);
     double getStudentHours(int studentId);
 
-    std::vector<std::shared_ptr<Vehicle>> getAvailableVehicles(Category category, TimeRange range);
-    std::vector<std::shared_ptr<Instructor>> getAvailableInstructors(Category category, TimeRange range);
+    std::vector<VehiclePtr> getAvailableVehicles(Category category, TimeRange range);
+    std::vector<InstructorPtr> getAvailableInstructors(Category category, TimeRange range);
 
     StudentPtr getStudentById(int id);
     InstructorPtr getInstructorById(int id);
