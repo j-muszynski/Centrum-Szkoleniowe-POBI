@@ -6,19 +6,18 @@
 #include "managers/VehicleManager.h"
 #include <algorithm>
 
-Coordinator::Coordinator(std::shared_ptr<CourseManager> courseManager,
-                         std::shared_ptr<StudentManager> studentManager,
-                         std::shared_ptr<InstructorManager> instructorManager,
-                         std::shared_ptr<DrivingSessionManager> drivingSessionManager,
-                         std::shared_ptr<VehicleManager> vehicleManager)
-    : courseManager(courseManager), studentManager(studentManager),
-      instructorManager(instructorManager), drivingSessionManager(drivingSessionManager),
-      vehicleManager(vehicleManager) {}
+Coordinator::Coordinator(InstructorManager& instructorManager, StudentManager& studentManager,
+                         DrivingSessionManager& drivingSessionManager, VehicleManager& vehicleManager,
+                         CourseManager& courseManager) : instructorManager(instructorManager),
+                                                         studentManager(studentManager),
+                                                         drivingSessionManager(drivingSessionManager),
+                                                         vehicleManager(vehicleManager),
+                                                         courseManager(courseManager) {}
 
 std::shared_ptr<Student> Coordinator::getStudentById(int id) {
-    auto students = studentManager->findAllStudents();
+    auto students = studentManager.findAllStudents();
     for (const auto& student : students) {
-        if (student.getId() == id) {
+        if (student->getId() == id) {
             return std::make_shared<Student>(student);
         }
     }
@@ -26,9 +25,9 @@ std::shared_ptr<Student> Coordinator::getStudentById(int id) {
 }
 
 std::shared_ptr<Instructor> Coordinator::getInstructorById(int id) {
-    auto instructors = instructorManager->findAllInstructors();
+    auto instructors = instructorManager.findAllInstructors();
     for (const auto& instructor : instructors) {
-        if (instructor.getId() == id) {
+        if (instructor->getId() == id) {
             return std::make_shared<Instructor>(instructor);
         }
     }
@@ -36,7 +35,7 @@ std::shared_ptr<Instructor> Coordinator::getInstructorById(int id) {
 }
 
 std::shared_ptr<Vehicle> Coordinator::getVehicleById(int id) {
-    auto vehicles = vehicleManager->findAllVehicles();
+    auto vehicles = vehicleManager.findAllVehicles();
     for (const auto& vehicle : vehicles) {
         if (vehicle != nullptr && vehicle->getId() == id) {
             return vehicle;
@@ -46,9 +45,9 @@ std::shared_ptr<Vehicle> Coordinator::getVehicleById(int id) {
 }
 
 std::shared_ptr<Course> Coordinator::getCourseById(int id) {
-    auto courses = courseManager->findAllCourses();
+    auto courses = courseManager.findAllCourses();
     for (const auto& course : courses) {
-        if (course.getId() == id) {
+        if (course->getId() == id) {
             return std::make_shared<Course>(course);
         }
     }
@@ -56,9 +55,9 @@ std::shared_ptr<Course> Coordinator::getCourseById(int id) {
 }
 
 std::shared_ptr<DrivingSession> Coordinator::getDrivingSessionById(int id) {
-    auto sessions = drivingSessionManager->findAllDrivingSession();
+    auto sessions = drivingSessionManager.findAllDrivingSessions();
     for (const auto& session : sessions) {
-        if (session.getId() == id) {
+        if (session->getId() == id) {
             return std::make_shared<DrivingSession>(session);
         }
     }
@@ -67,11 +66,11 @@ std::shared_ptr<DrivingSession> Coordinator::getDrivingSessionById(int id) {
 
 double Coordinator::calculateTotalCourseCost(int courseId) {
     double totalCost = 0.0;
-    auto sessions = drivingSessionManager->findAllDrivingSession();
-    
+    auto sessions = drivingSessionManager.findAllDrivingSessions();
+
     for (const auto& session : sessions) {
-        if (session.getCourseId() == courseId) {
-            totalCost += session.getSessionCost();
+        if (session->getCourseId() == courseId) {
+            totalCost += session->getSessionCost();
         }
     }
     return totalCost;
@@ -79,10 +78,10 @@ double Coordinator::calculateTotalCourseCost(int courseId) {
 
 double Coordinator::calculateRevenue() {
     double revenue = 0.0;
-    auto courses = courseManager->findAllCourses();
-    
+    auto courses = courseManager.findAllCourses();
+
     for (const auto& course : courses) {
-        revenue += calculateTotalCourseCost(course.getId());
+        revenue += calculateTotalCourseCost(course->getId());
     }
     return revenue;
 }
@@ -96,11 +95,11 @@ void Coordinator::completeCourse(int courseId) {
 
 double Coordinator::getTotalHoursForCourse(int courseId) {
     double totalHours = 0.0;
-    auto sessions = drivingSessionManager->findAllDrivingSession();
-    
+    auto sessions = drivingSessionManager.findAllDrivingSessions();
+
     for (const auto& session : sessions) {
-        if (session.getCourseId() == courseId) {
-            boost::posix_time::time_duration duration = session.getEndTime() - session.getStartTime();
+        if (session->getCourseId() == courseId) {
+            boost::posix_time::time_duration duration = session->getEndTime() - session->getStartTime();
             totalHours += duration.total_seconds() / 3600.0;
         }
     }
@@ -109,11 +108,11 @@ double Coordinator::getTotalHoursForCourse(int courseId) {
 
 double Coordinator::getStudentHours(int studentId) {
     double totalHours = 0.0;
-    auto sessions = drivingSessionManager->findAllDrivingSession();
-    
+    auto sessions = drivingSessionManager.findAllDrivingSessions();
+
     for (const auto& session : sessions) {
-        if (session.getStudent() != nullptr && session.getStudent()->getId() == studentId) {
-            boost::posix_time::time_duration duration = session.getEndTime() - session.getStartTime();
+        if (session->getStudent() != nullptr && session->getStudent()->getId() == studentId) {
+            boost::posix_time::time_duration duration = session->getEndTime() - session->getStartTime();
             totalHours += duration.total_seconds() / 3600.0;
         }
     }
@@ -122,11 +121,11 @@ double Coordinator::getStudentHours(int studentId) {
 
 double Coordinator::checkStudentCourseBalance(int studentId) {
     double balance = 0.0;
-    auto courses = courseManager->findAllCourses();
-    
+    auto courses = courseManager.findAllCourses();
+
     for (const auto& course : courses) {
-        if (course.getStudent() != nullptr && course.getStudent()->getId() == studentId) {
-            balance += calculateTotalCourseCost(course.getId());
+        if (course->getStudent() != nullptr && course->getStudent()->getId() == studentId) {
+            balance += calculateTotalCourseCost(course->getId());
         }
     }
     return balance;
@@ -134,15 +133,15 @@ double Coordinator::checkStudentCourseBalance(int studentId) {
 
 std::vector<std::shared_ptr<Vehicle>> Coordinator::getAvailableVehicles(Category category, TimeRange range) {
     std::vector<std::shared_ptr<Vehicle>> available;
-    auto allVehicles = vehicleManager->findAllVehicles();
-    auto allSessions = drivingSessionManager->findAllDrivingSession();
+    auto allVehicles = vehicleManager.findAllVehicles();
+    auto allSessions = drivingSessionManager.findAllDrivingSessions();
 
     for (const auto& vehicle : allVehicles) {
         if (vehicle != nullptr && vehicle->getCategory() == category) {
             bool isBusy = false;
             for (const auto& session : allSessions) {
-                if (session.getVehicle() != nullptr && session.getVehicle()->getId() == vehicle->getId()) {
-                    if (session.getStartTime() < range.endTime && session.getEndTime() > range.startTime) {
+                if (session->getVehicle() != nullptr && session->getVehicle()->getId() == vehicle->getId()) {
+                    if (session->getStartTime() < range->endTime && session->getEndTime() > range->startTime) {
                         isBusy = true;
                         break;
                     }
@@ -158,18 +157,18 @@ std::vector<std::shared_ptr<Vehicle>> Coordinator::getAvailableVehicles(Category
 
 std::vector<std::shared_ptr<Instructor>> Coordinator::getAvailableInstructors(Category category, TimeRange range) {
     std::vector<std::shared_ptr<Instructor>> available;
-    auto allInstructors = instructorManager->findAllInstructors();
-    auto allSessions = drivingSessionManager->findAllDrivingSession();
+    auto allInstructors = instructorManager.findAllInstructors();
+    auto allSessions = drivingSessionManager.findAllDrivingSessions();
 
     for (const auto& instructor : allInstructors) {
-        auto quals = instructor.getQualifications();
+        auto quals = instructor->getQualifications();
         bool hasCategory = std::find(quals.begin(), quals.end(), category) != quals.end();
-        
+
         if (hasCategory) {
             bool isBusy = false;
             for (const auto& session : allSessions) {
-                if (session.getInstructor() != nullptr && session.getInstructor()->getId() == instructor.getId()) {
-                    if (session.getStartTime() < range.endTime && session.getEndTime() > range.startTime) {
+                if (session->getInstructor() != nullptr && session->getInstructor()->getId() == instructor->getId()) {
+                    if (session->getStartTime() < range->endTime && session->getEndTime() > range->startTime) {
                         isBusy = true;
                         break;
                     }
@@ -181,4 +180,22 @@ std::vector<std::shared_ptr<Instructor>> Coordinator::getAvailableInstructors(Ca
         }
     }
     return available;
+}
+
+
+int Coordinator::getCourseIDByStudentID(int studentId) {
+    auto courses = courseManager.findAllCourses();
+
+    for (const auto& course : courses) {
+        // checking for nullptr
+        if (course != nullptr && course->getStudent() != nullptr) {
+            if (course->getStudent()->getId() == studentId) {
+                return course->getId(); // if found -> return it
+            }
+        }
+    }
+
+    // not found -> -1
+    std::cout << "Warning: No active course found for Student ID: " << studentId << "\n";
+    return -1;
 }

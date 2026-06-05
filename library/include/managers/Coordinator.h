@@ -8,15 +8,15 @@
 
 class Coordinator {
 private:
-    InstructorManager& instructorRepo;
-    StudentManager& studentRepo;
-    DrivingSession& drivingSessionRepo;
-    VehicleManager& vehicleRepo;
-    CourseManager& courseRepo;
+    InstructorManager& instructorManager;
+    StudentManager& studentManager;
+    DrivingSessionManager& drivingSessionManager;
+    VehicleManager& vehicleManager;
+    CourseManager& courseManager;
 
 public:
-    Coordinator(InstructorManager& instructorRepo, StudentManager& studentRepo, DrivingSession& drivingSessionRepo,
-                VehicleManager& vehicleRepo, CourseManager& courseRepo);
+    Coordinator(InstructorManager& instructorManger, StudentManager& studentManager, DrivingSessionManager& drivingSessionManager,
+                VehicleManager& vehicleManger, CourseManager& courseManager);
 
     double calculateRevenue();
     double calculateTotalCourseCost(int courseId);
@@ -28,9 +28,11 @@ public:
     std::vector<std::shared_ptr<Vehicle>> getAvailableVehicles(Category category, TimeRange range);
     std::vector<std::shared_ptr<Instructor>> getAvailableInstructors(Category category, TimeRange range);
 
-    std::shared_ptr<Student> getStudentById(int id);
-    std::shared_ptr<Instructor> getInstructorById(int id);
-    std::shared_ptr<Vehicle> getVehicleById(int id);
-    std::shared_ptr<Course> getCourseById(int id);
-    std::shared_ptr<DrivingSession> getDrivingSessionById(int id);
+    StudentPtr getStudentById(int id);
+    InstructorPtr getInstructorById(int id);
+    VehiclePtr getVehicleById(int id);
+    CoursePtr getCourseById(int id);
+    DrivingSessionPtr getDrivingSessionById(int id);
+
+    int getCourseIDByStudentID(int studentID);
 };
