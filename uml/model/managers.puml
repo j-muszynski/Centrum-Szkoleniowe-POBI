@@ -19,13 +19,20 @@ package "Warstwa Logiki Biznesowej (BLL)" {
         - vehicleManager: VehicleManager
 
         + calculateRevenue(): double
+        + calculateTotalCourseCost(courseId: int): double
         + completeCourse(courseId: int): void
         + checkStudentCourseBalance(studentId: int): double
         + getTotalHoursForCourse(courseId: int): double
         + getStudentHours(studentId: int): double
-        + getAvailableVehicles(category: Category, range: TimeRange): std::vector<std::shared_ptr<Vehicle>>
 
+        + getAvailableVehicles(category: Category, range: TimeRange): std::vector<std::shared_ptr<Vehicle>>
         + getAvailableInstructors(category: Category, range: TimeRange): std::vector<Instructor>
+
+        + getStudentById(id: int): Student
+        + getInstructorById(id: int): Instructor
+        + getVehicleById(id: int): std::shared_ptr<Vehicle>
+        + getCourseById(id: int): Course
+        + getDrivingSessionById(id: int): DrivingSession
     }
 
     class CourseManager {

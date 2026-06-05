@@ -16,10 +16,10 @@ BOOST_AUTO_TEST_CASE(CourseInitializationTest) {
     auto student = std::make_shared<Student>(2, "Tomasz", "Kursant", "222", date, address, "PKK1");
     
     // Tworzymy kurs
-    Course course(100, Category::B, instructor, student, 2500.0);
-    
+    Course course(100, Category::B, instructor, student); // usunelismy cene = 2500.0, bo po usuniecu
+                                                                  // *price mamy 5 argumentow a powinny byc 4
     // Sprawdzamy połączenia
-    BOOST_TEST(course.getPrice() == 2500.0);
+    // tu bylo BOOST_TEST(course.getPrice() == 2500.0); ale usunelismy (ten sam powod co linia 19)
     BOOST_TEST(course.getInstructor()->getLastName() == "Instruktor");
     BOOST_TEST(course.getStudent()->getLastName() == "Kursant");
     

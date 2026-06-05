@@ -20,19 +20,17 @@ private:
         ar & instructor;
         ar & student;
         ar & isFinished;
-        ar & price;
     }
     int id;
     Category type; // Kategoria kursu
     std::shared_ptr<Instructor> instructor; // Wskaźnik na przypisanego instruktora prowadzącego
     std::shared_ptr<Student> student; // Na kursanta
     bool isFinished; // 1 = godziny wyjeżdżone 0 = wiadomo co
-    double price;    // Cena
 protected:
     Course() = default;
 public:
     Course(int id, Category type, std::shared_ptr<Instructor> instructor,
-           std::shared_ptr<Student> student, double price);
+           std::shared_ptr<Student> student);
     ~Course() = default;
 
     int getId() const;
@@ -40,11 +38,12 @@ public:
     std::shared_ptr<Instructor> getInstructor() const;
     std::shared_ptr<Student> getStudent() const;
     bool getIsFinished() const;
-    double getPrice() const;
 
     void setFinished(bool finished);
 
     std::string getCourseInfo() const;
+
+    // Usunieto *price zgodnie z poprawionym UML
 };
 
 #endif
