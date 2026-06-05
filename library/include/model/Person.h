@@ -6,7 +6,7 @@
 #include <memory>
 #include "model/Address.h"
 #include "model/Category.h"
-
+#include "typedefs.h"
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
@@ -31,7 +31,7 @@ private:
     std::string lastName;             // Imie nazwisko
     std::string pesel;                // Pesel (jednak bez const bo nie dziala zapis do pliku tak jak mowiles)
     boost::gregorian::date birthDate; // Data urodzenia
-    std::shared_ptr<Address> address; // Adres
+    AddressPtr address; // Adres
     std::vector<Category> licenses;   // Jakie prawko już ma
 
 protected:
@@ -40,7 +40,7 @@ protected:
 public:
     Person(int id, const std::string& firstName, const std::string& lastName,
            const std::string& pesel, const boost::gregorian::date& birthDate,
-           std::shared_ptr<Address> address);
+           AddressPtr address);
     virtual ~Person() = default;
 
     int getId() const;
@@ -48,12 +48,12 @@ public:
     const std::string& getLastName() const;
     const std::string& getPesel() const;
     const boost::gregorian::date& getBirthDate() const;
-    std::shared_ptr<Address> getAddress() const;
+    AddressPtr getAddress() const;
     const std::vector<Category>& getLicenses() const;
 
     void setFirstName(const std::string& firstName);
     void setLastName(const std::string& lastName);
-    void setAddress(std::shared_ptr<Address> address);
+    void setAddress(AddressPtr address);
     void addLicense(Category category);
 
     virtual std::string getInfo() const = 0;
