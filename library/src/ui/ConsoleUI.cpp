@@ -242,7 +242,7 @@ void ConsoleUI::start() {
                 std::cout << coordinator.getInstructorManager().getInstructorReport();
                 break;
             }
-            case 11: {
+            case 11: { // Do poprawy
                 int vehicleType;
                 std::string plateNumber;
 
