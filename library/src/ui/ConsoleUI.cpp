@@ -125,13 +125,23 @@ void ConsoleUI::start() {
             case 5: {
                 std::string lastName;
                 std::cout << "Podaj nazwisko kursanta do wyszukania: ";
-                std::cin >> lastName;
 
-                // DO ZMIANY JAK DOSTANE MANAGERÓW
-                std::cout << "-> Wyszukiwanie kursantow o nazwisku '" << lastName << "' (symulacja)...\n";
-                std::cout << "Znaleziono:\n";
-                std::cout << " [ID: 101] Jan " << lastName << " | PKK: 100200/30 | PESEL: 1234\n";
-                std::cout << " [ID: 102] Piotr " << lastName << " | PKK: 500600/70 | PESEL: 5678\n";
+                std::getline(std::cin >> std::ws, lastName);
+                StudentPredicate isName = [&lastName](const StudentPtr& s) { // lambda dla flitrowania po nazwisku
+                    return s != nullptr && s->getLastName() == lastName;
+                };
+
+                // Manager zwraca liste szukanych studentow
+                auto students = coordinator.getStudentManager().findStudents(isName);
+
+                if (students.empty()) {
+                    std::cout << "-> Nie znaleziono w bazie nikogo o nazwisku '" << lastName << "'.\n";
+                } else {
+                    std::cout << "Znaleziono:\n";
+                    for(const auto& s : students) {
+                        std::cout << " [ID: " << s->getId() << "] " << s->getInfo() << "\n";
+                    }
+                }
                 break;
             }
             }
