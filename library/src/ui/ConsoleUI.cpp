@@ -50,6 +50,13 @@ void ConsoleUI::start() {
                 int courseId;
                 std::cout << "Podaj ID kursu: ";
                 std::cin >> courseId;
+
+                if (std::cin.fail()) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID kursu musi byc liczba!\n";
+                    break;
+                }
+
                 double cost = coordinator.calculateTotalCourseCost(courseId);
                 std::cout << "-> Calkowity koszt kursu wynosi: " << cost << " PLN\n";
                 break;
@@ -84,10 +91,27 @@ void ConsoleUI::start() {
                 std::cin >> buildingNumber;
 
                 // Data urodzenia
-                std::cout << "--- Dataa urodzeni ---\n";
-                std::cout << "Podaj rok urodzenia (np 2006): "; std::cin >> year;
-                std::cout << "Podaj miesiac (1-12): "; std::cin >> month;
-                std::cout << "Podaj dzien (1-31): "; std::cin >> day;
+                std::cout << "--- Data urodzenia ---\n";
+                std::cout << "Podaj rok urodzenia (np 2006): ";
+                std::cin >> year;
+                if (std::cin.fail() || year < 1900 || year > 2026) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Nieprawidlowy rok!\n"; break;
+                }
+
+                std::cout << "Podaj miesiac (1-12): ";
+                std::cin >> month;
+                if (std::cin.fail() || month < 1 || month > 12) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Miesiac musi byc liczba od 1 do 12!\n"; break;
+                }
+
+                std::cout << "Podaj dzien (1-31): ";
+                std::cin >> day;
+                if (std::cin.fail() || day < 1 || day > 31) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Dzien musi byc liczba od 1 do 31!\n"; break;
+                }
 
                 // Przypisujemy ID
                 int nextId = 1; // Domyślne ID dla pierwszej osoby
@@ -118,6 +142,13 @@ void ConsoleUI::start() {
                 int studentId;
                 std::cout << "Podaj ID kursanta: ";
                 std::cin >> studentId;
+
+                if (std::cin.fail()) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID kursanta musi byc liczba!\n";
+                    break;
+                }
+
                 double hours = coordinator.getStudentHours(studentId);
                 std::cout << "-> Kursant wyjezdzil juz: " << hours << " godzin.\n";
                 break;
@@ -144,12 +175,11 @@ void ConsoleUI::start() {
                 }
                 break;
             }
-            }
             case 6: {
                 std::cout << "-> Lista wszystkich TRWAJACYCH kursow:\n";
                 std::cout << coordinator.getCourseManager().getCourseReport();
                 break;
-             }
+            }
             case 7: {
                 std::cout << "-> Lista wszystkich ZAKONCZONYCH kursow:\n";
                 std::cout << coordinator.getCourseManager().getArchiveCourseReport();
@@ -212,32 +242,32 @@ void ConsoleUI::start() {
                 std::cout << coordinator.getInstructorManager().getInstructorReport();
                 break;
             }
-        case 11: {
-            int vehicleType;
-            std::string plateNumber;
+            case 11: {
+                int vehicleType;
+                std::string plateNumber;
 
-            std::cout << "Jaki rodzaj pojazdu chcesz wprowadzic?\n";
-            std::cout << " 1 - Samochod osobowy\n";
-            std::cout << " 2 - Motocykl\n";
-            std::cout << " 3 - Ciezarowka\n";
-            std::cout << " 4 - Autobus\n";
-            std::cout << "Wybierz (1-4): ";
-            std::cin >> vehicleType;
+                std::cout << "Jaki rodzaj pojazdu chcesz wprowadzic?\n";
+                std::cout << " 1 - Samochod osobowy\n";
+                std::cout << " 2 - Motocykl\n";
+                std::cout << " 3 - Ciezarowka\n";
+                std::cout << " 4 - Autobus\n";
+                std::cout << "Wybierz (1-4): ";
+                std::cin >> vehicleType;
 
-            std::cout << "Podaj numer rejestracyjny: ";
-            std::cin >> plateNumber;
+                std::cout << "Podaj numer rejestracyjny: ";
+                std::cin >> plateNumber;
 
-            // DO ZMIANY JAK DOSTANE MANAGERÓW
-            std::string typeName = "Nieznany pojazd";
-            if (vehicleType == 1) typeName = "Samochod osobowy";
-            else if (vehicleType == 2) typeName = "Motocykl";
-            else if (vehicleType == 3) typeName = "Ciezarowka";
-            else if (vehicleType == 4) typeName = "Autobus";
+                // DO ZMIANY JAK DOSTANE MANAGERÓW
+                std::string typeName = "Nieznany pojazd";
+                if (vehicleType == 1) typeName = "Samochod osobowy";
+                else if (vehicleType == 2) typeName = "Motocykl";
+                else if (vehicleType == 3) typeName = "Ciezarowka";
+                else if (vehicleType == 4) typeName = "Autobus";
 
-            // DO ZMIANY JAK DOSTANE MANAGERÓW
-            std::cout << "-> Dodano nowy " << typeName << " o rejestracji [" << plateNumber << "] do floty (symulacja).\n";
-            break;
-        }
+                // DO ZMIANY JAK DOSTANE MANAGERÓW
+                std::cout << "-> Dodano nowy " << typeName << " o rejestracji [" << plateNumber << "] do floty (symulacja).\n";
+                break;
+            }
             case 12: {
                 int vehicleId;
                 std::cout << "Podaj ID pojazdu do wycofania z floty: ";
@@ -276,3 +306,4 @@ void ConsoleUI::start() {
             }
         }
     }
+}
