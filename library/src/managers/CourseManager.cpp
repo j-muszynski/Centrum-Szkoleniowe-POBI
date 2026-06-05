@@ -38,7 +38,7 @@ void CourseManager::registerCourse(const StudentPtr& studentPtr, const Instructo
     auto it = std::find(licences.begin(), licences.end(), category);
 
     if (it != licences.end()) {
-        auto newCourse = std::make_shared<Course>(courseRepo.getNextID(), category, instructorPtr, studentPtr, 0.0);
+        auto newCourse = std::make_shared<Course>(courseRepo.getNextID(), category, instructorPtr, studentPtr);
 
         courseRepo.add(newCourse);
     }

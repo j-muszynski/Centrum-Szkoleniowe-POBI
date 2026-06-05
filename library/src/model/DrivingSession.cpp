@@ -22,11 +22,23 @@ void DrivingSession::setStatus(const std::string& newStatus) {
     status = newStatus;
 }
 
-std::string DrivingSession::getInfo() {
-    std::string info = "CourseID: " + std::to_string(getCourseId()) + '\n' +
+std::string DrivingSession::getInfo() { // funkcja nic nie zwracala, dodany return
+    return "CourseID: " + std::to_string(getCourseId()) + '\n' +
         "Student: " + getStudent()->getInfo() + '\n' +
         "Instructor: " + getInstructor()->getInfo() + '\n' +
         "Vehicle: " + getVehicle()->getVehicleInfo() + '\n' +
         "Start time: " + boost::posix_time::to_simple_string(getStartTime()) + '\n' +
         "End time: " + boost::posix_time::to_simple_string(getEndTime()) + '\n';
+}
+double DrivingSession::getSessionCost() const {
+    if (vehicle == nullptr) {return 0.0;}
+
+    // Oblicza czasu trwania jazdy za pomocą biblioteki Boost
+    boost::posix_time::time_duration duration = endTime - startTime;
+
+    // Zwraca czas trwania w godzinach (np. 1.5 = 1h 30m)
+    double hours = duration.total_seconds() / 3600.0;
+
+    // Koszt: stawka godzinowa pojazdu * czas
+    return vehicle->getBaseHourlyCost() * hours;
 }

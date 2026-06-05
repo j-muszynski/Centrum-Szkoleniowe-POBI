@@ -1,22 +1,22 @@
-    cmake_minimum_required(VERSION 3.20)
-    project(Library)
+cmake_minimum_required(VERSION 3.20)
+project(Library)
 
-    if(NOT Boost_FOUND)
-        find_package(Boost REQUIRED COMPONENTS date_time serialization unit_test_framework)
-    endif()
+if(NOT Boost_FOUND)
+    find_package(Boost REQUIRED COMPONENTS date_time serialization unit_test_framework)
+endif()
 
-    set(SOURCE_FILES
-            # ------ Header files ------
-            include/repositories/IRepository.h
-            include/repositories/CourseRepository.h
-            include/repositories/DrivingSessionRepository.h
-            include/repositories/InstructorRepository.h
-            include/repositories/StudentRepository.h
-            include/repositories/VehicleRepository.h
-            include/repositories/IDataStorage.h
-            include/repositories/AbstractFileRepository.h
-            include/repositories/FileStorage.h
-            include/typedefs.h
+set(SOURCE_FILES
+        # ------ Header files ------
+        include/repositories/IRepository.h
+        include/repositories/CourseRepository.h
+        include/repositories/DrivingSessionRepository.h
+        include/repositories/InstructorRepository.h
+        include/repositories/StudentRepository.h
+        include/repositories/VehicleRepository.h
+        include/repositories/IDataStorage.h
+        include/repositories/AbstractFileRepository.h
+        include/repositories/FileStorage.h
+        include/typedefs.h
 
             # ------ Source files ------
 
@@ -48,14 +48,15 @@
             src/managers/Coordinator.cpp
     )
 
-    add_library(Library STATIC ${SOURCE_FILES})
+add_library(Library STATIC ${SOURCE_FILES})
 
-    target_include_directories(Library PUBLIC include)
+target_include_directories(Library PUBLIC include)
 
-    if (APPLE)
-        target_include_directories(Library PUBLIC "/opt/homebrew/include")
-    endif ()
-    target_link_libraries(Library PUBLIC Boost::date_time Boost::serialization)
+if (APPLE)
+    target_include_directories(Library PUBLIC "/opt/homebrew/include")
+endif ()
+
+target_link_libraries(Library PUBLIC Boost::date_time Boost::serialization)
 
     target_link_libraries(Library PUBLIC
             Boost::date_time
@@ -70,31 +71,38 @@
             test/DrivingSessionManagerTest.cpp
             test/InstructorManagerTest.cpp
             test/StudentManagerTest.cpp
-            test/VehicleManagerTest.cpp)
+            test/VehicleManagerTest.cpp
+            test/master.cpp
+            test/AbstractFileRepositoryTest.cpp
+            test/FileStorageTest.cpp
+            test/AddressTest.cpp
+            test/PersonTest.cpp
+            test/VehicleTest.cpp
+            test/CourseAndSessionTest.cpp
+)
 
-    add_executable(LibraryTester ${SOURCE_TEST_FILES})
+add_executable(LibraryTester ${SOURCE_TEST_FILES})
 
-    target_include_directories(LibraryTester PRIVATE
-            include
-    )
-    if(APPLE)
-        target_include_directories(LibraryTester PRIVATE "/opt/homebrew/include")
-    endif()
+target_include_directories(LibraryTester PRIVATE
+        include
+)
+if(APPLE)
+    target_include_directories(LibraryTester PRIVATE "/opt/homebrew/include")
+endif()
 
+target_link_libraries(LibraryTester PRIVATE
+        Library
+        Boost::unit_test_framework
+        Boost::date_time
+        Boost::serialization
+)
 
-    target_link_libraries(LibraryTester PRIVATE
-            Library
-            Boost::unit_test_framework
-            Boost::date_time
-            Boost::serialization
-    )
+add_test(LibraryTest LibraryTester
+        --report_level=detailed
+        --log_level=all
+        --color_output=yes
+)
 
-    add_test(LibraryTest LibraryTester
-            --report_level=detailed
-            --log_level=all
-            --color_output=yes
-    )
-
-    add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1 BOOST_TEST_LOG_LEVEL=all
-            ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> --verbose
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+add_custom_target(check ${CMAKE_COMMAND} -E env CTEST_OUTPUT_ON_FAILURE=1 BOOST_TEST_LOG_LEVEL=all
+        ${CMAKE_CTEST_COMMAND} -C $<CONFIGURATION> --verbose
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
