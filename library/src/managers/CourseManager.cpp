@@ -26,7 +26,7 @@ std::vector<CoursePtr> CourseManager::findAllArchiveCourses() const {
  * calculating the price: when driving session is finished hours of the driving session * cost of the vehicle is added to
  * course price which will allow for easier accounting in coordinator class
  */
-void CourseManager::registerCourse(StudentPtr studentPtr, InstructorPtr instructorPtr, Category category) {
+void CourseManager::registerCourse(const StudentPtr& studentPtr, const InstructorPtr& instructorPtr, Category category) {
 
     std::vector<Category> licences = instructorPtr->getQualifications();
 
