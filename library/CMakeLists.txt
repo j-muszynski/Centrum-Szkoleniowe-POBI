@@ -46,6 +46,8 @@ set(SOURCE_FILES
             src/managers/DrivingSessionManager.cpp
             src/managers/CourseManager.cpp
             src/managers/Coordinator.cpp
+        # --- ui ---
+        src/ui/ConsoleUI.cpp
     )
 
 add_library(Library STATIC ${SOURCE_FILES})

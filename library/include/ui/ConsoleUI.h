@@ -8,6 +8,10 @@
 #include "managers/InstructorManager.h"
 #include "managers/DrivingSessionManager.h"
 #include "managers/VehicleManager.h"
+#include "model/PassengerCar.h"
+#include "model/Motorcycle.h"
+#include "model/Truck.h"
+#include "model/Bus.h"
 
 class ConsoleUI {
 private:
