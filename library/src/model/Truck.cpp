@@ -20,3 +20,6 @@ std::string Truck::getVehicleInfo() const {
            ", Rejestracja: " + getPlateNumber() + 
            ", Ladownosc: " + std::to_string(cargoCapacity) + "t]";
 }
+    double Truck::getBaseHourlyCost() const {
+        return 150.0; // Stawka dla ciężarówek
+}
