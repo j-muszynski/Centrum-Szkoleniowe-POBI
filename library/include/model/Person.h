@@ -15,6 +15,11 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/serialization/assume_abstract.hpp>
 
+/**
+ * @class Person
+ * @brief Abstrakcyjna klasa bazowa reprezentująca osobę w systemie.
+ * * Zawiera wspólne atrybuty dla kursantów i instruktorów (m.in. dane personalne, adres).
+ */
 class Person {
     friend class boost::serialization::access;
     template<class Archive>
@@ -39,6 +44,16 @@ protected:
     Person() = default;
 
 public:
+
+    /**
+     * @brief Konstruktor obiektu Person.
+     * @param id Unikalny identyfikator.
+     * @param firstName Imię.
+     * @param lastName Nazwisko.
+     * @param pesel Numer PESEL.
+     * @param birthDate Data urodzenia.
+     * @param address Wskaźnik na adres (AddressPtr).
+     */
     Person(int id, const std::string& firstName, const std::string& lastName,
            const std::string& pesel, const boost::gregorian::date& birthDate,
            AddressPtr address);
@@ -57,6 +72,10 @@ public:
     void setAddress(AddressPtr address);
     void addLicense(Category category);
 
+    /**
+     * @brief Zwraca sformatowane informacje o osobie (metoda wirtualna).
+     * @return String z informacjami.
+     */
     virtual std::string getInfo() const = 0;
 };
 
