@@ -85,7 +85,7 @@ public:
 
     /**
      * @brief Zwraca sformatowane informacje o osobie (metoda wirtualna).
-     * @return String z informacjami.
+     * @return String zawierający podstawowe informacje o obiekcie.
      */
     virtual std::string getInfo() const = 0;
 };

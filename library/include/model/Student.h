@@ -48,6 +48,7 @@ public:
     const std::string& getPkkNumber() const;
     bool getIsReadyForExam() const;
 
+    /** @brief Pobiera numer PKK kursanta. */
     void setPkkNumber(const std::string& pkkNumber);
 
     /**
@@ -55,7 +56,10 @@ public:
      * @param isReady Status gotowości (true/false).
      */
     void setReadyForExam(bool isReady);
-
+    /**
+         * @brief Generuje czytelne podsumowanie danych kursanta.
+         * @return String zawierający podstawowe informacje o obiekcie.
+         */
     std::string getInfo() const override;
 };
 

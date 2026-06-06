@@ -6,6 +6,14 @@
 #include <boost/serialization/split_member.hpp>
 #include "typedefs.h"
 #include <boost/serialization/access.hpp>
+
+/**
+ * @class Instructor
+ * @brief Klasa reprezentująca pracownika - instruktora jazdy.
+ *
+ * Dziedziczy po klasie Person. Posiada wektor kwalifikacji, który określa
+ * z jakich kategorii instruktor może prowadzić szkolenia.
+ */
 class Instructor : public Person {
 private:
     friend class boost::serialization::access;
@@ -22,14 +30,35 @@ protected:
     Instructor() = default;
 
 public:
+    /**
+     * @brief Konstruktor instruktora.
+     * @param id Unikalny identyfikator.
+     * @param firstName Imię.
+     * @param lastName Nazwisko.
+     * @param pesel Numer PESEL.
+     * @param birthDate Data urodzenia.
+     * @param address Wskaźnik na adres przypisany do instruktora.
+     */
     Instructor(int id, const std::string& firstName, const std::string& lastName,
                const std::string& pesel, const boost::gregorian::date& birthDate,
                AddressPtr address);
     ~Instructor() override = default;
 
+    /**
+     * @brief Pobiera listę kwalifikacji instruktora.
+     * @return Wektor zawierający przypisane kategorie.
+     */
     const std::vector<Category>& getQualifications() const;
-    void addQualification(Category category);
 
+    /**
+     * @brief Dodaje nową kwalifikację do profilu instruktora.
+     * @param category Kategoria, której instruktor będzie mógł nauczać.
+     */
+    void addQualification(Category category);
+    /**
+         * @brief Generuje ciąg znaków opisujący instruktora i jego uprawnienia.
+         * @return Sformatowany String.
+         */
     std::string getInfo() const override;
 };
 
