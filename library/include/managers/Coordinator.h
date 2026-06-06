@@ -16,7 +16,6 @@ class CourseManager;
      * * Klasa odpowiada za operacje biznesowe, takie jak obliczanie kosztów,
      * weryfikacja dostępności zasobów (pojazdów, instruktorów) oraz generowanie statystyk.
      */
-
 class Coordinator {
 private:
     InstructorManager& instructorManager;
@@ -24,8 +23,6 @@ private:
     DrivingSessionManager& drivingSessionManager;
     VehicleManager& vehicleManager;
     CourseManager& courseManager;
-
-
 
 public:
 
@@ -41,10 +38,15 @@ public:
     Coordinator(InstructorManager& instructorManger, StudentManager& studentManager, DrivingSessionManager& drivingSessionManager,
                 VehicleManager& vehicleManger, CourseManager& courseManager);
 
+    /** @brief Zwraca referencję do menedżera instruktorów. */
     InstructorManager& getInstructorManager();
+    /** @brief Zwraca referencję do menedżera kursantów. */
     StudentManager& getStudentManager();
+    /** @brief Zwraca referencję do menedżera sesji jazd. */
     DrivingSessionManager& getDrivingSessionManager();
+    /** @brief Zwraca referencję do menedżera pojazdów. */
     VehicleManager& getVehicleManager();
+    /** @brief Zwraca referencję do menedżera kursów. */
     CourseManager& getCourseManager();
 
     /**
@@ -102,10 +104,39 @@ public:
      */
     std::vector<InstructorPtr> getAvailableInstructors(Category category, TimeRange range);
 
+    /**
+     * @brief Pobiera kursanta na podstawie jego unikalnego ID.
+     * @param id Unikalny identyfikator kursanta.
+     * @return Wskaźnik na obiekt kursanta (StudentPtr) lub nullptr, jeśli nie znaleziono.
+     */
     StudentPtr getStudentById(int id);
+
+    /**
+     * @brief Pobiera instruktora na podstawie jego unikalnego ID.
+     * @param id Unikalny identyfikator instruktora.
+     * @return Wskaźnik na obiekt instruktora (InstructorPtr) lub nullptr, jeśli nie znaleziono.
+     */
     InstructorPtr getInstructorById(int id);
+
+    /**
+     * @brief Pobiera pojazd na podstawie jego unikalnego ID.
+     * @param id Unikalny identyfikator pojazdu.
+     * @return Wskaźnik na obiekt pojazdu (VehiclePtr) lub nullptr, jeśli nie znaleziono.
+     */
     VehiclePtr getVehicleById(int id);
+
+    /**
+     * @brief Pobiera kurs na podstawie jego unikalnego ID.
+     * @param id Unikalny identyfikator kursu.
+     * @return Wskaźnik na obiekt kursu (CoursePtr) lub nullptr, jeśli nie znaleziono.
+     */
     CoursePtr getCourseById(int id);
+
+    /**
+     * @brief Pobiera sesję jazdy na podstawie jej unikalnego ID.
+     * @param id Unikalny identyfikator sesji jazdy.
+     * @return Wskaźnik na obiekt sesji (DrivingSessionPtr) lub nullptr, jeśli nie znaleziono.
+     */
     DrivingSessionPtr getDrivingSessionById(int id);
 
     /**
