@@ -2,6 +2,8 @@
 #define HEAVYVEHICLE_H
 
 #include "model/Vehicle.h"
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/assume_abstract.hpp>
 
 class HeavyVehicle : public Vehicle {
 private:
@@ -18,5 +20,7 @@ public:
     double getBaseHourlyCost() const override = 0; // zgodnie z UML
 
 };
+
+BOOST_SERIALIZATION_ASSUME_ABSTRACT(HeavyVehicle) // Bo boost placze ze abstrakcyjna
 
 #endif
