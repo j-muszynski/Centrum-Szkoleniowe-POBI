@@ -5,6 +5,10 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/base_object.hpp>
 
+/**
+ * @class PassengerCar
+ * @brief Reprezentuje standardowy samochód osobowy (kategoria B).
+ */
 class PassengerCar : public Vehicle {
 private:
     friend class boost::serialization::access;
@@ -17,6 +21,12 @@ protected:
     PassengerCar() = default;
 
 public:
+    /**
+     * @brief Konstruktor auta osobowego.
+     * Kategoria B jest tu przypisywana na stałe z góry.
+     * @param id Unikalny identyfikator.
+     * @param plateNumber Numer rejestracyjny.
+     */
     PassengerCar(int id, const std::string& plateNumber);
     ~PassengerCar() override = default;
 
