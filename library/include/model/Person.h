@@ -59,17 +59,28 @@ public:
            AddressPtr address);
     virtual ~Person() = default;
 
+    /** @brief Pobiera unikalne ID osoby. */
     int getId() const;
+    /** @brief Pobiera imię osoby. */
     const std::string& getFirstName() const;
+    /** @brief Pobiera nazwisko osoby. */
     const std::string& getLastName() const;
+    /** @brief Pobiera numer PESEL. */
     const std::string& getPesel() const;
+    /** @brief Pobiera datę urodzenia. */
     const boost::gregorian::date& getBirthDate() const;
+    /** @brief Pobiera wskaźnik na przypisany adres. */
     AddressPtr getAddress() const;
+    /** @brief Pobiera listę posiadanych licencji/kategorii. */
     const std::vector<Category>& getLicenses() const;
 
+    /** @brief Ustawia nowe imię. */
     void setFirstName(const std::string& firstName);
+    /** @brief Ustawia nowe nazwisko. */
     void setLastName(const std::string& lastName);
+    /** @brief Ustawia nowy wskaźnik na adres. */
     void setAddress(AddressPtr address);
+    /** @brief Dodaje nową kategorię do posiadanych licencji. */
     void addLicense(Category category);
 
     /**
