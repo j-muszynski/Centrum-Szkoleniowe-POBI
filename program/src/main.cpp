@@ -11,8 +11,22 @@
 #include "repositories/CourseRepository.h"
 #include "repositories/DrivingSessionRepository.h"
 #include "repositories/FileStorage.h"
+#include <boost/serialization/export.hpp>
+#include "model/Student.h"
+#include "model/Instructor.h"
+#include "model/PassengerCar.h"
+#include "model/Motorcycle.h"
+#include "model/Truck.h"
+#include "model/Bus.h"
 
 int main() {
+    boost::serialization::void_cast_register<Student, Person>();   // dodane bo przez static lib w UI boost wariowal
+    boost::serialization::void_cast_register<Instructor, Person>();
+    boost::serialization::void_cast_register<PassengerCar, Vehicle>();
+    boost::serialization::void_cast_register<Motorcycle, Vehicle>();
+    boost::serialization::void_cast_register<Truck, HeavyVehicle>();
+    boost::serialization::void_cast_register<Bus, HeavyVehicle>();
+
     FileStorage<StudentPtr> studentStorage("students.txt");
     FileStorage<InstructorPtr> instructorStorage("instructors.txt");
     FileStorage<VehiclePtr> vehicleStorage("vehicles.txt");

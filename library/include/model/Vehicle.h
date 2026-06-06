@@ -3,6 +3,8 @@
 
 #include <string>
 #include "model/Category.h"
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/assume_abstract.hpp>
 
 class Vehicle {
 private:
@@ -30,4 +32,5 @@ public:
     virtual double getBaseHourlyCost() const = 0; // zgodnie z UML
 };
 
+BOOST_SERIALIZATION_ASSUME_ABSTRACT(Vehicle) // Bo boost placze ze klasa abstrakcyjna
 #endif

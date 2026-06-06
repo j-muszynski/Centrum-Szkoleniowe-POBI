@@ -13,6 +13,7 @@
 #include <boost/serialization/shared_ptr.hpp>
 //#include <boost/date_time/gregorian/greg_serialize.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
+#include <boost/serialization/assume_abstract.hpp>
 
 class Person {
     friend class boost::serialization::access;
@@ -58,5 +59,7 @@ public:
 
     virtual std::string getInfo() const = 0;
 };
+
+BOOST_SERIALIZATION_ASSUME_ABSTRACT(Person) // Bo boost placze ze abstrakcyjna
 
 #endif
