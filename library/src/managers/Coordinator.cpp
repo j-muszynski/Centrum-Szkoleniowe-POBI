@@ -95,11 +95,8 @@ double Coordinator::calculateRevenue() {
 }
 
 void Coordinator::completeCourse(int courseId) {
-    auto course = getCourseById(courseId);
-    if (course != nullptr) {
-        course->setFinished(true);
+    courseManager.completeCourse(courseId); // Delegujemy zadanie do menedżera
     }
-}
 
 double Coordinator::getTotalHoursForCourse(int courseId) {
     double totalHours = 0.0;

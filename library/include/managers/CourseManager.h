@@ -18,6 +18,7 @@ private:
     IRepository<CoursePtr>& archiveCourseRepo;
 
 public:
+    void completeCourse(int courseId);
     /**
      * @brief Constructs a CourseManager with required data repositories.
      * @param courseRepo Reference to the repository handling active courses.
