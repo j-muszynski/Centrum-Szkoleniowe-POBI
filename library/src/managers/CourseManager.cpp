@@ -69,3 +69,11 @@ CoursePtr CourseManager::getCourseById(int courseId) const {
 CoursePtr CourseManager::getArchiveCourseById(int courseId) const {
     return archiveCourseRepo.getById(courseId);
 }
+void CourseManager::completeCourse(int courseId) {
+    auto course = courseRepo.getById(courseId);
+    if (course != nullptr) {
+        course->setFinished(true);
+        archiveCourseRepo.add(course);
+        courseRepo.remove(courseId);
+    }
+}
