@@ -13,15 +13,32 @@
 #include "model/Truck.h"
 #include "model/Bus.h"
 
+/**
+ * @class ConsoleUI
+ * @brief Interfejs użytkownika w konsoli.
+ * * Klasa odpowiada za komunikację z użytkownikiem, wyświetlanie menu
+ * oraz przekazywanie poleceń do warstwy logiki biznesowej (Coordinator).
+ */
 class ConsoleUI {
 private:
     Coordinator& coordinator;
 
 public:
+    /**
+     * @brief Konstruktor interfejsu konsolowego.
+     * @param coordinator Referencja do głównego koordynatora systemu.
+     */
     ConsoleUI(Coordinator& coordinator);
     ~ConsoleUI() = default;
 
+    /**
+     * @brief Uruchamia główną pętlę programu obsługującą wejście użytkownika.
+     */
     void start();
+
+    /**
+     * @brief Wyświetla opcje menu w konsoli.
+     */
     void displayMenu();
 };
 
