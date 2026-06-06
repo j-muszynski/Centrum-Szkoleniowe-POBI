@@ -8,9 +8,22 @@
 
 class Vehicle {
 private:
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, [[maybe_unused]] const unsigned int version) {
+        ar & id;
+        ar & plateNumber;
+        ar & category;
+    }
+
     int id;
     std::string plateNumber;  // Rejestracja
     Category category;        // Jakie prawko
+
+protected:
+    Vehicle() = default;
+    friend class boost::serialization::access;
 
 public:
     // Konstruktor

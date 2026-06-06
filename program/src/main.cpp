@@ -19,6 +19,16 @@
 #include "model/Truck.h"
 #include "model/Bus.h"
 
+BOOST_CLASS_EXPORT(Student)
+BOOST_CLASS_EXPORT(Instructor)
+BOOST_CLASS_EXPORT(PassengerCar)
+BOOST_CLASS_EXPORT(Motorcycle)
+BOOST_CLASS_EXPORT(Truck)
+BOOST_CLASS_EXPORT(Bus)
+
+
+
+
 int main() {
     boost::serialization::void_cast_register<Student, Person>();   // dodane bo przez static lib w UI boost wariowal
     boost::serialization::void_cast_register<Instructor, Person>();
@@ -26,23 +36,39 @@ int main() {
     boost::serialization::void_cast_register<Motorcycle, Vehicle>();
     boost::serialization::void_cast_register<Truck, HeavyVehicle>();
     boost::serialization::void_cast_register<Bus, HeavyVehicle>();
+    boost::serialization::void_cast_register<HeavyVehicle, Vehicle>();
 
+    // Poprawka - osobne storage dla aktywnych i archiwalnych baz
     FileStorage<StudentPtr> studentStorage("students.txt");
+    FileStorage<StudentPtr> archiveStudentStorage("archive_students.txt");
+
     FileStorage<InstructorPtr> instructorStorage("instructors.txt");
+    FileStorage<InstructorPtr> archiveInstructorStorage("archive_instructors.txt");
+
     FileStorage<VehiclePtr> vehicleStorage("vehicles.txt");
+
     FileStorage<CoursePtr> courseStorage("courses.txt");
+    FileStorage<CoursePtr> archiveCourseStorage("archive_courses.txt");
+
     FileStorage<DrivingSessionPtr> sessionStorage("sessions.txt");
+    FileStorage<DrivingSessionPtr> archiveSessionStorage("archive_sessions.txt");
 
+    // Repozytoria
     StudentRepository studentRepo("students.txt", studentStorage);
-    StudentRepository archiveStudentRepo("archive_students.txt", studentStorage);
-    InstructorRepository instructorRepo("instructors.txt", instructorStorage);
-    InstructorRepository archiveInstructorRepo("archive_instructors.txt", instructorStorage);
-    VehicleRepository vehicleRepo("vehicles.txt", vehicleStorage);
-    CourseRepository courseRepo("courses.txt", courseStorage);
-    CourseRepository archiveCourseRepo("archive_courses.txt", courseStorage);
-    DrivingSessionRepository sessionRepo("sessions.txt", sessionStorage);
-    DrivingSessionRepository archiveSessionRepo("archive_sessions.txt", sessionStorage);
+    StudentRepository archiveStudentRepo("archive_students.txt", archiveStudentStorage);
 
+    InstructorRepository instructorRepo("instructors.txt", instructorStorage);
+    InstructorRepository archiveInstructorRepo("archive_instructors.txt", archiveInstructorStorage);
+
+    VehicleRepository vehicleRepo("vehicles.txt", vehicleStorage);
+
+    CourseRepository courseRepo("courses.txt", courseStorage);
+    CourseRepository archiveCourseRepo("archive_courses.txt", archiveCourseStorage);
+
+    DrivingSessionRepository sessionRepo("sessions.txt", sessionStorage);
+    DrivingSessionRepository archiveSessionRepo("archive_sessions.txt", archiveSessionStorage);
+
+    // Wczytanie danycgh
     studentRepo.executeLoad();
     archiveStudentRepo.executeLoad();
     instructorRepo.executeLoad();
@@ -53,6 +79,7 @@ int main() {
     sessionRepo.executeLoad();
     archiveSessionRepo.executeLoad();
 
+    // Menadzer i koordynaro - inicjalizacja
     StudentManager studentManager(studentRepo, archiveStudentRepo);
     InstructorManager instructorManager(instructorRepo, archiveInstructorRepo);
     VehicleManager vehicleManager(vehicleRepo);
@@ -60,15 +87,13 @@ int main() {
     DrivingSessionManager sessionManager(sessionRepo, archiveSessionRepo);
 
     Coordinator coordinator(instructorManager, studentManager, sessionManager, vehicleManager, courseManager);
-
     ConsoleUI ui(coordinator);
 
-    auto inst = std::make_shared<Instructor>(1, "Jan", "Kowalski", "12345", boost::gregorian::date(1980,1,1), std::make_shared<Address>("Lodz","Wiosenna","1"));
-    inst->addQualification(Category::B);
-    instructorManager.registerInstructor(inst);
+    // Tu byl Jan Kowalski ale sprawial problemy
 
     ui.start();
 
+    // Zapis
     studentRepo.executeSave();
     archiveStudentRepo.executeSave();
     instructorRepo.executeSave();
@@ -80,4 +105,5 @@ int main() {
     archiveSessionRepo.executeSave();
 
     return 0;
+
 }

@@ -5,7 +5,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/split_member.hpp>
 #include "typedefs.h"
-
+#include <boost/serialization/access.hpp>
 class Instructor : public Person {
 private:
     friend class boost::serialization::access;

@@ -5,6 +5,7 @@
 #include "typedefs.h"
 #include "model/Person.h"
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/access.hpp>
 
 class Student : public Person {
 private:

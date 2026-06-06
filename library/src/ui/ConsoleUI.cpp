@@ -40,6 +40,8 @@ void ConsoleUI::displayMenu() {
     std::cout << "12. Wyswietl baze aktywnych instruktorow\n";
     std::cout << "13. Wprowadz nowy pojazd do floty\n";
     std::cout << "14. Wycofaj pojazd z floty (po ID)\n";
+    std::cout << "15. Zatrudnij Instrukora\n";
+    std::cout << "16. Zwolnij Instruktora\n";
     std::cout << "=======================================================\n";
     std::cout << " 0. Wyjdz z programu\n";
     std::cout << "Wybierz opcje: ";
@@ -521,13 +523,140 @@ void ConsoleUI::start() {
                 }
                 break;
             }
+            case 15: {
+                std::string firstName, lastName, pesel;
+                std::string city, street, buildingNumber;
+                int year, month, day;
+
+                // Podstawowe dane
+                std::cout << "Podaj imie: ";
+                std::getline(std::cin >> std::ws, firstName);
+                std::cout << "Podaj nazwisko: ";
+                std::getline(std::cin >> std::ws, lastName);
+                std::cout << "Podaj PESEL: ";
+                std::cin >> pesel;
+
+                // Dane adresowe
+                std::cout << "--- Dane adresowe ---\n";
+                std::cout << "Podaj miasto: ";
+                std::getline(std::cin >> std::ws, city);
+                std::cout << "Podaj ulice: ";
+                std::getline(std::cin >> std::ws, street);
+                std::cout << "Podaj numer budynku/mieszkania: ";
+                std::cin >> buildingNumber;
+
+                // Data urodzenia
+                std::cout << "--- Data urodzenia ---\n";
+                std::cout << "Podaj rok urodzenia (np. 1980): ";
+                std::cin >> year;
+                if (std::cin.fail() || year < 1900 || year > 2006) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Nieprawidlowy rok (Instruktor musi byc pelnoletni)!\n"; break;
+                }
+
+                std::cout << "Podaj miesiac (1-12, bez zera na poczatku): ";
+                std::cin >> month;
+                if (std::cin.fail() || month < 1 || month > 12) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Miesiac musi byc liczba od 1 do 12!\n"; break;
+                }
+
+                std::cout << "Podaj dzien (1-31, bez zera na poczatku): ";
+                std::cin >> day;
+                if (std::cin.fail() || !isDateValid(year, month, day)) {
+                    std::cin.clear(); std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] Podana data jest nieprawidlowa w kalendarzu!\n"; break;
+                }
+
+                // Przypisanie ID
+                int nextId = 1;
+                auto allInstructors = coordinator.getInstructorManager().findAllInstructors();
+                if (!allInstructors.empty()) {
+                    for (const auto& instructor : allInstructors) {
+                        if (instructor != nullptr && instructor->getId() >= nextId) {
+                            nextId = instructor->getId() + 1;
+                        }
+                    }
+                }
+
+                // Tworzymy obiekty
+                AddressPtr address = std::make_shared<Address>(city, street, buildingNumber);
+                boost::gregorian::date birthDate(year, month, day);
+                auto newInstructor = std::make_shared<Instructor>(nextId, firstName, lastName, pesel, birthDate, address);
+
+                // Dodawanie kategorii
+                std::cout << "--- Kategorie uprawnien ---\n";
+                bool addingCategories = true;
+                while (addingCategories) {
+                    std::string catStr;
+                    std::cout << "Podaj kategorie (AM, A1, A2, A, B, BE, C, CE, D, DE) lub wpisz 'X' aby zakonczyc: ";
+                    std::cin >> catStr;
+
+                    if (catStr == "X" || catStr == "x") {
+                        if (newInstructor->getQualifications().empty()) {
+                            std::cout << "[UWAGA] Instruktor nie ma przypisanej zadnej kategorii. Nie bedzie mogl prowadzic kursow!\n";
+                        }
+                        addingCategories = false;
+                        continue;
+                    }
+
+                    Category cat;
+                    if (catStr == "AM") cat = Category::AM;
+                    else if (catStr == "A1") cat = Category::A1;
+                    else if (catStr == "A2") cat = Category::A2;
+                    else if (catStr == "A") cat = Category::A;
+                    else if (catStr == "B") cat = Category::B;
+                    else if (catStr == "BE") cat = Category::BE;
+                    else if (catStr == "C") cat = Category::C;
+                    else if (catStr == "CE") cat = Category::CE;
+                    else if (catStr == "D") cat = Category::D;
+                    else if (catStr == "DE") cat = Category::DE;
+                    else {
+                        std::cout << "[BLAD] Nieznana kategoria!\n";
+                        continue;
+                    }
+
+                    newInstructor->addQualification(cat);
+                    std::cout << "-> Dodano uprawnienie kategorii: " << catStr << "\n";
+                }
+
+                // Zapis
+                coordinator.getInstructorManager().registerInstructor(newInstructor);
+                std::cout << "-> Instruktor " << firstName << " " << lastName << " (ID: " << nextId << ") zostal zatrudniony w osrodku.\n";
+                break;
+            }
+            case 16: {
+                int instructorId;
+                std::cout << "Podaj ID instruktora do zwolnienia: ";
+                std::cin >> instructorId;
+
+                // Czy liczba
+                if (std::cin.fail()) {
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    std::cout << "[BLAD] ID instruktora musi byc liczba!\n";
+                    break;
+                }
+
+                // Sprawdzamy czy istnieje
+                auto instructor = coordinator.getInstructorById(instructorId);
+
+                if (instructor == nullptr) {
+                    std::cout << "[BLAD] Nie znaleziono instruktora o ID: " << instructorId << " w bazie pracownikow.\n";
+                } else {
+                    // Usuwamy
+                    coordinator.getInstructorManager().unregisterInstructor(instructorId);
+                    std::cout << "-> Pracownik o ID: " << instructorId << " zostal zwolniony i usuniety z bazy.\n";
+                }
+                break;
+            }
             case 0: {
                 std::cout << "Zamykanie systemu OSK. Do widzenia!\n";
                 isRunning = false;
                 break;
             }
             default: {
-                std::cout << "[BLAD] Nieznana opcja. Wybierz liczbe od 0 do 14.\n";
+                std::cout << "[BLAD] Nieznana opcja. Wybierz liczbe od 0 do 16.\n";
                 break;
             }
         }

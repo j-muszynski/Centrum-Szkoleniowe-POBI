@@ -1,5 +1,6 @@
 #include "model/Bus.h"
 
+
 Category Bus::determineCategory(bool hasTrailer) {
     if (hasTrailer == true) {
         return Category::DE;
