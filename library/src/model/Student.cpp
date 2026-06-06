@@ -1,8 +1,6 @@
 #include "model/Student.h"
-#include <boost/serialization/export.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/date_time/gregorian/greg_serialize.hpp>
-BOOST_CLASS_EXPORT(Student)
 
 Student::Student(int id, const std::string& firstName, const std::string& lastName,
                  const std::string& pesel, const boost::gregorian::date& birthDate,
