@@ -29,7 +29,7 @@ private:
     int id;
     Category type; // Kategoria kursu
     InstructorPtr instructor; // Wskaźnik na przypisanego instruktora prowadzącego
-    StudentPtr student; // Na kursanta
+    StudentPtr student; // Wskaźnikna  kursanta
     bool isFinished; // 1 = godziny wyjeżdżone 0 = wiadomo co
 protected:
     Course() = default;
