@@ -5,6 +5,7 @@
 #include "repositories/StudentRepository.h"
 #include "model/Student.h"
 #include "model/Address.h"
+#include "model/Exceptions.h"
 
 // fakeStorage class imitates FileStorage, but it stores data in a vector instead of a file
 template <typename T>
@@ -52,7 +53,10 @@ BOOST_FIXTURE_TEST_SUITE(StudentManagerTestSuite, StudentManagerFixture)
         BOOST_REQUIRE(manager.findAllStudents().empty());
 
         // trying to register a nullptr student (should be ignored)
-        manager.registerStudent(nullptr);
+        BOOST_CHECK_THROW(
+            manager.registerStudent(nullptr),
+            NullPointerException
+        );
         BOOST_CHECK(manager.findAllStudents().empty());
 
         // registering a correct student object
@@ -88,6 +92,15 @@ BOOST_FIXTURE_TEST_SUITE(StudentManagerTestSuite, StudentManagerFixture)
         auto archivedStudent = manager.findAllArchiveStudents()[0];
         BOOST_REQUIRE(archivedStudent != nullptr);
         BOOST_CHECK(archivedStudent->getId() == 1);
+
+        BOOST_CHECK_THROW(
+            manager.unregisterStudent(1),
+            NotFoundException
+        );
+        BOOST_CHECK_THROW(
+            manager.unregisterStudent(-1),
+            InvalidInputException
+        );
     }
 
     /**
@@ -109,6 +122,16 @@ BOOST_FIXTURE_TEST_SUITE(StudentManagerTestSuite, StudentManagerFixture)
         auto archivedStudent = manager.getArchiveStudentById(1);
         BOOST_REQUIRE(archivedStudent != nullptr);
         BOOST_CHECK(archivedStudent->getIsReadyForExam());
+
+        BOOST_CHECK_THROW(
+            manager.updateExamStatus(999),
+            NotFoundException
+        );
+
+        BOOST_CHECK_THROW(
+            manager.updateExamStatus(-5),
+            InvalidInputException
+        );
     }
 
     /**
