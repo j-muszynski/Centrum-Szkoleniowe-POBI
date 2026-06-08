@@ -56,5 +56,10 @@ public:
      * @return VehiclePtr A shared pointer to the Vehicle object, or nullptr if not found.
      */
     [[nodiscard]] VehiclePtr getVehicleById(int vehicleId) const;
+
+    /**
+     * @brief Removes a vehicle by given unique id number from a database.
+     * @param vehicleId id of a vehicle that is supposed to be unregistered.
+     */
     void unregisterVehicle(int vehicleId);
 };
