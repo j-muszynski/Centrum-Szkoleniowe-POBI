@@ -38,9 +38,16 @@ package "Warstwa Logiki Biznesowej (BLL)" {
     class CourseManager {
         - coursesRepo: IRepository<Course>&
         - archiveCoursesRepo: IRepository<Course>&
+        + completeCourse(courseId: int): void
         + findCourses(predicate: const CoursePredicate&): std::vector<Course>
+        + findArchiveCourses(predicate: const CoursePredicate&): std::vector<CoursePtr>
         + findAllCourses(): std::vector<Course>
+        + findAllArchiveCourses(): std::vector<CoursePtr>
         + registerCourse(studentId: int, instructorId: int, category: Category): void
+        + getCourseReport(): std::string
+        + getArchiveCourseReport(): std::string
+        + getCourseById(id: int): CoursePtr
+        + getArchiveCourseById(id: int): CoursePtr
     }
 
     class StudentManager {
@@ -59,8 +66,12 @@ package "Warstwa Logiki Biznesowej (BLL)" {
         + registerInstructor(instructor: const Instructor&): void
         + unregisterInstructor(instructorId: int): void
         + findInstructor(predicate: const InstructorPredicate&): std::vector<Instructor>
-        + findAllInstructors(): std::vector<Instructor>
+        + findArchiveInstructor(predicate: const InstructorPredicate&): std::vector<Instructor>
+        + findAllInstructors(): std::vector<InstructorPtr>
+        + findAllArchiveInstructors(): std::vector<InstructorPtr>
         + assignToCategory(instructorId: int, category: Category): void
+        + getInstructorReport(): std::string
+        + getArchiveInstructorReport(): std::string
     }
 
     class DrivingSessionManager {
