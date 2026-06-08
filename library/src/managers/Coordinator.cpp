@@ -5,6 +5,7 @@
 #include "managers/VehicleManager.h"
 #include "managers/CourseManager.h"
 #include "model/Category.h"
+#include "model/Exceptions.h"
 
 #include <algorithm>
 
@@ -192,15 +193,11 @@ int Coordinator::getCourseIDByStudentID(int studentId) {
     auto courses = courseManager.findAllCourses();
 
     for (const auto& course : courses) {
-        // checking for nullptr
         if (course != nullptr && course->getStudent() != nullptr) {
             if (course->getStudent()->getId() == studentId) {
                 return course->getId(); // if found -> return it
             }
         }
     }
-
-    // not found -> -1
-    std::cout << "Warning: No active course found for Student ID: " << studentId << "\n";
     return -1;
 }
