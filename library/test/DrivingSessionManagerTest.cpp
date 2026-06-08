@@ -21,6 +21,7 @@
 #include "model/Course.h"
 #include "model/Address.h"
 #include "model/Category.h"
+#include "model/Exceptions.h"
 
 template <typename T>
 class FakeStorage : public IDataStorage<T> {
@@ -138,15 +139,24 @@ BOOST_FIXTURE_TEST_SUITE(DrivingSessionManagerTestSuite, DrivingSessionManagerFi
         TimeRange desiredTime(start, end);
 
         // Target non-existing student (999)
-        drivingSessionManager.scheduleDrivingSession(999, 202, 303, desiredTime, coordinator);
+        BOOST_CHECK_THROW(
+            drivingSessionManager.scheduleDrivingSession(999, 202, 303, desiredTime, coordinator),
+            NotFoundException
+        );
         BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().empty());
 
         // Target non-existing instructor (999)
-        drivingSessionManager.scheduleDrivingSession(101, 999, 303, desiredTime, coordinator);
+        BOOST_CHECK_THROW(
+            drivingSessionManager.scheduleDrivingSession(101, 999, 303, desiredTime, coordinator),
+            NotFoundException
+        );
         BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().empty());
 
         // Target non-existing vehicle (999)
-        drivingSessionManager.scheduleDrivingSession(101, 202, 999, desiredTime, coordinator);
+        BOOST_CHECK_THROW(
+            drivingSessionManager.scheduleDrivingSession(101, 202, 999, desiredTime, coordinator),
+            NotFoundException
+        );
         BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().empty());
     }
 
@@ -175,7 +185,10 @@ BOOST_FIXTURE_TEST_SUITE(DrivingSessionManagerTestSuite, DrivingSessionManagerFi
         auto secondCourse = std::make_shared<Course>(505, Category::B, mockInstructor, secondStudent);
         courseRepo.add(secondCourse);
 
-        drivingSessionManager.scheduleDrivingSession(777, 202, 303, conflictingTime, coordinator);
+        BOOST_CHECK_THROW(
+            drivingSessionManager.scheduleDrivingSession(777, 202, 303, conflictingTime, coordinator),
+            ValidationException
+        );
 
         // Verify that the conflicting transaction was aborted
         BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().size() == 1);
@@ -200,7 +213,10 @@ BOOST_FIXTURE_TEST_SUITE(DrivingSessionManagerTestSuite, DrivingSessionManagerFi
         TimeRange sessionOneTime(start1, end1);
 
         // session too short (fail)
-        drivingSessionManager.scheduleDrivingSession(101, 202, 303, sessionOneTime, coordinator);
+        BOOST_CHECK_THROW(
+            drivingSessionManager.scheduleDrivingSession(101, 202, 303, sessionOneTime, coordinator),
+            ValidationException
+        );
         BOOST_REQUIRE(drivingSessionManager.findAllDrivingSessions().empty());
 
         boost::posix_time::ptime start2(boost::gregorian::date(2026, 6, 10), boost::posix_time::hours(11));
@@ -208,7 +224,10 @@ BOOST_FIXTURE_TEST_SUITE(DrivingSessionManagerTestSuite, DrivingSessionManagerFi
         TimeRange sessionTwoTime(start2, end2);
 
         // session too long (fail)
-        drivingSessionManager.scheduleDrivingSession(101, 202, 303, sessionTwoTime, coordinator);
+        BOOST_CHECK_THROW(
+            drivingSessionManager.scheduleDrivingSession(101, 202, 303, sessionTwoTime, coordinator),
+            ValidationException
+        );
         BOOST_REQUIRE(drivingSessionManager.findAllDrivingSessions().empty());
 
         boost::posix_time::ptime start3(boost::gregorian::date(2026, 6, 10), boost::posix_time::hours(11));
@@ -269,6 +288,15 @@ BOOST_FIXTURE_TEST_SUITE(DrivingSessionManagerTestSuite, DrivingSessionManagerFi
 
         drivingSessionManager.cancelSession(sessionId, coordinator);
         BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().empty());
+
+        BOOST_CHECK_THROW(
+            drivingSessionManager.cancelSession(999, coordinator),
+            NotFoundException
+        );
+        BOOST_CHECK_THROW(
+            drivingSessionManager.cancelSession(-5, coordinator),
+            InvalidInputException
+        );
     }
 
     /**
@@ -300,31 +328,41 @@ BOOST_FIXTURE_TEST_SUITE(DrivingSessionManagerTestSuite, DrivingSessionManagerFi
      * @test validates that completed driving session is moved to archived repository and changes it's status
      */
     BOOST_AUTO_TEST_CASE(setDrivingSessionAsCompleted_TEST) {
-    boost::posix_time::ptime start(boost::gregorian::date(2026, 6, 10), boost::posix_time::hours(8));
-    boost::posix_time::ptime end(boost::gregorian::date(2026, 6, 10), boost::posix_time::hours(9));
+        boost::posix_time::ptime start(boost::gregorian::date(2026, 6, 10), boost::posix_time::hours(8));
+        boost::posix_time::ptime end(boost::gregorian::date(2026, 6, 10), boost::posix_time::hours(9));
 
-    // repos are empty at the start
-    BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().empty());
-    BOOST_CHECK(drivingSessionManager.findAllArchiveDrivingSessions().empty());
+        // repos are empty at the start
+        BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().empty());
+        BOOST_CHECK(drivingSessionManager.findAllArchiveDrivingSessions().empty());
 
-    drivingSessionManager.scheduleDrivingSession(101, 202, 303, TimeRange(start, end), coordinator);
+        drivingSessionManager.scheduleDrivingSession(101, 202, 303, TimeRange(start, end), coordinator);
 
-    // making sure that session was successfully scheduled
-    BOOST_REQUIRE(!drivingSessionManager.findAllDrivingSessions().empty());
+        // making sure that session was successfully scheduled
+        BOOST_REQUIRE(!drivingSessionManager.findAllDrivingSessions().empty());
 
-    int drivingSessionID = drivingSessionManager.findAllDrivingSessions()[0]->getId();
-    DrivingSessionPtr session = drivingSessionManager.getDrivingSessionById(drivingSessionID);
+        int drivingSessionID = drivingSessionManager.findAllDrivingSessions()[0]->getId();
+        DrivingSessionPtr session = drivingSessionManager.getDrivingSessionById(drivingSessionID);
 
-    // moving session to archive repo
-    drivingSessionManager.setDrivingSessionAsCompleted(drivingSessionID);
+        // moving session to archive repo
+        drivingSessionManager.setDrivingSessionAsCompleted(drivingSessionID);
 
-    BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().empty());
-    BOOST_CHECK(!drivingSessionManager.findAllArchiveDrivingSessions().empty());
-    session = drivingSessionManager.findAllArchiveDrivingSessions()[0];
+        BOOST_CHECK(drivingSessionManager.findAllDrivingSessions().empty());
+        BOOST_CHECK(!drivingSessionManager.findAllArchiveDrivingSessions().empty());
+        session = drivingSessionManager.findAllArchiveDrivingSessions()[0];
 
-    // verifying the report for archive repo
-    BOOST_REQUIRE(session != nullptr);
-    BOOST_CHECK(session->getStatus() == "COMPLETED");
+        // verifying the report for archive repo
+        BOOST_REQUIRE(session != nullptr);
+        BOOST_CHECK(session->getStatus() == "COMPLETED");
+
+        BOOST_CHECK_THROW(
+            drivingSessionManager.setDrivingSessionAsCompleted(999),
+            NotFoundException
+        );
+
+        BOOST_CHECK_THROW(
+            drivingSessionManager.setDrivingSessionAsCompleted(-10),
+            InvalidInputException
+        );
     }
 
 BOOST_AUTO_TEST_SUITE_END()
