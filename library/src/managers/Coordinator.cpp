@@ -5,6 +5,7 @@
 #include "managers/VehicleManager.h"
 #include "managers/CourseManager.h"
 #include "model/Category.h"
+#include "model/Exceptions.h"
 
 #include <algorithm>
 
@@ -29,7 +30,7 @@ StudentPtr Coordinator::getStudentById(int id) {
             return student;
         }
     }
-    return nullptr;
+    throw NotFoundException("Nie znaleziono kursanta o podanym ID: " + std::to_string(id));
 }
 
 InstructorPtr Coordinator::getInstructorById(int id) {
@@ -39,7 +40,7 @@ InstructorPtr Coordinator::getInstructorById(int id) {
             return instructor;
         }
     }
-    return nullptr;
+    throw NotFoundException("Nie znaleziono instruktora o podanym ID: " + std::to_string(id));
 }
 
 VehiclePtr Coordinator::getVehicleById(int id) {
@@ -49,7 +50,7 @@ VehiclePtr Coordinator::getVehicleById(int id) {
             return vehicle;
         }
     }
-    return nullptr;
+    throw NotFoundException("Nie znaleziono pojazdu o podanym ID: " + std::to_string(id));
 }
 
 CoursePtr Coordinator::getCourseById(int id) {
@@ -59,7 +60,7 @@ CoursePtr Coordinator::getCourseById(int id) {
             return course;
         }
     }
-    return nullptr;
+    throw NotFoundException("Nie znaleziono kursu o podanym ID: " + std::to_string(id));
 }
 
 DrivingSessionPtr Coordinator::getDrivingSessionById(int id) {
@@ -69,7 +70,7 @@ DrivingSessionPtr Coordinator::getDrivingSessionById(int id) {
             return session;
         }
     }
-    return nullptr;
+    throw NotFoundException("Nie znaleziono sesji jazdy o podanym ID: " + std::to_string(id));
 }
 
 double Coordinator::calculateTotalCourseCost(int courseId) {
@@ -192,15 +193,11 @@ int Coordinator::getCourseIDByStudentID(int studentId) {
     auto courses = courseManager.findAllCourses();
 
     for (const auto& course : courses) {
-        // checking for nullptr
         if (course != nullptr && course->getStudent() != nullptr) {
             if (course->getStudent()->getId() == studentId) {
                 return course->getId(); // if found -> return it
             }
         }
     }
-
-    // not found -> -1
-    std::cout << "Warning: No active course found for Student ID: " << studentId << "\n";
-    return -1;
+    throw NotFoundException("Brak aktywnego kursu dla kursanta o ID: " + std::to_string(studentId));
 }
