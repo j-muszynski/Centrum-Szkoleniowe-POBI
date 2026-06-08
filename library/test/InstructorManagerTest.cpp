@@ -6,6 +6,7 @@
 #include "model/Instructor.h"
 #include "model/Address.h"
 #include "model/Category.h"
+#include "model/Exceptions.h"
 
 // fakeStorage class imitates FileStorage, but it stores data in a vector instead of a file
 template <typename T>
@@ -53,7 +54,10 @@ BOOST_FIXTURE_TEST_SUITE(InstructorManagerTestSuite, InstructorManagerFixture)
         BOOST_REQUIRE(manager.findAllInstructors().empty());
 
         // trying to register a nullptr instructor (should be ignored)
-        manager.registerInstructor(nullptr);
+        BOOST_CHECK_THROW(
+            manager.registerInstructor(nullptr),
+            NullPointerException
+        );
         BOOST_CHECK(manager.findAllInstructors().empty());
 
         // registering a correct instructor object
@@ -91,9 +95,16 @@ BOOST_FIXTURE_TEST_SUITE(InstructorManagerTestSuite, InstructorManagerFixture)
         BOOST_CHECK(archivedInstructor->getId() == 12);
 
         // unregistering non-existent instructor should not crash a program
-        manager.unregisterInstructor(12);
+        BOOST_CHECK_THROW(
+            manager.unregisterInstructor(12),
+            NotFoundException
+        );
         BOOST_CHECK(manager.findAllInstructors().empty());
         BOOST_REQUIRE(manager.findAllArchiveInstructors().size() == 1);
+        BOOST_CHECK_THROW(
+            manager.unregisterInstructor(-1),
+            InvalidInputException
+        );
     }
 
     /**
@@ -118,6 +129,16 @@ BOOST_FIXTURE_TEST_SUITE(InstructorManagerTestSuite, InstructorManagerFixture)
         manager.assignToCategory(12, Category::A);
         BOOST_REQUIRE(updatedInstructor->getQualifications().size() == 2);
         BOOST_CHECK(updatedInstructor->getQualifications()[1] == Category::A);
+
+        BOOST_CHECK_THROW(
+            manager.assignToCategory(999, Category::A),
+            NotFoundException
+        );
+
+        BOOST_CHECK_THROW(
+            manager.assignToCategory(-5, Category::C),
+            InvalidInputException
+        );
     }
 
     /**

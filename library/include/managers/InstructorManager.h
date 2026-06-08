@@ -59,7 +59,7 @@ public:
      * @brief Registers a new instructor in the repository using a generated unique ID.
      * @param instructor Instructor shared_pointer, which will be registered into system.
      */
-    void registerInstructor(InstructorPtr instructor);
+    void registerInstructor(const InstructorPtr& instructor);
 
     /**
      * @brief Unregisters instructor which is already in the repository (transfers the instructor to archive repo).
@@ -72,7 +72,7 @@ public:
     * @param instructorID id of instructor which is currently in instructorRepo.
     * @param category category which given instructor will be able to start teaching.
     */
-    void assignToCategory(int instructorID, Category category);
+    void assignToCategory(int instructorID, Category category) const;
 
     /**
      * @brief Generates a text report of all instructors.
