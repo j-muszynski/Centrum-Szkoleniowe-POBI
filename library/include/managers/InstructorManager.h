@@ -33,27 +33,27 @@ public:
      * @param predicate A callable boolean filter evaluation function.
      * @return std::vector<InstructorPtr> List of instructors matching the predicate.
      */
-    std::vector<InstructorPtr> findInstructors(const InstructorPredicate& predicate) const;
+    [[nodiscard]] std::vector<InstructorPtr> findInstructors(const InstructorPredicate& predicate) const;
 
     /**
      * @brief Filters archive instructors based on a custom predicate function.
      * @param predicate A callable boolean filter evaluation function.
      * @return std::vector<InstructorPtr> List of archive instructors matching the predicate.
      */
-    std::vector<InstructorPtr> findArchiveInstructors(const InstructorPredicate& predicate) const;
+    [[nodiscard]] std::vector<InstructorPtr> findArchiveInstructors(const InstructorPredicate& predicate) const;
 
 
     /**
      * @brief Retrieves all instructors currently registered in the system.
      * @return std::vector<InstructorPtr> List containing all instructors.
      */
-    std::vector<InstructorPtr> findAllInstructors() const;
+    [[nodiscard]] std::vector<InstructorPtr> findAllInstructors() const;
 
     /**
      * @brief Retrieves all instructors unregistered in the system.
      * @return std::vector<InstructorPtr> List containing all instructors.
      */
-    std::vector<InstructorPtr> findAllArchiveInstructors() const;
+    [[nodiscard]] std::vector<InstructorPtr> findAllArchiveInstructors() const;
 
     /**
      * @brief Registers a new instructor in the repository using a generated unique ID.
@@ -78,25 +78,25 @@ public:
      * @brief Generates a text report of all instructors.
      * @return std::string Formatted report string.
      */
-    std::string getInstructorReport() const;
+    [[nodiscard]] std::string getInstructorReport() const;
 
     /**
      * @brief Generates a text report of all archive instructors.
      * @return std::string Formatted report string.
      */
-    std::string getArchiveInstructorReport() const;
+    [[nodiscard]] std::string getArchiveInstructorReport() const;
 
     /**
      * @brief Retrieves an instructor entity by its unique identifier.
      * @param instructorId The unique ID of the target instructor.
      * @return InstructorPtr A shared pointer to the Instructor object, or nullptr if not found.
      */
-    InstructorPtr getInstructorById(int instructorId) const;
+    [[nodiscard]] InstructorPtr getInstructorById(int instructorId) const;
 
     /**
     * @brief Retrieves an archive instructor entity by its unique identifier.
     * @param instructorId The unique ID of the target instructor.
     * @return InstructorPtr A shared pointer to the Instructor object, or nullptr if not found.
     */
-    InstructorPtr getArchiveInstructorById(int instructorId) const;
+    [[nodiscard]] InstructorPtr getArchiveInstructorById(int instructorId) const;
 };
