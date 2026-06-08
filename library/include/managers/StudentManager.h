@@ -32,27 +32,27 @@ public:
      * @param predicate A callable boolean filter evaluation function.
      * @return std::vector<StudentPtr> List of students matching the predicate.
      */
-    std::vector<StudentPtr> findStudents(const StudentPredicate& predicate) const;
+    [[nodiscard]] std::vector<StudentPtr> findStudents(const StudentPredicate& predicate) const;
 
     /**
      * @brief Filters archive students based on a custom predicate function.
      * @param predicate A callable boolean filter evaluation function.
      * @return std::vector<StudentPtr> List of archive students matching the predicate.
      */
-    std::vector<StudentPtr> findArchiveStudents(const StudentPredicate& predicate) const;
+    [[nodiscard]] std::vector<StudentPtr> findArchiveStudents(const StudentPredicate& predicate) const;
 
 
     /**
      * @brief Retrieves all students currently registered in the system.
      * @return std::vector<StudentPtr> List containing all students.
      */
-    std::vector<StudentPtr> findAllStudents() const;
+    [[nodiscard]] std::vector<StudentPtr> findAllStudents() const;
 
     /**
      * @brief Retrieves all students unregistered in the system.
      * @return std::vector<StudentPtr> List containing all students.
      */
-    std::vector<StudentPtr> findAllArchiveStudents() const;
+    [[nodiscard]] std::vector<StudentPtr> findAllArchiveStudents() const;
 
     /**
      * @brief Registers a new student in the repository using a generated unique ID.
@@ -76,25 +76,25 @@ public:
      * @brief Generates a text report of all students.
      * @return std::string Formatted report string.
      */
-    std::string getStudentReport() const;
+    [[nodiscard]] std::string getStudentReport() const;
 
     /**
      * @brief Generates a text report of all archive students.
      * @return std::string Formatted report string.
      */
-    std::string getArchiveStudentReport() const;
+    [[nodiscard]] std::string getArchiveStudentReport() const;
 
     /**
      * @brief Retrieves a student entity by its unique identifier.
      * @param studentId The unique ID of the target student.
      * @return StudentPtr A shared pointer to the Student object, or nullptr if not found.
      */
-    StudentPtr getStudentById(int studentId) const;
+    [[nodiscard]] StudentPtr getStudentById(int studentId) const;
 
     /**
      * @brief Retrieves an archive student entity by its unique identifier.
      * @param studentId The unique ID of the target student.
      * @return StudentPtr A shared pointer to the Student object, or nullptr if not found.
      */
-    StudentPtr getArchiveStudentById(int studentId) const;
+    [[nodiscard]] StudentPtr getArchiveStudentById(int studentId) const;
 };
