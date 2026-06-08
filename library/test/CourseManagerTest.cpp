@@ -5,6 +5,7 @@
 #include "model/Student.h"
 #include "model/Instructor.h"
 #include "model/Category.h"
+#include "model/Exceptions.h"
 
 // fakeStorage class imitates FleStorage, but it stores data in vector instead of a file
 template <typename T>
@@ -52,8 +53,11 @@ BOOST_FIXTURE_TEST_SUITE(CourseManagerTestSuite, CourseManagerFixture)
     BOOST_AUTO_TEST_CASE(RegisterCourse_TEST) {
         BOOST_REQUIRE(manager.findAllCourses().empty());
 
-        // trying to register course where instructor does not have licenses (should fail)
-        manager.registerCourse(mockStudent, mockInstructor, Category::B);
+        // trying to register course where instructor does not have licenses (should throw an exception)
+        BOOST_CHECK_THROW(
+            manager.registerCourse(mockStudent, mockInstructor, Category::B),
+            ValidationException
+        );
         BOOST_CHECK(manager.findAllCourses().empty());
 
         // adding required qualifications and registering course
@@ -155,12 +159,28 @@ BOOST_FIXTURE_TEST_SUITE(CourseManagerTestSuite, CourseManagerFixture)
         mockInstructor->addQualification(Category::B);
 
         // Null student
-        manager.registerCourse(nullptr, mockInstructor, Category::B);
+        BOOST_CHECK_THROW(
+            manager.registerCourse(nullptr, mockInstructor, Category::B),
+            NullPointerException
+        );
         BOOST_CHECK(manager.findAllCourses().empty());
 
         // null instructor
-        manager.registerCourse(mockStudent, nullptr, Category::B);
+        BOOST_CHECK_THROW(
+            manager.registerCourse(mockStudent, nullptr, Category::B),
+            NullPointerException
+        );
         BOOST_CHECK(manager.findAllCourses().empty());
+    }
+
+    /**
+     * @test verifies correct exception throw when no course was found
+     */
+    BOOST_AUTO_TEST_CASE(CompleteCourse_NotFound_Exception_TEST) {
+        BOOST_CHECK_THROW(
+            manager.completeCourse(999),
+            NotFoundException
+        );
     }
 
 BOOST_AUTO_TEST_SUITE_END()

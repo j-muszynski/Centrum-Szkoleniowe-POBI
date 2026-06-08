@@ -1,5 +1,6 @@
 #include "managers/CourseManager.h"
 #include "repositories/CourseRepository.h"
+#include "model/Exceptions.h"
 
 #include "model/Student.h"
 
@@ -26,11 +27,10 @@ std::vector<CoursePtr> CourseManager::findAllArchiveCourses() const {
  * calculating the price: when driving session is finished hours of the driving session * cost of the vehicle is added to
  * course price which will allow for easier accounting in coordinator class
  */
-void CourseManager::registerCourse(const StudentPtr& studentPtr, const InstructorPtr& instructorPtr, Category category) {
-
+void CourseManager::registerCourse(const StudentPtr& studentPtr, const InstructorPtr& instructorPtr,
+                                   Category category) {
     if (studentPtr == nullptr || instructorPtr == nullptr) {
-        std::cout << "Wrong data type (nullptr)\n";
-        return;
+        throw NullPointerException("Cannot register course: Student or Instructor pointer is null.");
     }
 
     std::vector<Category> licences = instructorPtr->getQualifications();
@@ -43,10 +43,8 @@ void CourseManager::registerCourse(const StudentPtr& studentPtr, const Instructo
         courseRepo.add(newCourse);
     }
     else {
-        // thorw in the future
-        std::cout << "Instructo does not have requierd license!\n";
+        throw ValidationException("Instructor does not have the required driving license category for this course.");
     }
-
 }
 
 std::string CourseManager::getCourseReport() const {
@@ -69,11 +67,15 @@ CoursePtr CourseManager::getCourseById(int courseId) const {
 CoursePtr CourseManager::getArchiveCourseById(int courseId) const {
     return archiveCourseRepo.getById(courseId);
 }
+
 void CourseManager::completeCourse(int courseId) {
     auto course = courseRepo.getById(courseId);
-    if (course != nullptr) {
-        course->setFinished(true);
-        archiveCourseRepo.add(course);
-        courseRepo.remove(courseId);
+
+    if (course == nullptr) {
+        throw NotFoundException(
+            "Cannot complete course: Active course with ID " + std::to_string(courseId) + " not found.");
     }
+    course->setFinished(true);
+    archiveCourseRepo.add(course);
+    courseRepo.remove(courseId);
 }
