@@ -72,6 +72,8 @@ package "Warstwa Logiki Biznesowej (BLL)" {
         + assignToCategory(instructorId: int, category: Category): void
         + getInstructorReport(): std::string
         + getArchiveInstructorReport(): std::string
+        + getInstructorById(id: int): InstructorPtr
+        + getArchiveInstructorById(id: int): InstructorPtr
     }
 
     class DrivingSessionManager {
