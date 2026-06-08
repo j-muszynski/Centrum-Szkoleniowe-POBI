@@ -5,6 +5,7 @@
 #include "model/PassengerCar.h"
 #include "model/Motorcycle.h"
 #include "model/Category.h"
+#include "model/Exceptions.h"
 
 // fakeStorage class imitates FileStorage, but it stores data in a vector instead of a file
 template <typename T>
@@ -43,7 +44,10 @@ BOOST_FIXTURE_TEST_SUITE(VehicleManagerTestSuite, VehicleManagerFixture)
         BOOST_REQUIRE(manager.findAllVehicles().empty());
 
         // trying to register a nullptr vehicle (should be ignored gracefully)
-        manager.registerVehicle(nullptr);
+        BOOST_CHECK_THROW(
+            manager.registerVehicle(nullptr),
+            NullPointerException
+        );
         BOOST_CHECK(manager.findAllVehicles().empty());
 
         // registering a correct vehicle object
@@ -143,6 +147,29 @@ BOOST_FIXTURE_TEST_SUITE(VehicleManagerTestSuite, VehicleManagerFixture)
 
         BOOST_REQUIRE(!manager.findAllVehicles().empty());
         BOOST_CHECK(!filledReport.empty());
+    }
+
+    /**
+     * @test Verifies the unregisterVehicle mechanism and its error handling paths.
+     */
+    BOOST_AUTO_TEST_CASE(UnregisterVehicle_TEST) {
+        manager.registerVehicle(mockCar);
+        BOOST_REQUIRE(manager.findAllVehicles().size() == 1);
+
+        manager.unregisterVehicle(1);
+        BOOST_CHECK(manager.findAllVehicles().empty());
+
+        // unregistering non-existent vehicle
+        BOOST_CHECK_THROW(
+            manager.unregisterVehicle(1),
+            NotFoundException
+        );
+
+        // unregistering non-existent vehicle with negative id number
+        BOOST_CHECK_THROW(
+            manager.unregisterVehicle(-9),
+            InvalidInputException
+        );
     }
 
 BOOST_AUTO_TEST_SUITE_END()

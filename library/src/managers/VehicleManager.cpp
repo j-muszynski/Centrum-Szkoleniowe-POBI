@@ -1,7 +1,7 @@
 #include "managers/VehicleManager.h"
 #include "repositories/VehicleRepository.h"
-
 #include "model/Student.h"
+#include "model/Exceptions.h"
 
 VehicleManager::VehicleManager(IRepository<VehiclePtr>& vehicleRepo)
     : vehicleRepo(vehicleRepo) {}
@@ -15,7 +15,9 @@ std::vector<VehiclePtr> VehicleManager::findAllVehicles() const {
 }
 
 void VehicleManager::registerVehicle(const VehiclePtr& newVehicle) {
-    if (newVehicle == nullptr) return;
+    if (newVehicle == nullptr) {
+        throw NullPointerException("Cannot register vehicle: Provided pointer is null.");
+    }
 
     vehicleRepo.add(newVehicle);
 }
@@ -31,8 +33,14 @@ VehiclePtr VehicleManager::getVehicleById(int vehicleId) const {
 }
 
 void VehicleManager::unregisterVehicle(int vehicleId) {
-    VehiclePtr vehicle = getVehicleById(vehicleId);
-    if (vehicle != nullptr) {
-        vehicleRepo.remove(vehicleId);
+    if (vehicleId < 0) {
+        throw InvalidInputException("Vehicle ID cannot be negative.");
     }
+    VehiclePtr vehicle = getVehicleById(vehicleId);
+
+    if (vehicle == nullptr) {
+        throw NotFoundException("Cannot unregister vehicle: Vehicle with ID " + std::to_string(vehicleId) + " not found.");
+    }
+
+    vehicleRepo.remove(vehicleId);
 }
