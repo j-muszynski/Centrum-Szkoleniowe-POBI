@@ -36,12 +36,12 @@ package "Warstwa Logiki Biznesowej (BLL)" {
     }
 
     class CourseManager {
-        - coursesRepo: IRepository<Course>&
-        - archiveCoursesRepo: IRepository<Course>&
+        - coursesRepo: IRepository<CoursePtr>&
+        - archiveCoursesRepo: IRepository<CoursePtr>&
         + completeCourse(courseId: int): void
-        + findCourses(predicate: const CoursePredicate&): std::vector<Course>
+        + findCourses(predicate: const CoursePredicate&): std::vector<CoursePtr>
         + findArchiveCourses(predicate: const CoursePredicate&): std::vector<CoursePtr>
-        + findAllCourses(): std::vector<Course>
+        + findAllCourses(): std::vector<CoursePtr>
         + findAllArchiveCourses(): std::vector<CoursePtr>
         + registerCourse(studentId: int, instructorId: int, category: Category): void
         + getCourseReport(): std::string
@@ -51,13 +51,19 @@ package "Warstwa Logiki Biznesowej (BLL)" {
     }
 
     class StudentManager {
-        - studentRepo: IRepository<Student>&
-        - archiveStudentRepo: IRepository<Student>&
+        - studentRepo: IRepository<StudentPtr>&
+        - archiveStudentRepo: IRepository<StudentPtr>&
         + registerStudent(student: const Student&): void
         + unregisterStudent(studentId: int): void
-        + findStudents(predicate: const StudentPredicate&): std::vector<Student>
-        + findAllStudents(): std::vector<Student>
+        + findStudents(predicate: const StudentPredicate&): std::vector<StudentPtr>
+        + findArchiveStudents(predicate: const StudentPredicate&): std::vector<StudentPtr>
+        + findAllStudents(): std::vector<StudentPtr>
+        + findAllArchiveStudents(): std::vector<StudentPtr>
         + updateExamStatus(studentId: int): void
+        + getStudentById(id: int): StudentPtr
+        + getArchiveStudentById(id: int): StudentPtr
+        + getStudentReport(): std::string
+        + getArchiveStudentReport(): std::string
     }
 
     class InstructorManager {
@@ -77,20 +83,20 @@ package "Warstwa Logiki Biznesowej (BLL)" {
     }
 
     class DrivingSessionManager {
-        - drivingSessionRepo: IRepository<DrivingSession>&
-        - archiveDrivingSessionRepo: IRepository<DrivingSession>&
+        - drivingSessionRepo: IRepository<DrivingSessionPtr>&
+        - archiveDrivingSessionRepo: IRepository<DrivingSessionPtr>&
         + scheduleSession(studentId: int, instructorId: int, vehicleId: int, range: TimeRange, coordinator: Coordinator&): void
         + cancelSession(sessionId: int, coordinator: Coordinator&): void
-        + findDrivingSession(predicate: const DrivingSessionPredicate&): std::vector<DrivingSession>
-        + findAllDrivingSession(): std::vector<DrivingSession>
+        + findDrivingSession(predicate: const DrivingSessionPredicate&): std::vector<DrivingSessionPtr>
+        + findAllDrivingSession(): std::vector<DrivingSessionPtr>
     }
 
    class VehicleManager {
-       - vehicleRepo: IRepository<Vehicle>&
-       + registerVehicle(vehicle: std::shared_ptr<Vehicle>): void
+       - vehicleRepo: IRepository<VehiclePtr>&
+       + registerVehicle(vehicle: VehiclePtr): void
        + unregisterVehicle(vehicleId: int): void
-       + findVehicles(predicate: const VehiclePredicate&): std::vector<std::shared_ptr<Vehicle>>
-       + findAllVehicles(): std::vector<std::shared_ptr<Vehicle>>
+       + findVehicles(predicate: const VehiclePredicate&): std::vector<VehiclePtr>
+       + findAllVehicles(): std::vector<VehiclePtr>
    }
 }
 
