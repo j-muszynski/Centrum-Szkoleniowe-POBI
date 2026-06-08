@@ -4,6 +4,29 @@ skinparam classAttributeIconSize 0
 package "Interfejs Użytkownika (UI)" {
     class ConsoleUI {
         - coordinator: Coordinator&
+
+        - getIntInput(text: std::string, errorMsg: std::string): int
+        - getStringInput(text: std::string): std::string
+        - parseCategory(catStr: std::string): Category
+
+        - handleCalculateCourseCost(): void
+        - handleCalculateRevenue(): void
+        - handleRegisterStudent(): void
+        - handleGetStudentHours(): void
+        - handleRegisterCourse(): void
+        - handleScheduleDrivingSession(): void
+        - handleFindStudent(): void
+        - handleDisplayActiveCourses(): void
+        - handleDisplayArchiveCourses(): void
+        - handleCancelDrivingSession(): void
+        - handleCompleteCourse(): void
+        - handleDisplayActiveInstructors(): void
+        - handleRegisterVehicle(): void
+        - handleUnregisterVehicle(): void
+        - handleRegisterInstructor(): void
+        - handleUnregisterInstructor(): void
+
+        + ConsoleUI(coordinator: Coordinator&)
         + start(): void
         + displayMenu(): void
     }
