@@ -1,6 +1,6 @@
 #include "managers/DrivingSessionManager.h"
 #include "repositories/DrivingSessionRepository.h"
-
+#include "model/Exceptions.h"
 #include "model/Student.h"
 
 DrivingSessionManager::DrivingSessionManager(IRepository<DrivingSessionPtr>& drivingSessionRepo,
@@ -25,26 +25,22 @@ std::vector<DrivingSessionPtr> DrivingSessionManager::findAllArchiveDrivingSessi
     return archiveDrivingSessionRepo.findAll();
 }
 
-/*
- * exceptions later on
- * add functionality to propose different vehicle or instructor
- */
 void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructorID, int vehicleID, TimeRange timeRange,
                                                    Coordinator& coordinator) {
-    if (timeRange.first >= timeRange.second) return;
+    if (timeRange.first >= timeRange.second) {
+        throw InvalidInputException("Invalid time range: Start time must be before end time.");
+    }
 
     boost::posix_time::time_duration duration = timeRange.second - timeRange.first;
 
     // checking if session will be at least an hour long
-    if (duration.hours() < 1) {
-        std::cout << "Error: Driving session cannot be shorter than 1 hour (60 minutes).\n";
-        return;
+    if (duration < boost::posix_time::hours(1)) {
+        throw ValidationException("Driving session cannot be shorter than 1 hour (60 minutes).");
     }
 
     // checking if session will be shorter than 8h
-    if (duration.hours() > 8) {
-        std::cout << "Error: Driving session cannot be longer than 8 hours!.\n";
-        return;
+    if (duration > boost::posix_time::hours(8)) {
+        throw ValidationException("Driving session cannot be longer than 8 hours.");
     }
 
 
@@ -54,8 +50,15 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
     auto vehiclePtr = coordinator.getVehicleById(vehicleID);
 
     // if one of pointers is nullptr -> abort scheduling
-    if (studentPtr == nullptr || instructorPtr == nullptr || vehiclePtr == nullptr) {
-        return;
+    if (studentPtr == nullptr) {
+        throw NotFoundException("Scheduling failed: Student with ID " + std::to_string(studentID) + " not found.");
+    }
+    if (instructorPtr == nullptr) {
+        throw NotFoundException(
+            "Scheduling failed: Instructor with ID " + std::to_string(instructorID) + " not found.");
+    }
+    if (vehiclePtr == nullptr) {
+        throw NotFoundException("Scheduling failed: Vehicle with ID " + std::to_string(vehicleID) + " not found.");
     }
 
     // preparing time period
@@ -65,6 +68,7 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
     const auto& allSessions = drivingSessionRepo.findAll();
 
     bool conflict = false;
+    std::string conflictMessage;
     for (const auto& session : allSessions) {
         if (session != nullptr && session->getStatus() != "Cancelled") {
             // time period for current session (for loop session)
@@ -74,19 +78,19 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
             if (requestedPeriod.intersects(sessionPeriod)) {
                 // Instructor conflict
                 if (session->getInstructor()->getId() == instructorID) {
-                    std::cout << "Instructor is already booked for this time period.\n";
+                    conflictMessage += "Instructor is already booked. ";
                     conflict = true;
                 }
 
                 // Vehicle conflict
                 if (session->getVehicle()->getId() == vehicleID) {
-                    std::cout << "Vehicle is already booked for this time period.\n";
+                    conflictMessage += "Vehicle is already booked. ";
                     conflict = true;
                 }
 
                 // student conflict
                 if (session->getStudent()->getId() == studentID) {
-                    std::cout << "Student already has a session scheduled for this time period.\n";
+                    conflictMessage += "Student already has a scheduled session. ";
                     conflict = true;
                 }
             }
@@ -94,16 +98,17 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
     }
 
     // if conflict appeared, session cannot be scheduled
-    if (conflict == true) {
-        std::cout << "Sorry, no available dates. Please try different date\n";
-        return;
+    if (conflict) {
+        throw ValidationException(conflictMessage + "Please choose a different date or time.");
     }
 
     // getting unique id for new driving session
     int newSessionId = drivingSessionRepo.getNextID();
     int courseID = coordinator.getCourseIDByStudentID(studentID);
 
-    if (courseID == -1) return;
+    if (courseID == -1) {
+        throw NotFoundException("Cannot schedule session: Student with ID " + std::to_string(studentID) + " is not assigned to any active course.");
+    }
 
     // Creating new DrivingSession object
     auto newSession = std::make_shared<DrivingSession>(
@@ -121,10 +126,13 @@ void DrivingSessionManager::scheduleDrivingSession(int studentID, int instructor
 }
 
 void DrivingSessionManager::cancelSession(int drivingSessionID, Coordinator& coordinator) {
+    if (drivingSessionID < 0) {
+        throw InvalidInputException("Driving session ID cannot be negative.");
+    }
+
     auto drivingSessionPtr = coordinator.getDrivingSessionById(drivingSessionID);
     if (drivingSessionPtr == nullptr) {
-        std::cout << "Such driving session does not exist in database!\n";
-        return;
+        throw NotFoundException("Cannot cancel session: Driving session with ID " + std::to_string(drivingSessionID) + " does not exist.");
     }
 
     drivingSessionRepo.remove(drivingSessionID);
@@ -151,8 +159,14 @@ DrivingSessionPtr DrivingSessionManager::getArchiveDrivingSessionById(int sessio
 }
 
 void DrivingSessionManager::setDrivingSessionAsCompleted(int drivingSessionID) {
+    if (drivingSessionID < 0) {
+        throw InvalidInputException("Driving session ID cannot be negative.");
+    }
+
     DrivingSessionPtr session = getDrivingSessionById(drivingSessionID);
-    if (session == nullptr) return;
+    if (session == nullptr) {
+        throw NotFoundException("Cannot complete session: Active driving session with ID " + std::to_string(drivingSessionID) + " not found.");
+    }
     session->setStatus("COMPLETED");
 
     drivingSessionRepo.remove(drivingSessionID);
