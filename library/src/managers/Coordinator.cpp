@@ -30,7 +30,7 @@ StudentPtr Coordinator::getStudentById(int id) {
             return student;
         }
     }
-    throw NotFoundException("Nie znaleziono kursanta o podanym ID: " + std::to_string(id));
+    return nullptr;
 }
 
 InstructorPtr Coordinator::getInstructorById(int id) {
@@ -40,7 +40,7 @@ InstructorPtr Coordinator::getInstructorById(int id) {
             return instructor;
         }
     }
-    throw NotFoundException("Nie znaleziono instruktora o podanym ID: " + std::to_string(id));
+    return nullptr;
 }
 
 VehiclePtr Coordinator::getVehicleById(int id) {
@@ -50,7 +50,7 @@ VehiclePtr Coordinator::getVehicleById(int id) {
             return vehicle;
         }
     }
-    throw NotFoundException("Nie znaleziono pojazdu o podanym ID: " + std::to_string(id));
+    return nullptr;
 }
 
 CoursePtr Coordinator::getCourseById(int id) {
@@ -60,7 +60,7 @@ CoursePtr Coordinator::getCourseById(int id) {
             return course;
         }
     }
-    throw NotFoundException("Nie znaleziono kursu o podanym ID: " + std::to_string(id));
+    return nullptr;
 }
 
 DrivingSessionPtr Coordinator::getDrivingSessionById(int id) {
@@ -70,7 +70,7 @@ DrivingSessionPtr Coordinator::getDrivingSessionById(int id) {
             return session;
         }
     }
-    throw NotFoundException("Nie znaleziono sesji jazdy o podanym ID: " + std::to_string(id));
+    return nullptr;
 }
 
 double Coordinator::calculateTotalCourseCost(int courseId) {
@@ -199,5 +199,5 @@ int Coordinator::getCourseIDByStudentID(int studentId) {
             }
         }
     }
-    throw NotFoundException("Brak aktywnego kursu dla kursanta o ID: " + std::to_string(studentId));
+    return -1;
 }

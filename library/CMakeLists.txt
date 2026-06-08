@@ -33,6 +33,7 @@ set(SOURCE_FILES
             src/model/Instructor.cpp
             src/model/Course.cpp
             src/model/DrivingSession.cpp
+             src/model/Exceptions.cpp
             # --- repo ---
             src/repositories/CourseRepository.cpp
             src/repositories/DrivingSessionRepository.cpp
