@@ -30,21 +30,4 @@ public:
     explicit InvalidInputException(const std::string& message);
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif
