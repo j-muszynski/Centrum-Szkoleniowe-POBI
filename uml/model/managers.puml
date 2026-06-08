@@ -88,7 +88,14 @@ package "Warstwa Logiki Biznesowej (BLL)" {
         + scheduleSession(studentId: int, instructorId: int, vehicleId: int, range: TimeRange, coordinator: Coordinator&): void
         + cancelSession(sessionId: int, coordinator: Coordinator&): void
         + findDrivingSession(predicate: const DrivingSessionPredicate&): std::vector<DrivingSessionPtr>
+        + findArchiveDrivingSession(predicate: const DrivingSessionPredicate&): std::vector<DrivingSessionPtr>
         + findAllDrivingSession(): std::vector<DrivingSessionPtr>
+        + findAllArchiveDrivingSession(): std::vector<DrivingSessionPtr>
+        + getDrivingSessionById(sessionId: int): DrivingSessionPtr
+        + getArchiveDrivingSessionById(sessionId: int): DrivingSessionPtr
+        + setDrivingSessionAsCompleted(drivingSessionID: int): void
+        + getDrivingSessionReport(): std::string
+        + getArchiveDrivingSessionReport(): std::string
     }
 
    class VehicleManager {
