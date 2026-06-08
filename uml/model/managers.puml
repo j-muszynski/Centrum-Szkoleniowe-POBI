@@ -97,6 +97,8 @@ package "Warstwa Logiki Biznesowej (BLL)" {
        + unregisterVehicle(vehicleId: int): void
        + findVehicles(predicate: const VehiclePredicate&): std::vector<VehiclePtr>
        + findAllVehicles(): std::vector<VehiclePtr>
+       + getVehicleById(id: int): VehiclePtr
+       + getVehicleReport(): std::string
    }
 }
 
