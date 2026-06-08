@@ -15,12 +15,17 @@ package "Warstwa Składowania Danych (DAL)" {
         + remove(id: int) : void
         + getById(id: int) : T
         + getSize() : int
+        + getNextID(): int
     }
 
     abstract class AbstractFileRepository<T> {
         # filePath : std::string
         ' Referencja
         - storage : IDataStorage<T>&
+        - nextID: int
+        + executeSave(data: const std::vector<T>&): void
+        + executeLoad(): std::vector<T>
+        + getNextID(): int
     }
 
     IRepository <|.. AbstractFileRepository
@@ -54,5 +59,12 @@ package "Warstwa Składowania Danych (DAL)" {
     AbstractFileRepository <|-- InstructorRepository
     AbstractFileRepository <|-- StudentRepository
     AbstractFileRepository <|-- VehicleRepository
+
+    class FileStorage<T> {
+        - filename: std::string
+        + save(data: const std::vector<T>&): void
+        + load(): std::vector<T>
+    }
+    FileStorage ..|> IDataStorage : "implements"
 }
 @enduml
