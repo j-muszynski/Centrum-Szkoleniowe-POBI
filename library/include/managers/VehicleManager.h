@@ -30,13 +30,13 @@ public:
      * @param predicate A callable boolean filter.
      * @return std::vector<VehiclePtr> List of vehicles matching the predicate criteria.
      */
-    std::vector<VehiclePtr> findVehicles(const VehiclePredicate& predicate) const;
+    [[nodiscard]] std::vector<VehiclePtr> findVehicles(const VehiclePredicate& predicate) const;
 
     /**
      * @brief Retrieves all vehicles currently registered in the system.
      * @return std::vector<VehiclePtr> List containing all vehicles.
      */
-    std::vector<VehiclePtr> findAllVehicles() const;
+    [[nodiscard]] std::vector<VehiclePtr> findAllVehicles() const;
 
     /**
      * @brief Registers and creates a new vehicle session in the  repository.
@@ -48,13 +48,13 @@ public:
      * @brief Generates a text report of all managed vehicles.
      * @return std::string Formatted report containing details of each vehicle.
      */
-    std::string getVehicleReport() const;
+    [[nodiscard]] std::string getVehicleReport() const;
 
     /**
      * @brief Retrieves a vehicle entity by its unique identifier.
      * @param vehicleId The unique ID of the target vehicle.
      * @return VehiclePtr A shared pointer to the Vehicle object, or nullptr if not found.
      */
-    VehiclePtr getVehicleById(int vehicleId) const;
+    [[nodiscard]] VehiclePtr getVehicleById(int vehicleId) const;
     void unregisterVehicle(int vehicleId);
 };
